@@ -1,0 +1,32 @@
+package com.kronostools.timehammer.utils;
+
+public class Constants {
+    public static final String NO_SSID = "NA";
+
+    public static final Long WORKER_STATUS_INITIAL_AVG_PROCESSING_TIME = 1000L;
+    public static final String HIDDEN_PASSWORD = "*****";
+    public static final String DEMO_PASSWORD = "demo";
+
+    public class Caches {
+        public static final String COMUNYTEK_SESSION = "comunytek-session-cache";
+        public static final String COMUNYTEK_STATUS = "comunytek-status-cache";
+        public static final String WORKER_BY_EXTERNAL_ID_AS_WORKERVO = "worker-by-externalid-as-workervo-cache";
+        public static final String WORKER_BY_CHATID_AS_WORKERVO = "worker-by-chatid-as-workervo-cache";
+        public static final String ALL_WORKER_PREFERENCES = "all-worker-preferences-cache";
+        public static final String WORKER_PREFERENCES = "worker-preferences-cache";
+        public static final String WORKER_HOLIDAYS = "worker-holidays-cache";
+        public static final String WORKER_CHATS = "worker-chats-cache";
+        public static final String CITY_LIST = "city-list-cache";
+        public static final String CITY_HOLIDAYS = "city-holidays-cache";
+    }
+
+    public class Buses {
+        public static final String UPDATE_WORKER_SSID_TRACKING_INFO = "updateWorkerSsidTrackingInfo";
+        public static final String ADD_SSID_TRACKING_EVENT = "addSsidTrackingEvent";
+    }
+
+    public class RegistrationErrorMessages {
+        public static final String REGISTRATION_EXPIRED = "La solicitud de registro ha expirado, por favor, vuelva a iniciar otra.";
+        public static final String UNEXPEDTED_ERROR = "Ha ocurrido un error inesperado mientras procesábamos su solicitud de registro, por favor, inténtelo de nuevo";
+    }
+}

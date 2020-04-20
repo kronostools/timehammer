@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/css/ion.rangeSlider.min.css" integrity="sha256-g7HgoMySZyonuPwHTORf+uGHEeOm7VRI2kfXWXlJnco=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="timehammer.timetable.css" />
+    <link rel="stylesheet" href="registration.css" />
+
+    <script src="https://kit.fontawesome.com/ebff2e60d9.js" crossorigin="anonymous"></script>
+
+    <title>Timehammer</title>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h2>Bienvenido a Timehammer!</h2>
+            <p class="lead">En esta página podrás registrarte en Timehammer y así podrás olvidarte del engorro de fichar.</p>
+
+            <h3>¿Cómo funciona esto?</h3>
+            <p class="lead">Pendiente de redactar</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h4 class="mb-3">Formulario de registro</h4>
+                <form class="needs-validation" novalidate="novalidate" action="register" method="POST">
+                    <input type="hidden" name="registrationId" value="{registrationId}" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="externalId">Usuario (*)</label>
+                            <input type="text" class="form-control" id="externalId" name="externalId" placeholder="" value="" aria-describedby="externalIdHelp">
+                            <small id="externalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa.</small>
+                            <div id="externalIdInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="externalPassword">Contraseña (*)</label>
+                            <input type="password" class="form-control" id="externalPassword" name="externalPassword" placeholder="" value="" aria-describedby="externalPasswordHelp">
+                            <small id="externalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
+                            <div id="externalPasswordInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="workCity">Ciudad de trabajo (*)</label>
+                            <select class="form-control custom-select d-block w-100" id="workCity" name="workCity" aria-describedby="workCityHelp">
+                                <option value=""></option>
+                                {#each cities}
+                                <option value="{it.code}">{it.name}</option>
+                                {/each}
+                            </select>
+                            <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
+                            <div id="workCityInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="workSsid">SSID de la WiFi del trabajo</label>
+                            <input type="text" class="form-control" id="workSsid" name="workSsid" value="" placeholder="" aria-describedby="workSsidHelp">
+                            <small id="workSsidHelp" class="form-text text-muted">Necesario si se quiere automatizar el proceso de fichaje</small>
+                            <div id="invalidFeedbackWorkSsid" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+
+                    <div class="timetable" data-time-values-min="{timetableMin}" data-time-values-max="{timetableMax}" data-time-format="HH:mm" data-interval-qty="5" data-interval-unit="m"></div>
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">© 2019-2020 Timehammer</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js" integrity="sha256-Z639rJO57BiZzQDlWsGyF+EJ3Fs3nD4pQPkfimTy3S8=" crossorigin="anonymous"></script>
+    <script src="timehammer.timetable.js"></script>
+    <script src="registration.js"></script>
+</body>
+</html>

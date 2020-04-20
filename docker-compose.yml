@@ -1,0 +1,71 @@
+version: '3'
+services:
+  db:
+    image: postgres:12.2-alpine
+    container_name: db
+    environment:
+      POSTGRES_USER: timehammer
+      POSTGRES_DB: timehammer
+      POSTGRES_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      TZ: Etc/UTC
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - timehammer
+  kv:
+    image: vault:1.4.0
+    container_name: kv
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: myroot
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      VAULT_ADDR: http://0.0.0.0:8200
+    ports:
+      - 8200:8200
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - timehammer
+  timehammerdev:
+    image: maven:3.6.3-jdk-11-slim
+    container_name: timehammerdev
+    env_file:
+      - .env
+    volumes:
+      - ./wksp:/root/wksp/timehammer
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    working_dir: /root/wksp/timehammer
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    ports:
+      - 9000:8080
+      - 6000:5005
+    networks:
+      - timehammer
+  timehammernativebuild:
+    image: quay.io/quarkus/centos-quarkus-maven:20.0.0-java8
+    container_name: timehammernativebuild
+    volumes:
+      - ./wksp:/project/timehammer
+    working_dir: /project/timehammer
+    command: /bin/bash
+    stdin_open: true
+    tty: true
+    networks:
+      - timehammer
+  timehammernative:
+    build:
+      context: ./wksp
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer-native:1.0.0
+    container_name: timehammernative
+    ports:
+      - 9000:8080
+    networks:
+      - timehammer
+
+volumes:
+  dbdata:
+
+networks:
+  timehammer:

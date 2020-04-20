@@ -1,0 +1,27 @@
+.toolbar {
+    font-size: 1.4rem;
+}
+
+.irs--flat.blank-bar .irs-bar {
+    background-color: unset;
+}
+
+.copy-paste-tools {
+    cursor: pointer;
+}
+
+.copy-paste-tools.copied {
+    color: orange;
+}
+
+.copy-paste-tools.paste {
+    color: lightgreen;
+}
+
+.lunch-optional {
+    cursor: pointer;
+}
+
+.lunch-optional.disabled {
+    color: red!important;
+}

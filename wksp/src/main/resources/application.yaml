@@ -1,0 +1,133 @@
+quarkus:
+  # language configuration
+  default-locale: es-ES
+  locales: es-ES
+
+  # datasource configuration
+  datasource:
+    url: jdbc:postgresql://db:5432/timehammer
+    driver: org.postgresql.Driver
+    username: timehammer
+    password: ${TIMEHAMMER_DB_PASSWORD}
+
+  # logging
+  log:
+    category:
+      com.kronostools:
+          level: DEBUG
+
+  # hibernate
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+    log:
+      sql: true
+    jdbc:
+      statement-batch-size: 10
+
+  # caches
+  cache:
+    caffeine:
+      city-list-cache:
+        expire-after-write: 8h
+      comunytek-session-cache:
+        expire-after-write: 10m
+      comunytek-status-cache:
+        expire-after-write: 5m
+      worker-by-externalid-as-workervo-cache:
+        expire-after-write: 8h
+      worker-by-chatid-as-workervo-cache:
+        expire-after-write: 8h
+      all-worker-preferences-cache:
+        expire-after-write: 8h
+      worker-preferences-cache:
+        expire-after-write: 8h
+      worker-holidays-cache:
+        expire-after-write: 8h
+      worker-chats-cache:
+        expire-after-write: 8h
+      city-holidays-cache:
+        expire-after-write: 8h
+
+  # quarkus-camel
+  camel:
+    main:
+      routes-discovery:
+        enabled: false
+
+# apis
+
+## comunytek api
+comunytek-api/mp-rest/url: https://empleados.comunytek.com/SWHandler
+comunytek-api/mp-rest/scope: javax.inject.Singleton
+
+## telegram api
+telegram-api/mp-rest/url: https://api.telegram.org/bot${TIMEHAMMER_CHATBOT_TOKEN}
+telegram-api/mp-rest/scope: javax.inject.Singleton
+
+# camel
+camel:
+  context:
+    name: timehammer-camel-cdi
+
+# custom properties
+timehammer:
+  baseUrl: https://timehammer.com
+  admins:
+    - DCV
+  chatbot:
+    token: ${TIMEHAMMER_CHATBOT_TOKEN}
+  timetable:
+    min: "07:00"
+    max: "19:30"
+  mocks:
+    comunytekClientMocked: false
+    timeMachineServiceMocked: false
+  schedules:
+    # cron expressions (https://www.freeformatter.com/cron-expression-generator-quartz.html)
+    updateWorkersStatus:
+      name: updateWorkersStatus
+      enabled: true
+      intervalInMinutes: 2
+      ## Update workers' status -> every ${timehammer.scheduleUpdateWorkersStatus.intervalInMinutes} minutes starting at minute 0, every hour, every day between Monday and Friday, every month
+      cron: 0 0/${timehammer.schedules.updateWorkersStatus.intervalInMinutes} * ? * MON-FRI *
+      ## In UTC
+      start: "05:00"
+      ## In UTC
+      end: "19:00"
+    updateWorkersHolidays:
+      name: updateWorkersHolidays
+      enabled: true
+      ## Update workers' holidays -> At 00:10:00am UTC, every day between Monday and Friday, every month
+      cron: 0 10 0 ? * MON-FRI *
+    cleanSsidTrackingEvents:
+      name: cleanSsidTrackingEvents
+      enabled: true
+      ## Clean SSID tracking events -> At 00:05:00am UTC, every day between Monday and Friday, every month
+      cron: 0 5 0 ? * MON-FRI *
+
+"%dev":
+  timehammer:
+    baseUrl: http://192.168.86.168:9000
+
+"%localdemo":
+  timehammer:
+    baseUrl: http://192.168.86.168:9000
+    mocks:
+      comunytekClientMocked: true
+      timeMachineServiceMocked: true
+    schedules:
+      updateWorkersStatus:
+        enabled: false
+  quarkus:
+    # caches
+    cache:
+      caffeine:
+        comunytek-session-cache:
+          expire-after-write: 10s
+        comunytek-status-cache:
+          expire-after-write: 10s
+        worker-preferences-cache:
+          expire-after-write: 10s
+        worker-holidays-cache:
+          expire-after-write: 10s
