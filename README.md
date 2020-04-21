@@ -128,6 +128,15 @@ https://learn.hashicorp.com/vault/getting-started/install
 https://www.vaultproject.io/docs/what-is-vault
 https://hub.docker.com/r/keybaseio/client
 
+## NGINX + Let's encrypt
+
+https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+https://thepolyglotdeveloper.com/2017/03/nginx-reverse-proxy-containerized-docker-applications
+
+## Docker Compose - extending services
+
+https://docs.docker.com/compose/extends
+
 ---
 
 # Creación de un proyecto quarkus.io

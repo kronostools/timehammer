@@ -25,6 +25,13 @@ services:
       - IPC_LOCK
     networks:
       - timehammer
+  reverseproxy:
+    image: nginx:1.17.10-alpine
+    ports:
+      - 8080:80
+      - 8443:443
+      volumes:
+        - ./data/nginx:/etc/nginx/conf.d
   timehammerdev:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammerdev
