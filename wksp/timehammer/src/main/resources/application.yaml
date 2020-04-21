@@ -72,7 +72,7 @@ camel:
 
 # custom properties
 timehammer:
-  baseUrl: https://timehammer.com
+  baseUrl: https://timehammer.kronostools.com
   admins:
     - DCV
   chatbot:

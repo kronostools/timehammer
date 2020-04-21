@@ -1,0 +1,36 @@
+upstream docker-timehammer {
+    server ${TIMEHAMMER_SERVICE_NAME}:${TIMEHAMMER_SERVICE_PORT};
+}
+
+server {
+    listen ${TIMEHAMMER_HTTP_PORT};
+    server_name ${TIMEHAMMER_HOST};
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen ${TIMEHAMMER_HTTPS_PORT} ssl;
+    server_name ${TIMEHAMMER_HOST};
+    ssl_certificate /etc/letsencrypt/live/${TIMEHAMMER_HOST}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${TIMEHAMMER_HOST}/privkey.pem;
+
+    # From letsencrypt
+    include certbot/options-ssl-nginx.conf;
+    ssl_dhparam certbot/ssl-dhparams.pem;
+
+    location / {
+        proxy_pass         http://docker-timehammer;
+        proxy_redirect     off;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Host $server_name;
+    }
+}

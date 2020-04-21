@@ -1,15 +1,22 @@
 # TODO
 
+- Primer despliegue en producción
+    - Hosting con OVH.com
+        - Comprar servidor de tipo VPS SSD 3 (https://www.ovh.es/vps/vps-ssd.xml)
+        - Instalar docker y docker-compose
+    - Configurar en el dominio kronostools.com de google el subdominio timehammer y apuntarlo al servidor de ovh
+    - Desplegar versión para probar que funciona por HTTPs
+    - Mirar HTTPs (reverseproxy, certbot)
+    - Revisar docker-compose.yaml para facilitar el arranque en producción
+        - Crear uno para poder hacer docker-compose up en producción
+    - Estudiar uso de registry
+        - Docker Hub?
+        - Contenedor registry de docker en producción para publicar la imagen de timehammer?
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
 - Los mensajes sin catalogar se guardan en tabla "basura" (asincronamente). Para poder hacer en el futuro NLP
 - Probar que funciona después de incorporar el servicio TimeMachineService
-- Primer despliegue en producción
-    - Hosting con OVH.com
-    - Mirar si se pueden tener docker-compose.yaml activados por perfil
-        - Crear uno para poder hacer docker-compose up en producción
-    - Mirar HTTPs (nginx, letsencrypt)
 - Revisar idea de
     - Acciones clockin / clockout
     - Ámbitos work / lunch
