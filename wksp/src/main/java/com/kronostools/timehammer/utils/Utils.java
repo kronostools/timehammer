@@ -24,6 +24,10 @@ public class Utils {
         return r.ints(minInclusive, maxExclusive).findFirst().getAsInt();
     }
 
+    public static <T> T getRandomElementFromArray(final T[] array) {
+        return array[Utils.getRandomNumberInRange(0, array.length)];
+    }
+
     public static String stringFormat(String format, Object... params) {
         return MessageFormatter.arrayFormat(format, params).getMessage();
     }

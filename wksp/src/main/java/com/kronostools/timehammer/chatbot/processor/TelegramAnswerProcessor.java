@@ -11,10 +11,7 @@ import com.kronostools.timehammer.enums.QuestionType;
 import com.kronostools.timehammer.vo.WorkerVo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.component.telegram.model.EditMessageReplyMarkupMessage;
 import org.apache.camel.component.telegram.model.IncomingCallbackQuery;
-import org.apache.camel.component.telegram.model.InlineKeyboardMarkup;
-import org.apache.camel.component.telegram.model.OutgoingMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +34,7 @@ public class TelegramAnswerProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         final IncomingCallbackQuery incomingCallbackQuery = exchange.getIn().getBody(IncomingCallbackQuery.class);
 
         LOG.debug("Processing answer ...");
@@ -48,18 +45,7 @@ public class TelegramAnswerProcessor implements Processor {
         final QuestionType question = RoutesUtils.getQuestion(exchange);
         final AnswerType answer = RoutesUtils.getAnswer(exchange);
 
-        InlineKeyboardMarkup replyMarkup = InlineKeyboardMarkup
-                .builder()
-                .build();
-
-        OutgoingMessage outgoingMessage = EditMessageReplyMarkupMessage
-                .builder()
-                .chatId(chatId)
-                .messageId(incomingCallbackQuery.getMessage().getMessageId().intValue())
-                .replyMarkup(replyMarkup)
-                .build();
-
-        exchange.getMessage().setBody(outgoingMessage);
+        exchange.getMessage().setBody(NotificationService.getOutgoingMessageToRemoveInlineKeyboard(chatId, incomingCallbackQuery.getMessage().getMessageId()));
 
         Boolean answerProcessedSuccessfully = Boolean.TRUE;
 

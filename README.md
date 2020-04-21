@@ -3,12 +3,13 @@
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
-    - Servicio para centralizar los mensajes
-        - Mensajes están en:
-            - QuestionType
-            - AnswerType
-            - TelegramMessageProcessor
-    - Utilidad para la creación de keyboards del chatbot
+- Los mensajes sin catalogar se guardan en tabla "basura" (asincronamente). Para poder hacer en el futuro NLP
+- Probar que funciona después de incorporar el servicio TimeMachineService
+- Primer despliegue en producción
+    - Hosting con OVH.com
+    - Mirar si se pueden tener docker-compose.yaml activados por perfil
+        - Crear uno para poder hacer docker-compose up en producción
+    - Mirar HTTPs (nginx, letsencrypt)
 - Revisar idea de
     - Acciones clockin / clockout
     - Ámbitos work / lunch
@@ -17,13 +18,6 @@
         - Acción en Comunytek (traductor de acciones con distintas implementaciones)
     - Estado INIT, WORKING, LUNCHING, ENDED
     - Acciones Comunitek Entrada, Pausar (Motivo), Reanudar, Salida
-- Los mensajes sin catalogar se guardan en tabla "basura" (asincronamente). Para poder hacer en el futuro NLP
-- Probar que funciona después de incorporar el servicio TimeMachineService
-- Primer despliegue en producción
-    - Hosting con OVH.com
-    - Mirar si se pueden tener docker-compose.yaml activados por perfil
-        - Crear uno para poder hacer docker-compose up en producción
-    - Mirar HTTPs (nginx, letsencrypt)
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)

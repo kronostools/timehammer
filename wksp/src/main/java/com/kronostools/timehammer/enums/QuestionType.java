@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.enums;
 
+import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.AnswerOptionVo;
 
@@ -12,11 +13,9 @@ import static java.util.Map.entry;
 
 public enum QuestionType {
     START("START",
-            new String[] {
-                    "Ya va siendo hora de ponerse a currar no?"
-            },
-            new EnumMap(Map.ofEntries(
-                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, "Se ha registrado correctamente la entrada.")),
+            ChatbotMessages.QUESTION_START,
+            new EnumMap<>(Map.ofEntries(
+                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, ChatbotMessages.QUESTION_START_OPTION_Y)),
                     entry(AnswerType.N5M, new AnswerOptionVo(AnswerType.N5M)),
                     entry(AnswerType.N10M, new AnswerOptionVo(AnswerType.N10M)),
                     entry(AnswerType.N15M, new AnswerOptionVo(AnswerType.N15M)),
@@ -24,11 +23,9 @@ public enum QuestionType {
             ))
     ),
     LUNCH_START("LUNCH_START",
-            new String[] {
-                    "Se come o qué?"
-            },
-            new EnumMap(Map.ofEntries(
-                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, "Se ha registrado correctamente la pausa para la comida.")),
+            ChatbotMessages.QUESTION_LUNCH_START,
+            new EnumMap<>(Map.ofEntries(
+                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, ChatbotMessages.QUESTION_LUNCH_START_OPTION_Y)),
                     entry(AnswerType.N5M, new AnswerOptionVo(AnswerType.N5M)),
                     entry(AnswerType.N10M, new AnswerOptionVo(AnswerType.N10M)),
                     entry(AnswerType.N15M, new AnswerOptionVo(AnswerType.N15M)),
@@ -36,11 +33,9 @@ public enum QuestionType {
             ))
     ),
     LUNCH_RESUME("LUNCH_RESUME",
-            new String[] {
-                    "Has terminado ya de comer?"
-            },
-            new EnumMap(Map.ofEntries(
-                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, "Se ha registrado correctamente el final de la pausa para la comida.")),
+            ChatbotMessages.QUESTION_LUNCH_RESUME,
+            new EnumMap<>(Map.ofEntries(
+                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, ChatbotMessages.QUESTION_LUNCH_RESUME_OPTION_Y)),
                     entry(AnswerType.N5M, new AnswerOptionVo(AnswerType.N5M)),
                     entry(AnswerType.N10M, new AnswerOptionVo(AnswerType.N10M)),
                     entry(AnswerType.N15M, new AnswerOptionVo(AnswerType.N15M)),
@@ -48,11 +43,9 @@ public enum QuestionType {
             ))
     ),
     END("END",
-            new String[] {
-                    "Habrá que irse ya para casa no?"
-            },
-            new EnumMap(Map.ofEntries(
-                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, "Se ha registrado correctamente la salida.")),
+            ChatbotMessages.QUESTION_END,
+            new EnumMap<>(Map.ofEntries(
+                    entry(AnswerType.Y, new AnswerOptionVo(AnswerType.Y, ChatbotMessages.QUESTION_END_OPTION_Y)),
                     entry(AnswerType.N5M, new AnswerOptionVo(AnswerType.N5M)),
                     entry(AnswerType.N10M, new AnswerOptionVo(AnswerType.N10M)),
                     entry(AnswerType.N15M, new AnswerOptionVo(AnswerType.N15M)),
@@ -75,7 +68,7 @@ public enum QuestionType {
     }
 
     public String getQuestionText() {
-        return questionText[Utils.getRandomNumberInRange(0, questionText.length)];
+        return Utils.getRandomElementFromArray(questionText);
     }
 
     public Map<AnswerType, AnswerOptionVo> getAnswerOptions() {

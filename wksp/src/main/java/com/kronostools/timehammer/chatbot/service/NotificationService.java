@@ -163,18 +163,21 @@ public class NotificationService {
         return getOutgoingMessage(chatId, questionType.getQuestionText(), replyMarkup);
     }
 
-    private void removeInlineKeyboardFromMessage(final String chatId, final Long messageId) {
-        InlineKeyboardMarkup replyMarkup = InlineKeyboardMarkup
+    public static OutgoingMessage getOutgoingMessageToRemoveInlineKeyboard(final String chatId, final Long messageId) {
+        final InlineKeyboardMarkup replyMarkup = InlineKeyboardMarkup
                 .builder()
                 .build();
 
-        OutgoingMessage outgoingMessage = EditMessageReplyMarkupMessage
+        return EditMessageReplyMarkupMessage
                 .builder()
                 .chatId(chatId)
                 .messageId(messageId.intValue())
                 .replyMarkup(replyMarkup)
                 .build();
+    }
 
+    private void removeInlineKeyboardFromMessage(final String chatId, final Long messageId) {
+        final OutgoingMessage outgoingMessage = NotificationService.getOutgoingMessageToRemoveInlineKeyboard(chatId, messageId);
         notify(outgoingMessage);
     }
 }

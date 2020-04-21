@@ -1,15 +1,17 @@
 package com.kronostools.timehammer.enums;
 
+import com.kronostools.timehammer.utils.ChatbotMessages;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum AnswerType {
-    Y("Y", "Sí", "La acción se ha registrado correctamente."),
-    N5M("+5M", "+5 m", "Anotado queda. Dentro de 5 minutos te lo volveré a recordar."),
-    N10M("+10M", "+10 m", "Anotado queda. Dentro de 10 minutos te lo volveré a recordar."),
-    N15M("+15M", "+15 m", "Anotado queda. Dentro de 15 minutos te lo volveré a recordar."),
-    N20M("+20M", "+20 m", "Anotado queda. Dentro de 20 minutos te lo volveré a recordar."),
-    N("N", "No", "Anotado queda. Hasta el próximo día laborable no se te volverá a notificar de lo mismo.");
+    Y("Y", ChatbotMessages.ANSWER_Y_BUTTON, ChatbotMessages.ANSWER_Y),
+    N5M("+5M", ChatbotMessages.ANSWER_N5M_BUTTON, ChatbotMessages.ANSWER_N5M),
+    N10M("+10M", ChatbotMessages.ANSWER_N10M_BUTTON, ChatbotMessages.ANSWER_N10M),
+    N15M("+15M", ChatbotMessages.ANSWER_N15M_BUTTON, ChatbotMessages.ANSWER_N15M),
+    N20M("+20M", ChatbotMessages.ANSWER_N20M_BUTTON, ChatbotMessages.ANSWER_N20M),
+    N("N", ChatbotMessages.ANSWER_N_BUTTON, ChatbotMessages.ANSWER_N);
 
     private final String answerCode;
     private final String answerButtonText;
