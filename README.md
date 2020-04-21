@@ -1,6 +1,5 @@
 # TODO
 
-- Revisar la configuración de los saltos de linea en git
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
