@@ -1,5 +1,12 @@
 # TODO
 
+- Cambiar password de servidor OHV
+- Añadir clave ssh para conexión a OVH
+- Crear usuario no root en OVH?
+- Reorganizar docker-compose para trabajar fácilmente en local y remoto
+- Crear flujo de despliegue en prod
+    - Rama a usar para prod?
+    - Registry de docker en prod?
 - Primer despliegue en producción
     - Hosting con OVH.com
         - Comprar servidor de tipo VPS SSD 3 (https://www.ovh.es/vps/vps-ssd.xml)
