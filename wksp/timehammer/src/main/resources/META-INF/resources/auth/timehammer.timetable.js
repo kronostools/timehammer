@@ -82,6 +82,8 @@ $.widget('timehammer.timetable', {
     },
 
     _configureTimeValues: function() {
+        const $element = this.element
+
         const timeValuesMin = $element.data('time-values-min')
         const timeValuesMax = $element.data('time-values-max')
         const timeFormat = $element.data('time-format')
