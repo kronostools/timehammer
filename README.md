@@ -1,5 +1,7 @@
 # TODO
 
+- timehammer.timetable.js L101, falta una coma
+- Cambiar certbot + nginx -> linuxserver/docker-letsencrypt
 - Cambiar password de servidor OHV
 - Añadir clave ssh para conexión a OVH
 - Crear usuario no root en OVH?
@@ -19,6 +21,14 @@
     - Estudiar uso de registry
         - Docker Hub?
         - Contenedor registry de docker en producción para publicar la imagen de timehammer?
+- Tener en cuenta vacaciones y festivos al obtener currentpreferences (añadir motivo en caso de no trabajar? Holiday|Weekend|NonWorking)
+- Añadir batch para el día 1 del año para borrar las vacaciones del año anterior
+- El método que recupera las vacaciones que sea getPendingHolidays
+- El método que recupera los festivos que sea getPendingNonWorkingDays
+- En página de demo añadir las currentpreferences para el día en cuestión
+- En la página de demo añadir descripciones al estado del usuario
+- Añadir al usuario campo empresa
+- Elegir el cliente en función de la empresa
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
@@ -37,6 +47,7 @@
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)
 - Almacen de claves
     - El almacén de claves tendrá un usuario por clave y solo ese usuario puede leer y escribir (así el admin de timehammer no puede ver nada, el admin solo puede borrar por si a alguien se le olvidase la contraseña)
+- *************** DEMO ***************
 - Modularizar ?
 - Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
 - Añadir la posibilidad de meter excepciones al horario
