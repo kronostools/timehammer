@@ -98,7 +98,7 @@ $.widget('timehammer.timetable', {
         }
 
         this.options.timeValues = timeValues
-    }
+    },
 
     _getFormGroup: function(idSuffix, workText, lunchText, lunchOptional) {
         const $formGroup = $('<div>', { 'class': 'form-group' })

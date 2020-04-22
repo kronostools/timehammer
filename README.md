@@ -1,6 +1,5 @@
 # TODO
 
-- timehammer.timetable.js L101, falta una coma
 - Cambiar certbot + nginx -> linuxserver/docker-letsencrypt
 - Cambiar password de servidor OHV
 - Añadir clave ssh para conexión a OVH
