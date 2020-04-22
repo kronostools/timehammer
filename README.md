@@ -1,25 +1,5 @@
 # TODO
 
-- Cambiar certbot + nginx -> linuxserver/docker-letsencrypt
-- Cambiar password de servidor OHV
-- Añadir clave ssh para conexión a OVH
-- Crear usuario no root en OVH?
-- Reorganizar docker-compose para trabajar fácilmente en local y remoto
-- Crear flujo de despliegue en prod
-    - Rama a usar para prod?
-    - Registry de docker en prod?
-- Primer despliegue en producción
-    - Hosting con OVH.com
-        - Comprar servidor de tipo VPS SSD 3 (https://www.ovh.es/vps/vps-ssd.xml)
-        - Instalar docker y docker-compose
-    - Configurar en el dominio kronostools.com de google el subdominio timehammer y apuntarlo al servidor de ovh
-    - Desplegar versión para probar que funciona por HTTPs
-    - Mirar HTTPs (reverseproxy, certbot)
-    - Revisar docker-compose.yaml para facilitar el arranque en producción
-        - Crear uno para poder hacer docker-compose up en producción
-    - Estudiar uso de registry
-        - Docker Hub?
-        - Contenedor registry de docker en producción para publicar la imagen de timehammer?
 - Tener en cuenta vacaciones y festivos al obtener currentpreferences (añadir motivo en caso de no trabajar? Holiday|Weekend|NonWorking)
 - Añadir batch para el día 1 del año para borrar las vacaciones del año anterior
 - El método que recupera las vacaciones que sea getPendingHolidays
@@ -69,14 +49,18 @@
     - El comando /admin genera un link incluyendo el registrationId
     - Al acceder al Admin con el registrationId se comprueba el perfil del usuario
     - Si el usuario no es admin -> UnauthorizedException
-- La compilación nativa no funciona con quarkus-camel-telegram
-    - esperar a que haya versión final y volver a probar (en el iMac no tengo problemas para compilar)
-    - cuando funciona luego no ejecuta en la imagen distroless del Dockerfile tiny
-        - ya abrí un issue y me respondieron diciendo que se podía hacer
-        - retomar el issue y pedir que lo añadan y lo publiquen
+- Mejorar flujo de despliegue en producción
+    - Estudiar uso de registry
+        - Docker Hub?
+        - Contenedor registry de docker en producción para publicar la imagen de timehammer?
+    - Imagen nativa de timehammer
+        - La compilación nativa no funciona con quarkus-camel-telegram
+            - esperar a que haya versión final y volver a probar (en el iMac no tengo problemas para compilar)
+            - cuando funciona luego no ejecuta en la imagen distroless del Dockerfile tiny
+                - ya abrí un issue y me respondieron diciendo que se podía hacer
+                - retomar el issue y pedir que lo añadan y lo publiquen
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
-- HTTPs
 - Despliegue en producción
     - Revisión de contenido de páginas
     - Política de privacidad y de cookies
@@ -228,3 +212,23 @@ Para construir imagen con el ejecutable nativo
 ```
 > docker-compose up timehammernative
 ```
+
+# Despliegue en producción
+
+(a mejorar)
+
+```
+cd /home/timehammer/wksp/kronostools \
+&& rm -Rf timehammer \
+&& git clone https://github.com/kronostools/timehammer.git \
+&& cd timehammer \
+&& rm -f docker-compose.override.yml
+```
+
+Subir fichero `.env` (con filezilla)
+
+docker-compose up -d db
+docker-compose up -d timehammer
+docker-compose up -d reverseproxy
+
+(la idea sería que fuese necesario únicamente `docker-compose up -d`)
