@@ -1,0 +1,15 @@
+version: '3'
+services:
+  kv:
+    ports:
+      - 8200:8200
+  timehammer:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: mvn -Dquarkus.profile=localdemo quarkus:dev
+    ports:
+      - 9000:8080
+      - 6000:5005
+  timehammernative:
+    ports:
+      - 9000:8080
