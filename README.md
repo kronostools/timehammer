@@ -222,7 +222,8 @@ cd /home/timehammer/wksp/kronostools \
 && rm -Rf timehammer \
 && git clone https://github.com/kronostools/timehammer.git \
 && cd timehammer \
-&& rm -f docker-compose.override.yml
+&& rm -f docker-compose.override.yml \
+&& rm -Rf .git
 ```
 
 Subir fichero `.env` (con filezilla)
