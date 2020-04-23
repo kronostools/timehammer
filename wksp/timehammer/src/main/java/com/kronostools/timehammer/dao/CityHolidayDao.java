@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.dao;
 
+import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.vo.HolidayVo;
 import org.hibernate.jpa.QueryHints;
 
@@ -9,8 +10,12 @@ import java.util.List;
 
 @ApplicationScoped
 public class CityHolidayDao extends GenericDao {
-    public CityHolidayDao(final EntityManager em) {
+    private final TimeMachineService timeMachineService;
+
+    public CityHolidayDao(final EntityManager em,
+                          final TimeMachineService timeMachineService) {
         super(em);
+        this.timeMachineService = timeMachineService;
     }
 
     public List<HolidayVo> fetchAllCityHolidayAsHolidayVoByCityCode(final String cityCode) {
@@ -28,8 +33,9 @@ public class CityHolidayDao extends GenericDao {
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM CityHoliday " +
                         "WHERE id.cityCode = :cityCode " +
-                        "AND id.day >= current_date()", HolidayVo.class)
+                        "AND id.day >= :today", HolidayVo.class)
                 .setParameter("cityCode", cityCode)
+                .setParameter("today", timeMachineService.getNow().toLocalDate())
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }

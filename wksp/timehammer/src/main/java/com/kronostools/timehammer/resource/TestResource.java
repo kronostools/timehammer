@@ -8,7 +8,7 @@ import com.kronostools.timehammer.dto.form.validation.RegistrationValidationOrde
 import com.kronostools.timehammer.enums.QuestionType;
 import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.service.WorkerService;
-import com.kronostools.timehammer.vo.WorkerNonWorkingDaysVo;
+import com.kronostools.timehammer.vo.WorkerAndPreferencesVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +48,8 @@ public class TestResource {
     @GET
     @Path("/workerNonWorkingDays/{externalId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public WorkerNonWorkingDaysVo workerNonWorkingDays(@PathParam("externalId") String externalId) {
-        return workerService.getNonWorkingDays(externalId);
+    public WorkerAndPreferencesVo workerNonWorkingDays(@PathParam("externalId") String externalId) {
+        return workerService.getWorkerAndPreferencesByExternalId(externalId);
     }
 
     @POST

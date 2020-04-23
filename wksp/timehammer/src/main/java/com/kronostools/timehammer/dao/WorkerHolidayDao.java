@@ -2,8 +2,10 @@ package com.kronostools.timehammer.dao;
 
 import com.kronostools.timehammer.model.Worker;
 import com.kronostools.timehammer.model.WorkerHoliday;
+import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.vo.HolidayVo;
 import org.hibernate.Session;
+import org.hibernate.jpa.QueryHints;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
@@ -11,8 +13,12 @@ import java.util.List;
 
 @ApplicationScoped
 public class WorkerHolidayDao extends GenericDao {
-    public WorkerHolidayDao(final EntityManager em) {
+    private final TimeMachineService timeMachineService;
+
+    public WorkerHolidayDao(final EntityManager em,
+                            final TimeMachineService timeMachineService) {
         super(em);
+        this.timeMachineService = timeMachineService;
     }
 
     public List<WorkerHoliday> fetchAllWorkerHolidayByWorkerExternalId(final String workerExternalId) {
@@ -30,6 +36,7 @@ public class WorkerHolidayDao extends GenericDao {
                         "FROM WorkerHoliday " +
                         "WHERE id.workerExternalId = :workerExternalId", HolidayVo.class)
                 .setParameter("workerExternalId", workerExternalId)
+                .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }
 
@@ -38,8 +45,10 @@ public class WorkerHolidayDao extends GenericDao {
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
                         "WHERE id.workerExternalId = :workerExternalId " +
-                        "AND id.day >= current_date()", HolidayVo.class)
+                        "AND id.day >= :today", HolidayVo.class)
                 .setParameter("workerExternalId", workerExternalId)
+                .setParameter("today", timeMachineService.getNow().toLocalDate())
+                .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }
 
