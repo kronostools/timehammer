@@ -13,11 +13,22 @@ public class CityHolidayDao extends GenericDao {
         super(em);
     }
 
-    public List<HolidayVo> findCityHolidayAsHolidayVoByCityCode(final String cityCode) {
+    public List<HolidayVo> fetchAllCityHolidayAsHolidayVoByCityCode(final String cityCode) {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM CityHoliday " +
-                        "WHERE id.cityCode = :cityCode ", HolidayVo.class)
+                        "WHERE id.cityCode = :cityCode", HolidayVo.class)
+                .setParameter("cityCode", cityCode)
+                .setHint(QueryHints.HINT_READONLY,true)
+                .getResultList();
+    }
+
+    public List<HolidayVo> fetchPendingCityHolidayAsHolidayVoByCityCode(final String cityCode) {
+        return em.createQuery(
+                "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
+                        "FROM CityHoliday " +
+                        "WHERE id.cityCode = :cityCode " +
+                        "AND id.day >= current_date()", HolidayVo.class)
                 .setParameter("cityCode", cityCode)
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();

@@ -81,8 +81,8 @@ public class WorkerService {
     public WorkerNonWorkingDaysVo getNonWorkingDays(final String externalId) {
         WorkerPreferencesVo workerPreferencesVo = workerPreferencesManager.getWorkerPreferences(externalId);
 
-        Set<LocalDate> workerHolidays = workerHolidayManager.getWorkerHolidays(externalId);
-        Set<LocalDate> cityHolidays = cityHolidayManager.getCityHolidays(workerPreferencesVo.getCityCode());
+        Set<LocalDate> workerHolidays = workerHolidayManager.getPendingWorkerHolidays(externalId);
+        Set<LocalDate> cityHolidays = cityHolidayManager.getPendingCityHolidays(workerPreferencesVo.getCityCode());
 
         return new WorkerNonWorkingDaysVo(externalId, workerHolidays, cityHolidays);
     }

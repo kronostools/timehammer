@@ -29,16 +29,28 @@ public class WorkerHolidayManager {
         this.workerHolidayDao = workerHolidayDao;
     }
 
-    @CacheResult(cacheName = Caches.WORKER_HOLIDAYS)
-    @Transactional
-    public Set<LocalDate> getWorkerHolidays(final String workerExternalId) {
-        LOG.debug("BEGIN getWorkerHolidays: [{}]", workerExternalId);
+    public Set<LocalDate> getAllWorkerHolidays(final String workerExternalId) {
+        LOG.debug("BEGIN getAllWorkerHolidays: [{}]", workerExternalId);
 
-        List<HolidayVo> holidayVoList = workerHolidayDao.findWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
+        List<HolidayVo> holidayVoList = workerHolidayDao.fetchAllWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
 
         Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
 
-        LOG.debug("END getWorkerHolidays");
+        LOG.debug("END getAllWorkerHolidays");
+
+        return holidays;
+    }
+
+    @CacheResult(cacheName = Caches.WORKER_HOLIDAYS)
+    @Transactional
+    public Set<LocalDate> getPendingWorkerHolidays(final String workerExternalId) {
+        LOG.debug("BEGIN getPendingWorkerHolidays: [{}]", workerExternalId);
+
+        List<HolidayVo> holidayVoList = workerHolidayDao.fetchPendingWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
+
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+
+        LOG.debug("END getPendingWorkerHolidays");
 
         return holidays;
     }
@@ -47,7 +59,7 @@ public class WorkerHolidayManager {
     public void updateWorkerHolidays(@CacheKey final String workerExternalId, final ComunytekHolidaysDto comunytekHolidaysDto) {
         LOG.debug("BEGIN updateWorkerHolidays: [{}] [{}]", workerExternalId, comunytekHolidaysDto);
 
-        List<WorkerHoliday> workerHolidays = workerHolidayDao.findWorkerHolidayByWorkerExternalId(workerExternalId);
+        List<WorkerHoliday> workerHolidays = workerHolidayDao.fetchAllWorkerHolidayByWorkerExternalId(workerExternalId);
 
         // Delete holidays not declared anymore
         workerHolidays.stream()

@@ -15,7 +15,7 @@ public class WorkerHolidayDao extends GenericDao {
         super(em);
     }
 
-    public List<WorkerHoliday> findWorkerHolidayByWorkerExternalId(final String workerExternalId) {
+    public List<WorkerHoliday> fetchAllWorkerHolidayByWorkerExternalId(final String workerExternalId) {
         return em.createQuery(
                 "SELECT h " +
                         "FROM WorkerHoliday h " +
@@ -24,11 +24,21 @@ public class WorkerHolidayDao extends GenericDao {
                 .getResultList();
     }
 
-    public List<HolidayVo> findWorkerHolidayAsHolidayVoByWorkerExternalId(final String workerExternalId) {
+    public List<HolidayVo> fetchAllWorkerHolidayAsHolidayVoByWorkerExternalId(final String workerExternalId) {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
-                        "WHERE id.workerExternalId = :workerExternalId ", HolidayVo.class)
+                        "WHERE id.workerExternalId = :workerExternalId", HolidayVo.class)
+                .setParameter("workerExternalId", workerExternalId)
+                .getResultList();
+    }
+
+    public List<HolidayVo> fetchPendingWorkerHolidayAsHolidayVoByWorkerExternalId(final String workerExternalId) {
+        return em.createQuery(
+                "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
+                        "FROM WorkerHoliday " +
+                        "WHERE id.workerExternalId = :workerExternalId " +
+                        "AND id.day >= current_date()", HolidayVo.class)
                 .setParameter("workerExternalId", workerExternalId)
                 .getResultList();
     }

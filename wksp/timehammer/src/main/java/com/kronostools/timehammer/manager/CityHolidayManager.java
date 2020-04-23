@@ -24,16 +24,28 @@ public class CityHolidayManager {
         this.cityHolidayDao = cityHolidayDao;
     }
 
-    @CacheResult(cacheName = Caches.CITY_HOLIDAYS)
-    @Transactional
-    public Set<LocalDate> getCityHolidays(final String cityCode) {
+    public Set<LocalDate> getAllCityHolidays(final String cityCode) {
         LOG.debug("BEGIN getCityHolidays: [{}]", cityCode);
 
-        List<HolidayVo> holidayVoList = cityHolidayDao.findCityHolidayAsHolidayVoByCityCode(cityCode);
+        List<HolidayVo> holidayVoList = cityHolidayDao.fetchAllCityHolidayAsHolidayVoByCityCode(cityCode);
 
         Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
 
-        LOG.debug("END getCityHolidays");
+        LOG.debug("END getAllCityHolidays");
+
+        return holidays;
+    }
+
+    @CacheResult(cacheName = Caches.CITY_HOLIDAYS)
+    @Transactional
+    public Set<LocalDate> getPendingCityHolidays(final String cityCode) {
+        LOG.debug("BEGIN getPendingCityHolidays: [{}]", cityCode);
+
+        List<HolidayVo> holidayVoList = cityHolidayDao.fetchPendingCityHolidayAsHolidayVoByCityCode(cityCode);
+
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+
+        LOG.debug("END getPendingCityHolidays");
 
         return holidays;
     }

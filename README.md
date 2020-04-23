@@ -2,8 +2,6 @@
 
 - Tener en cuenta vacaciones y festivos al obtener currentpreferences (añadir motivo en caso de no trabajar? Holiday|Weekend|NonWorking)
 - Añadir batch para el día 1 del año para borrar las vacaciones del año anterior
-- El método que recupera las vacaciones que sea getPendingHolidays
-- El método que recupera los festivos que sea getPendingNonWorkingDays
 - En página de demo añadir las currentpreferences para el día en cuestión
 - En la página de demo añadir descripciones al estado del usuario
 - Añadir al usuario campo empresa
