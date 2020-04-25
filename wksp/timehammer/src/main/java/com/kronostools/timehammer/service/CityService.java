@@ -15,6 +15,6 @@ public class CityService {
     }
 
     public List<CityDto> getAllCities() {
-        return cityManager.getAllCitiesCached();
+        return cityManager.getAllCities();
     }
 }

@@ -1,12 +1,12 @@
 package com.kronostools.timehammer.resource;
 
 import com.kronostools.timehammer.config.TimehammerConfig;
-import com.kronostools.timehammer.dto.CityDto;
 import com.kronostools.timehammer.dto.FormResponse;
 import com.kronostools.timehammer.dto.RegistrationForm;
 import com.kronostools.timehammer.exceptions.ChatbotAlreadyRegisteredException;
 import com.kronostools.timehammer.service.AuthService;
 import com.kronostools.timehammer.service.CityService;
+import com.kronostools.timehammer.service.CompanyService;
 import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.utils.Utils;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @Path("/auth")
 public class AuthResource {
@@ -27,13 +26,16 @@ public class AuthResource {
     private final TimehammerConfig timehammerConfig;
     private final AuthService authService;
     private final CityService cityService;
+    private final CompanyService companyService;
 
     public AuthResource(final TimehammerConfig timehammerConfig,
                         final AuthService authService,
-                        final CityService cityService) {
+                        final CityService cityService,
+                        final CompanyService companyService) {
         this.timehammerConfig = timehammerConfig;
         this.authService = authService;
         this.cityService = cityService;
+        this.companyService = companyService;
     }
 
     @ResourcePath("register.html")
@@ -63,10 +65,9 @@ public class AuthResource {
     @Path("/register")
     @Produces(MediaType.TEXT_HTML)
     public TemplateInstance registrer(@QueryParam("registrationId") String registrationId) {
-        List<CityDto> cities = cityService.getAllCities();
-
         return registerTemplate
-                .data("cities", cities)
+                .data("cities", cityService.getAllCities())
+                .data("companies", companyService.getAllCompanies())
                 .data("timetableMin", TimeMachineService.formatTimeSimple(timehammerConfig.getTimetable().getMin()))
                 .data("timetableMax", TimeMachineService.formatTimeSimple(timehammerConfig.getTimetable().getMax()))
                 .data("registrationId", registrationId);

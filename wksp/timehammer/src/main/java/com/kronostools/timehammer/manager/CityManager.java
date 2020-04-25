@@ -2,7 +2,7 @@ package com.kronostools.timehammer.manager;
 
 import com.kronostools.timehammer.dao.CityDao;
 import com.kronostools.timehammer.dto.CityDto;
-import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Constants.Caches;
 import io.quarkus.cache.CacheResult;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,9 +17,9 @@ public class CityManager {
         this.cityDao = cityDao;
     }
 
-    @CacheResult(cacheName = Constants.Caches.CITY_LIST)
+    @CacheResult(cacheName = Caches.CITY_LIST)
     @Transactional
-    public List<CityDto> getAllCitiesCached() {
+    public List<CityDto> getAllCities() {
         return cityDao.getAllCities();
     }
 }

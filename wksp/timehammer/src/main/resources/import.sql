@@ -1,6 +1,9 @@
 INSERT INTO city(code, name, timezone)
 VALUES ('MAD', 'Madrid', 'EUROPE_MADRID');
 
+INSERT INTO company(code, name)
+VALUES ('COMUNYTEK', 'Comunytek');
+
 INSERT INTO city_holiday(city_code, day, description)
 VALUES ('MAD', '2020-01-01', 'año nuevo'),
        ('MAD', '2020-01-06', 'reyes'),

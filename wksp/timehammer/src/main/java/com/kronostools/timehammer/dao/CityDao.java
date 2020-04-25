@@ -16,7 +16,8 @@ public class CityDao extends GenericDao {
     public List<CityDto> getAllCities() {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.dto.CityDto(code, name) " +
-                        "FROM City", CityDto.class)
+                        "FROM City " +
+                        "ORDER BY name ASC", CityDto.class)
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }

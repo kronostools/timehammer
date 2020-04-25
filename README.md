@@ -3,10 +3,6 @@
 - Añadir al usuario campo empresa
     - En el registro se tiene que elegir la empresa
 - Elegir el cliente en función de la empresa
-- Revisar Chatbot
-    - Formato de mensajes
-    - Contenido de mensajes
-- Probar que funciona después de incorporar el servicio TimeMachineService
 - Revisar idea de
     - Acciones clockin / clockout
     - Ámbitos work / lunch
@@ -15,12 +11,18 @@
         - Acción en Comunytek (traductor de acciones con distintas implementaciones)
     - Estado INIT, WORKING, LUNCHING, ENDED
     - Acciones Comunitek Entrada, Pausar (Motivo), Reanudar, Salida
+- Almacen de claves
+    - El almacén de claves tendrá un usuario por clave y solo ese usuario puede leer y escribir (así el admin de timehammer no puede ver nada, el admin solo puede borrar por si a alguien se le olvidase la contraseña)
+- Revisar Chatbot
+    - Formato de mensajes
+    - Contenido de mensajes
+- Despliegue en producción
+- Probar en producción que funciona después de incorporar el servicio TimeMachineService
+- Hacer repo privado
+- *************** DEMO ***************
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)
-- Almacen de claves
-    - El almacén de claves tendrá un usuario por clave y solo ese usuario puede leer y escribir (así el admin de timehammer no puede ver nada, el admin solo puede borrar por si a alguien se le olvidase la contraseña)
-- *************** DEMO ***************
 - Modularizar ?
 - Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
 - Añadir la posibilidad de meter excepciones al horario

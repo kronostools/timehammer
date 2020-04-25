@@ -22,6 +22,7 @@ public class Constants {
         public static final String WORKER_CHATS = "worker-chats-cache";
         public static final String CITY_LIST = "city-list-cache";
         public static final String CITY_HOLIDAYS = "city-holidays-cache";
+        public static final String COMPANY_LIST = "company-list-cache";
     }
 
     public class Buses {
