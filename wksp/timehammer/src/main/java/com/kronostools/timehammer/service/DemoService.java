@@ -10,12 +10,16 @@ import com.kronostools.timehammer.dto.form.DemoTimestampFormValidationAdapter;
 import com.kronostools.timehammer.dto.form.FormError;
 import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Utils;
+import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerVo;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,18 +55,42 @@ public class DemoService {
                 .collect(Collectors.toSet());
     }
 
-    public DemoWorkerStatusForm getWorkerStatus(final String workerExternalId, final String timezone) {
+    public DemoWorkerStatusForm getWorkerStatus(final String workerExternalId, final SupportedTimezone timezone) {
         final ComunytekStatusDto workerStatus = comunytekClient.getStatus(workerExternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
+        final WorkerCurrentPreferencesVo currentPreferences = workerService.getWorkerCurrentPreferencesByExternalId(workerExternalId, timeMachineService.getNow());
+        final Set<LocalDate> workerHolidays = workerService.getPendingWorkerHolidays(workerExternalId);
+
+        final LocalDateTime workerStatusDateTime = TimeMachineService.getDateTimeAtZone(workerStatus.getTimestamp(), timezone);
 
         DemoWorkerStatusForm result = new DemoWorkerStatusForm();
         result.setExternalId(workerStatus.getUsername());
-        result.setTimestamp(TimeMachineService.formatDateTime(TimeMachineService.getDateTimeAtZone(workerStatus.getTimestamp(), timezone), "dd/MM/yyyy HH:mm:ss.SSS"));
-        result.setStatus(workerStatus.getStatus().getCode());
+        result.setTimestamp(TimeMachineService.formatDateTime(workerStatusDateTime, "dd/MM/yyyy HH:mm:ss.SSS"));
+        result.setDayOfWeek(TimeMachineService.getDayOfWeekFull(workerStatusDateTime, TimeMachineService.LOCALE_ES_ES));
+        result.setStatus(workerStatus.getStatus().getText());
+        result.setHolidays(workerHolidays.stream()
+                .map(d -> TimeMachineService.formatDate(d, TimeMachineService.FORMAT_DDMMYYYY_SEP_FWS))
+                .collect(Collectors.joining(", ")));
+
+        if (currentPreferences.workToday()) {
+            result.setWork(Utils.stringFormat("{} - {}",
+                    TimeMachineService.formatTimeSimple(currentPreferences.getZonedWorkStart()),
+                    TimeMachineService.formatTimeSimple(currentPreferences.getZonedWorkEnd())));
+        } else {
+            result.setWork(currentPreferences.getNonWorkingReason().getText());
+        }
+
+        if (currentPreferences.lunchToday()) {
+            result.setLunch(Utils.stringFormat("{} - {}",
+                    TimeMachineService.formatTimeSimple(currentPreferences.getZonedLunchStart()),
+                    TimeMachineService.formatTimeSimple(currentPreferences.getZonedLunchEnd())));
+        } else {
+            result.setLunch("N/A");
+        }
 
         return result;
     }
 
-    public DemoTimestampForm getTimestampForm(final String zone) {
+    public DemoTimestampForm getTimestampForm(final SupportedTimezone zone) {
         return DemoTimestampForm.fromLocalDateTime(timeMachineService.getNowAtZone(zone), zone);
     }
 

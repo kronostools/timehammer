@@ -1,20 +1,22 @@
 package com.kronostools.timehammer.dto;
 
+import com.kronostools.timehammer.enums.SupportedTimezone;
+
 import java.time.LocalDateTime;
 
 public class DemoTimestampForm {
-    private String timezone;
+    private SupportedTimezone timezone;
     private Integer day;
     private Integer month;
     private Integer year;
     private Integer hours;
     private Integer minutes;
 
-    public String getTimezone() {
+    public SupportedTimezone getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(String timezone) {
+    public void setTimezone(SupportedTimezone timezone) {
         this.timezone = timezone;
     }
 
@@ -62,7 +64,7 @@ public class DemoTimestampForm {
         return LocalDateTime.of(this.year, this.month, this.day, this.hours, this.minutes);
     }
 
-    public static DemoTimestampForm fromLocalDateTime(final LocalDateTime timestamp, final String timezone) {
+    public static DemoTimestampForm fromLocalDateTime(final LocalDateTime timestamp, final SupportedTimezone timezone) {
         DemoTimestampForm result = new DemoTimestampForm();
         result.setTimezone(timezone);
         result.setDay(timestamp.getDayOfMonth());
@@ -77,7 +79,7 @@ public class DemoTimestampForm {
     @Override
     public String toString() {
         return "DemoTimestampForm{" +
-                "timezone='" + timezone + '\'' +
+                "timezone='" + timezone.name() + '\'' +
                 ", day='" + day + '\'' +
                 ", month='" + month + '\'' +
                 ", year='" + year + '\'' +

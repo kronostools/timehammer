@@ -1,10 +1,8 @@
 # TODO
 
-- Tener en cuenta vacaciones y festivos al obtener currentpreferences (añadir motivo en caso de no trabajar? Holiday|Weekend|NonWorking)
 - Añadir batch para el día 1 del año para borrar las vacaciones del año anterior
-- En página de demo añadir las currentpreferences para el día en cuestión
-- En la página de demo añadir descripciones al estado del usuario
 - Añadir al usuario campo empresa
+    - En el registro se tiene que elegir la empresa
 - Elegir el cliente en función de la empresa
 - Revisar Chatbot
     - Formato de mensajes

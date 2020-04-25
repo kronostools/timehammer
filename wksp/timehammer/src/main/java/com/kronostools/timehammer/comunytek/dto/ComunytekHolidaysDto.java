@@ -7,6 +7,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.kronostools.timehammer.utils.Constants.LINE_BREAK;
+import static com.kronostools.timehammer.utils.Constants.TAB;
+
 public class ComunytekHolidaysDto {
     private final String username;
     private final Set<LocalDate> holidays;
@@ -25,8 +28,8 @@ public class ComunytekHolidaysDto {
     }
 
     public static ComunytekHolidaysDto fromResponse(final String username, final String response) {
-        final Set<LocalDate> holidays = Stream.of(response.split("\n"))
-                .map(rawHoliday -> rawHoliday.split("\t"))
+        final Set<LocalDate> holidays = Stream.of(response.split(LINE_BREAK))
+                .map(rawHoliday -> rawHoliday.split(TAB))
                 .map(holidayParts -> TimeMachineService.parseDate(holidayParts[0], TimeMachineService.FORMAT_DDMMYYYY_SEP_FWS))
                 .collect(Collectors.toSet());
 

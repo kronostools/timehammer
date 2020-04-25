@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class CityHolidayManager {
 
         List<HolidayVo> holidayVoList = cityHolidayDao.fetchAllCityHolidayAsHolidayVoByCityCode(cityCode);
 
-        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
         LOG.debug("END getAllCityHolidays");
 
@@ -43,7 +44,7 @@ public class CityHolidayManager {
 
         List<HolidayVo> holidayVoList = cityHolidayDao.fetchPendingCityHolidayAsHolidayVoByCityCode(cityCode);
 
-        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
         LOG.debug("END getPendingCityHolidays");
 

@@ -4,7 +4,7 @@ import com.kronostools.timehammer.dto.NewSsidTrackingReportDto;
 import com.kronostools.timehammer.dto.SsidTrackingEventDto;
 import com.kronostools.timehammer.manager.WorkerSsidTrackingInfoManager;
 import com.kronostools.timehammer.vo.SsidTrackingInfoVo;
-import com.kronostools.timehammer.vo.WorkerAndPreferencesVo;
+import com.kronostools.timehammer.vo.WorkerPreferencesVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +34,9 @@ public class WorkerSsidTrackingInfoService {
 
         LOG.warn("Considered '{}' as reported because no security has been implemented", workerExternalId);
 
-        WorkerAndPreferencesVo workerAndPreferencesVo = workerService.getWorkerAndPreferencesByExternalId(workerExternalId);
+        WorkerPreferencesVo workerPreferencesVo = workerService.getWorkerPreferencesByExternalId(workerExternalId);
 
-        SsidTrackingEventDto result = workerSsidTrackingInfoManager.updateWorkerSsidTrackingInfo(workerAndPreferencesVo, new SsidTrackingInfoVo(workerExternalId, newSsidTrackingReportDto.getSsid(), timeMachineService.getNow()));
+        SsidTrackingEventDto result = workerSsidTrackingInfoManager.updateWorkerSsidTrackingInfo(workerPreferencesVo, new SsidTrackingInfoVo(workerExternalId, newSsidTrackingReportDto.getSsid(), timeMachineService.getNow()));
 
         LOG.debug("END newSsidTrackingReport");
 

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class WorkerHolidayManager {
 
         List<HolidayVo> holidayVoList = workerHolidayDao.fetchAllWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
 
-        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
         LOG.debug("END getAllWorkerHolidays");
 
@@ -48,7 +49,7 @@ public class WorkerHolidayManager {
 
         List<HolidayVo> holidayVoList = workerHolidayDao.fetchPendingWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
 
-        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toSet());
+        Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
         LOG.debug("END getPendingWorkerHolidays");
 

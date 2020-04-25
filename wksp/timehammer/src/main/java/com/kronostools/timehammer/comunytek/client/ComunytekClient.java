@@ -106,7 +106,7 @@ public class ComunytekClient {
 
         LOG.debug("END getStatus");
 
-        return ComunytekStatusDto.fromResponse(comunytekSessionDto.getUsername(), hoursReportedResponse, timestamp, getTimezoneName());
+        return ComunytekStatusDto.fromResponse(comunytekSessionDto.getUsername(), hoursReportedResponse, timestamp, getTimezone());
     }
 
     @CacheInvalidate(cacheName = Constants.Caches.COMUNYTEK_STATUS)
@@ -146,7 +146,7 @@ public class ComunytekClient {
         return isClientMocked() ? comunytekMockedClient : comunytekRealClient;
     }
 
-    private String getTimezoneName() {
-        return SupportedTimezone.EUROPE_MADRID.getTimezoneName();
+    private SupportedTimezone getTimezone() {
+        return SupportedTimezone.EUROPE_MADRID;
     }
 }

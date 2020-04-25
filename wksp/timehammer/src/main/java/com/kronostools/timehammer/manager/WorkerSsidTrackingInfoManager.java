@@ -9,7 +9,6 @@ import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.SsidTrackingEventVo;
 import com.kronostools.timehammer.vo.SsidTrackingInfoVo;
-import com.kronostools.timehammer.vo.WorkerAndPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerPreferencesVo;
 import io.vertx.axle.core.eventbus.EventBus;
 import org.slf4j.Logger;
@@ -33,23 +32,23 @@ public class WorkerSsidTrackingInfoManager {
         this.bus = bus;
     }
 
-    public SsidTrackingEventDto updateWorkerSsidTrackingInfo(WorkerAndPreferencesVo workerAndPreferencesVo, final SsidTrackingInfoVo newSsidTrackingInfoVo) {
-        LOG.debug("BEGIN updateWorkerSsidTrackingInfo: [{}] [{}]", newSsidTrackingInfoVo, workerAndPreferencesVo);
+    public SsidTrackingEventDto updateWorkerSsidTrackingInfo(WorkerPreferencesVo workerPreferencesVo, final SsidTrackingInfoVo newSsidTrackingInfoVo) {
+        LOG.debug("BEGIN updateWorkerSsidTrackingInfo: [{}] [{}]", newSsidTrackingInfoVo, workerPreferencesVo);
 
-        final SsidTrackingInfoVo lastSsidTrackingInfoVo = workerSsidTrackingInfoDao.fetchByWorkerExternalId(workerAndPreferencesVo.getExternalId());
+        final SsidTrackingInfoVo lastSsidTrackingInfoVo = workerSsidTrackingInfoDao.fetchByWorkerExternalId(workerPreferencesVo.getWorkerExternalId());
 
         LOG.debug("Last ssid tracking info of worker [{}]", lastSsidTrackingInfoVo);
 
         workerSsidTrackingInfoDao.updateWorkerSsidTrackingInfo(newSsidTrackingInfoVo);
 
-        final String workSsid = workerAndPreferencesVo.getPreferences().getWorkSsid();
+        final String workSsid = workerPreferencesVo.getWorkSsid();
 
         final SsidTrackingEventType ssidTrackingEventType = Utils.getSsidTrackingEventType(lastSsidTrackingInfoVo.getSsid(), newSsidTrackingInfoVo.getSsid(), workSsid);
 
         LOG.debug("Generated ssid tracking event: {}", ssidTrackingEventType);
 
         if (ssidTrackingEventType != SsidTrackingEventType.NONE) {
-            final SsidTrackingEventVo newSsidTrackingEvent = new SsidTrackingEventVo(workerAndPreferencesVo.getExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
+            final SsidTrackingEventVo newSsidTrackingEvent = new SsidTrackingEventVo(workerPreferencesVo.getWorkerExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
 
             final String busName = Constants.Buses.ADD_SSID_TRACKING_EVENT;
 
@@ -60,10 +59,10 @@ public class WorkerSsidTrackingInfoManager {
 
         LOG.debug("END updateWorkerSsidTrackingInfo");
 
-        return new SsidTrackingEventDto(workerAndPreferencesVo.getExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
+        return new SsidTrackingEventDto(workerPreferencesVo.getWorkerExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
     }
 
-    public void initializeSsidTrackingInfo(final String workerExternalId, final WorkerPreferencesVo workerPreferencesVo) {
+    public void initializeSsidTrackingInfo(final String workerExternalId) {
         WorkerSsidTrackingInfo workerSsidTrackingInfo = new WorkerSsidTrackingInfo();
         workerSsidTrackingInfo.setWorkerExternalId(workerExternalId);
         workerSsidTrackingInfo.setSsidReported(Constants.NO_SSID);

@@ -1,82 +1,83 @@
 package com.kronostools.timehammer.vo;
 
+import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.service.TimeMachineService;
 
-import java.time.*;
+import java.time.LocalTime;
 
 public class WorkerPreferencesVo {
     private final String workerExternalId;
     private final String workSsid;
-    private final LocalTime workStartMon;
-    private final LocalTime workEndMon;
-    private final LocalTime lunchStartMon;
-    private final LocalTime lunchEndMon;
-    private final LocalTime workStartTue;
-    private final LocalTime workEndTue;
-    private final LocalTime lunchStartTue;
-    private final LocalTime lunchEndTue;
-    private final LocalTime workStartWed;
-    private final LocalTime workEndWed;
-    private final LocalTime lunchStartWed;
-    private final LocalTime lunchEndWed;
-    private final LocalTime workStartThu;
-    private final LocalTime workEndThu;
-    private final LocalTime lunchStartThu;
-    private final LocalTime lunchEndThu;
-    private final LocalTime workStartFri;
-    private final LocalTime workEndFri;
-    private final LocalTime lunchStartFri;
-    private final LocalTime lunchEndFri;
+    private final LocalTime zonedWorkStartMon;
+    private final LocalTime zonedWorkEndMon;
+    private final LocalTime zonedLunchStartMon;
+    private final LocalTime zonedLunchEndMon;
+    private final LocalTime zonedWorkStartTue;
+    private final LocalTime zonedWorkEndTue;
+    private final LocalTime zonedLunchStartTue;
+    private final LocalTime zonedLunchEndTue;
+    private final LocalTime zonedWorkStartWed;
+    private final LocalTime zonedWorkEndWed;
+    private final LocalTime zonedLunchStartWed;
+    private final LocalTime zonedLunchEndWed;
+    private final LocalTime zonedWorkStartThu;
+    private final LocalTime zonedWorkEndThu;
+    private final LocalTime zonedLunchStartThu;
+    private final LocalTime zonedLunchEndThu;
+    private final LocalTime zonedWorkStartFri;
+    private final LocalTime zonedWorkEndFri;
+    private final LocalTime zonedLunchStartFri;
+    private final LocalTime zonedLunchEndFri;
     private final String cityCode;
-    private final String cityTimezone;
+    private final SupportedTimezone timezone;
 
     public WorkerPreferencesVo(final String workerExternalId, final String workSsid,
-                               final LocalTime workStartMon, final LocalTime workEndMon, final LocalTime lunchStartMon, final LocalTime lunchEndMon,
-                               final LocalTime workStartTue, final LocalTime workEndTue, final LocalTime lunchStartTue, final LocalTime lunchEndTue,
-                               final LocalTime workStartWed, final LocalTime workEndWed, final LocalTime lunchStartWed, final LocalTime lunchEndWed,
-                               final LocalTime workStartThu, final LocalTime workEndThu, final LocalTime lunchStartThu, final LocalTime lunchEndThu,
-                               final LocalTime workStartFri, final LocalTime workEndFri, final LocalTime lunchStartFri, final LocalTime lunchEndFri,
+                               final LocalTime zonedWorkStartMon, final LocalTime zonedWorkEndMon, final LocalTime zonedLunchStartMon, final LocalTime zonedLunchEndMon,
+                               final LocalTime zonedWorkStartTue, final LocalTime zonedWorkEndTue, final LocalTime zonedLunchStartTue, final LocalTime zonedLunchEndTue,
+                               final LocalTime zonedWorkStartWed, final LocalTime zonedWorkEndWed, final LocalTime zonedLunchStartWed, final LocalTime zonedLunchEndWed,
+                               final LocalTime zonedWorkStartThu, final LocalTime zonedWorkEndThu, final LocalTime zonedLunchStartThu, final LocalTime zonedLunchEndThu,
+                               final LocalTime zonedWorkStartFri, final LocalTime zonedWorkEndFri, final LocalTime zonedLunchStartFri, final LocalTime zonedLunchEndFri,
                                final String cityCode) {
         this(workerExternalId, workSsid,
-                workStartMon, workEndMon, lunchStartMon, lunchEndMon,
-                workStartTue, workEndTue, lunchStartTue, lunchEndTue,
-                workStartWed, workEndWed, lunchStartWed, lunchEndWed,
-                workStartThu, workEndThu, lunchStartThu, lunchEndThu,
-                workStartFri, workEndFri, lunchStartFri, lunchEndFri,
+                zonedWorkStartMon, zonedWorkEndMon, zonedLunchStartMon, zonedLunchEndMon,
+                zonedWorkStartTue, zonedWorkEndTue, zonedLunchStartTue, zonedLunchEndTue,
+                zonedWorkStartWed, zonedWorkEndWed, zonedLunchStartWed, zonedLunchEndWed,
+                zonedWorkStartThu, zonedWorkEndThu, zonedLunchStartThu, zonedLunchEndThu,
+                zonedWorkStartFri, zonedWorkEndFri, zonedLunchStartFri, zonedLunchEndFri,
                 cityCode, null);
     }
 
     public WorkerPreferencesVo(final String workerExternalId, final String workSsid,
-                               final LocalTime workStartMon, final LocalTime workEndMon, final LocalTime lunchStartMon, final LocalTime lunchEndMon,
-                               final LocalTime workStartTue, final LocalTime workEndTue, final LocalTime lunchStartTue, final LocalTime lunchEndTue,
-                               final LocalTime workStartWed, final LocalTime workEndWed, final LocalTime lunchStartWed, final LocalTime lunchEndWed,
-                               final LocalTime workStartThu, final LocalTime workEndThu, final LocalTime lunchStartThu, final LocalTime lunchEndThu,
-                               final LocalTime workStartFri, final LocalTime workEndFri, final LocalTime lunchStartFri, final LocalTime lunchEndFri,
-                               final String cityCode, final String cityTimezone) {
+                               final LocalTime zonedWorkStartMon, final LocalTime zonedWorkEndMon, final LocalTime zonedLunchStartMon, final LocalTime zonedLunchEndMon,
+                               final LocalTime zonedWorkStartTue, final LocalTime zonedWorkEndTue, final LocalTime zonedLunchStartTue, final LocalTime zonedLunchEndTue,
+                               final LocalTime zonedWorkStartWed, final LocalTime zonedWorkEndWed, final LocalTime zonedLunchStartWed, final LocalTime zonedLunchEndWed,
+                               final LocalTime zonedWorkStartThu, final LocalTime zonedWorkEndThu, final LocalTime zonedLunchStartThu, final LocalTime zonedLunchEndThu,
+                               final LocalTime zonedWorkStartFri, final LocalTime zonedWorkEndFri, final LocalTime zonedLunchStartFri, final LocalTime zonedLunchEndFri,
+                               final String cityCode, final SupportedTimezone timezone) {
         this.workerExternalId = workerExternalId;
         this.workSsid = workSsid;
-        this.workStartMon = workStartMon;
-        this.workEndMon = workEndMon;
-        this.lunchStartMon = lunchStartMon;
-        this.lunchEndMon = lunchEndMon;
-        this.workStartTue = workStartTue;
-        this.workEndTue = workEndTue;
-        this.lunchStartTue = lunchStartTue;
-        this.lunchEndTue = lunchEndTue;
-        this.workStartWed = workStartWed;
-        this.workEndWed = workEndWed;
-        this.lunchStartWed = lunchStartWed;
-        this.lunchEndWed = lunchEndWed;
-        this.workStartThu = workStartThu;
-        this.workEndThu = workEndThu;
-        this.lunchStartThu = lunchStartThu;
-        this.lunchEndThu = lunchEndThu;
-        this.workStartFri = workStartFri;
-        this.workEndFri = workEndFri;
-        this.lunchStartFri = lunchStartFri;
-        this.lunchEndFri = lunchEndFri;
+        this.zonedWorkStartMon = zonedWorkStartMon;
+        this.zonedWorkEndMon = zonedWorkEndMon;
+        this.zonedLunchStartMon = zonedLunchStartMon;
+        this.zonedLunchEndMon = zonedLunchEndMon;
+        this.zonedWorkStartTue = zonedWorkStartTue;
+        this.zonedWorkEndTue = zonedWorkEndTue;
+        this.zonedLunchStartTue = zonedLunchStartTue;
+        this.zonedLunchEndTue = zonedLunchEndTue;
+        this.zonedWorkStartWed = zonedWorkStartWed;
+        this.zonedWorkEndWed = zonedWorkEndWed;
+        this.zonedLunchStartWed = zonedLunchStartWed;
+        this.zonedLunchEndWed = zonedLunchEndWed;
+        this.zonedWorkStartThu = zonedWorkStartThu;
+        this.zonedWorkEndThu = zonedWorkEndThu;
+        this.zonedLunchStartThu = zonedLunchStartThu;
+        this.zonedLunchEndThu = zonedLunchEndThu;
+        this.zonedWorkStartFri = zonedWorkStartFri;
+        this.zonedWorkEndFri = zonedWorkEndFri;
+        this.zonedLunchStartFri = zonedLunchStartFri;
+        this.zonedLunchEndFri = zonedLunchEndFri;
         this.cityCode = cityCode;
-        this.cityTimezone = cityTimezone;
+        this.timezone = timezone;
     }
 
     public String getWorkerExternalId() {
@@ -87,143 +88,92 @@ public class WorkerPreferencesVo {
         return workSsid;
     }
 
-    public LocalTime getWorkStartMon() {
-        return workStartMon;
+    public LocalTime getZonedWorkStartMon() {
+        return zonedWorkStartMon;
     }
 
-    public LocalTime getWorkEndMon() {
-        return workEndMon;
+    public LocalTime getZonedWorkEndMon() {
+        return zonedWorkEndMon;
     }
 
-    public LocalTime getLunchStartMon() {
-        return lunchStartMon;
+    public LocalTime getZonedLunchStartMon() {
+        return zonedLunchStartMon;
     }
 
-    public LocalTime getLunchEndMon() {
-        return lunchEndMon;
+    public LocalTime getZonedLunchEndMon() {
+        return zonedLunchEndMon;
     }
 
-    public LocalTime getWorkStartTue() {
-        return workStartTue;
+    public LocalTime getZonedWorkStartTue() {
+        return zonedWorkStartTue;
     }
 
-    public LocalTime getWorkEndTue() {
-        return workEndTue;
+    public LocalTime getZonedWorkEndTue() {
+        return zonedWorkEndTue;
     }
 
-    public LocalTime getLunchStartTue() {
-        return lunchStartTue;
+    public LocalTime getZonedLunchStartTue() {
+        return zonedLunchStartTue;
     }
 
-    public LocalTime getLunchEndTue() {
-        return lunchEndTue;
+    public LocalTime getZonedLunchEndTue() {
+        return zonedLunchEndTue;
     }
 
-    public LocalTime getWorkStartWed() {
-        return workStartWed;
+    public LocalTime getZonedWorkStartWed() {
+        return zonedWorkStartWed;
     }
 
-    public LocalTime getWorkEndWed() {
-        return workEndWed;
+    public LocalTime getZonedWorkEndWed() {
+        return zonedWorkEndWed;
     }
 
-    public LocalTime getLunchStartWed() {
-        return lunchStartWed;
+    public LocalTime getZonedLunchStartWed() {
+        return zonedLunchStartWed;
     }
 
-    public LocalTime getLunchEndWed() {
-        return lunchEndWed;
+    public LocalTime getZonedLunchEndWed() {
+        return zonedLunchEndWed;
     }
 
-    public LocalTime getWorkStartThu() {
-        return workStartThu;
+    public LocalTime getZonedWorkStartThu() {
+        return zonedWorkStartThu;
     }
 
-    public LocalTime getWorkEndThu() {
-        return workEndThu;
+    public LocalTime getZonedWorkEndThu() {
+        return zonedWorkEndThu;
     }
 
-    public LocalTime getLunchStartThu() {
-        return lunchStartThu;
+    public LocalTime getZonedLunchStartThu() {
+        return zonedLunchStartThu;
     }
 
-    public LocalTime getLunchEndThu() {
-        return lunchEndThu;
+    public LocalTime getZonedLunchEndThu() {
+        return zonedLunchEndThu;
     }
 
-    public LocalTime getWorkStartFri() {
-        return workStartFri;
+    public LocalTime getZonedWorkStartFri() {
+        return zonedWorkStartFri;
     }
 
-    public LocalTime getWorkEndFri() {
-        return workEndFri;
+    public LocalTime getZonedWorkEndFri() {
+        return zonedWorkEndFri;
     }
 
-    public LocalTime getLunchStartFri() {
-        return lunchStartFri;
+    public LocalTime getZonedLunchStartFri() {
+        return zonedLunchStartFri;
     }
 
-    public LocalTime getLunchEndFri() {
-        return lunchEndFri;
+    public LocalTime getZonedLunchEndFri() {
+        return zonedLunchEndFri;
     }
 
     public String getCityCode() {
         return cityCode;
     }
 
-    public String getCityTimezone() {
-        return cityTimezone;
-    }
-
-    public WorkerCurrentPreferencesVo getAt(final LocalDateTime timestamp) {
-        final DayOfWeek dayOfWeek = timestamp.getDayOfWeek();
-
-        LocalTime workStart = null;
-        LocalTime workEnd = null;
-        LocalTime lunchStart = null;
-        LocalTime lunchEnd = null;
-
-        switch (dayOfWeek) {
-            case MONDAY:
-                workStart = workStartMon;
-                workEnd = workEndMon;
-                lunchStart = lunchStartMon;
-                lunchEnd = lunchEndMon;
-                break;
-            case TUESDAY:
-                workStart = workStartTue;
-                workEnd = workEndTue;
-                lunchStart = lunchStartTue;
-                lunchEnd = lunchEndTue;
-                break;
-            case WEDNESDAY:
-                workStart = workStartWed;
-                workEnd = workEndWed;
-                lunchStart = lunchStartWed;
-                lunchEnd = lunchEndWed;
-                break;
-            case THURSDAY:
-                workStart = workStartThu;
-                workEnd = workEndThu;
-                lunchStart = lunchStartThu;
-                lunchEnd = lunchEndThu;
-                break;
-            case FRIDAY:
-                workStart = workStartFri;
-                workEnd = workEndFri;
-                lunchStart = lunchStartFri;
-                lunchEnd = lunchEndFri;
-                break;
-        }
-
-        final ZoneOffset zoneOffSet = ZoneId.of(cityTimezone).getRules().getOffset(timestamp);
-
-        return new WorkerCurrentPreferencesVo(timestamp, workerExternalId, workSsid,
-                TimeMachineService.getTimeWithOffset(workStart, zoneOffSet),
-                TimeMachineService.getTimeWithOffset(workEnd, zoneOffSet),
-                TimeMachineService.getTimeWithOffset(lunchStart, zoneOffSet),
-                TimeMachineService.getTimeWithOffset(lunchEnd, zoneOffSet),
-                cityCode, cityTimezone);
+    public SupportedTimezone getTimezone() {
+        return timezone;
     }
 
     @Override
@@ -231,28 +181,28 @@ public class WorkerPreferencesVo {
         return "WorkerPreferencesVo{" +
                 "workerExternalId='" + workerExternalId + '\'' +
                 ", workSsid='" + workSsid + '\'' +
-                ", workStartMon=" + TimeMachineService.formatTimeSimple(workStartMon) +
-                ", workEndMon=" + TimeMachineService.formatTimeSimple(workEndMon) +
-                ", lunchStartMon=" + TimeMachineService.formatTimeSimple(lunchStartMon) +
-                ", lunchEndMon=" + TimeMachineService.formatTimeSimple(lunchEndMon) +
-                ", workStartTue=" + TimeMachineService.formatTimeSimple(workStartTue) +
-                ", workEndTue=" + TimeMachineService.formatTimeSimple(workEndTue) +
-                ", lunchStartTue=" + TimeMachineService.formatTimeSimple(lunchStartTue) +
-                ", lunchEndTue=" + TimeMachineService.formatTimeSimple(lunchEndTue) +
-                ", workStartWed=" + TimeMachineService.formatTimeSimple(workStartWed) +
-                ", workEndWed=" + TimeMachineService.formatTimeSimple(workEndWed) +
-                ", lunchStartWed=" + TimeMachineService.formatTimeSimple(lunchStartWed) +
-                ", lunchEndWed=" + TimeMachineService.formatTimeSimple(lunchEndWed) +
-                ", workStartThu=" + TimeMachineService.formatTimeSimple(workStartThu) +
-                ", workEndThu=" + TimeMachineService.formatTimeSimple(workEndThu) +
-                ", lunchStartThu=" + TimeMachineService.formatTimeSimple(lunchStartThu) +
-                ", lunchEndThu=" + TimeMachineService.formatTimeSimple(lunchEndThu) +
-                ", workStartFri=" + TimeMachineService.formatTimeSimple(workStartFri) +
-                ", workEndFri=" + TimeMachineService.formatTimeSimple(workEndFri) +
-                ", lunchStartFri=" + TimeMachineService.formatTimeSimple(lunchStartFri) +
-                ", lunchEndFri=" + TimeMachineService.formatTimeSimple(lunchEndFri) +
+                ", zonedWorkStartMon=" + TimeMachineService.formatTimeSimple(zonedWorkStartMon) +
+                ", zonedWorkEndMon=" + TimeMachineService.formatTimeSimple(zonedWorkEndMon) +
+                ", zonedLunchStartMon=" + TimeMachineService.formatTimeSimple(zonedLunchStartMon) +
+                ", zonedLunchEndMon=" + TimeMachineService.formatTimeSimple(zonedLunchEndMon) +
+                ", zonedWorkStartTue=" + TimeMachineService.formatTimeSimple(zonedWorkStartTue) +
+                ", zonedWorkEndTue=" + TimeMachineService.formatTimeSimple(zonedWorkEndTue) +
+                ", zonedLunchStartTue=" + TimeMachineService.formatTimeSimple(zonedLunchStartTue) +
+                ", zonedLunchEndTue=" + TimeMachineService.formatTimeSimple(zonedLunchEndTue) +
+                ", zonedWorkStartWed=" + TimeMachineService.formatTimeSimple(zonedWorkStartWed) +
+                ", zonedWorkEndWed=" + TimeMachineService.formatTimeSimple(zonedWorkEndWed) +
+                ", zonedLunchStartWed=" + TimeMachineService.formatTimeSimple(zonedLunchStartWed) +
+                ", zonedLunchEndWed=" + TimeMachineService.formatTimeSimple(zonedLunchEndWed) +
+                ", zonedWorkStartThu=" + TimeMachineService.formatTimeSimple(zonedWorkStartThu) +
+                ", zonedWorkEndThu=" + TimeMachineService.formatTimeSimple(zonedWorkEndThu) +
+                ", zonedLunchStartThu=" + TimeMachineService.formatTimeSimple(zonedLunchStartThu) +
+                ", zonedLunchEndThu=" + TimeMachineService.formatTimeSimple(zonedLunchEndThu) +
+                ", zonedWorkStartFri=" + TimeMachineService.formatTimeSimple(zonedWorkStartFri) +
+                ", zonedWorkEndFri=" + TimeMachineService.formatTimeSimple(zonedWorkEndFri) +
+                ", zonedLunchStartFri=" + TimeMachineService.formatTimeSimple(zonedLunchStartFri) +
+                ", zonedLunchEndFri=" + TimeMachineService.formatTimeSimple(zonedLunchEndFri) +
                 ", cityCode='" + cityCode + '\'' +
-                ", cityTimezone='" + cityTimezone + '\'' +
+                ", timezone='" + timezone.name() + '\'' +
                 '}';
     }
 }

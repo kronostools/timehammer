@@ -90,7 +90,7 @@
                 </div>
             </div>
 
-            <div class="row justify-content-center">
+            <div class="row mt-2 justify-content-center">
                 <div class="col-md-10">
                     <h4 class="mb-3">Trabajador</h4>
                     <form id="workersForm" class="form-inline" novalidate="novalidate" action="/demo/workers" method="GET">
@@ -106,20 +106,40 @@
 
                     <form id="workerStatusForm" class="mt-2" action="#">
                         <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="statusDayOfWeek" class="text-muted">Dia</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="statusDayOfWeek" name="statusDayOfWeek" disabled="disabled">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="work" class="text-muted">Trabajo</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="work" name="work" disabled="disabled">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="lunch" class="text-muted">Comida</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="lunch" name="lunch" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="statusTimestamp" class="text-muted">Fecha</label>
-                                <input type="text" class="form-control form-control-sm" id="statusTimestamp" name="statusTimestamp" disabled="disabled">
+                                <label for="statusTimestamp" class="text-muted">Útimo fichaje</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="statusTimestamp" name="statusTimestamp" disabled="disabled">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="status" class="text-muted">Estado</label>
-                                <input type="text" class="form-control form-control-sm" id="status" name="status" disabled="disabled">
+                                <input type="text" class="form-control form-control-sm text-center" id="status" name="status" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="holidays">Vacaciones</label>
+                                <textarea class="form-control form-control.sm" id="holidays" name="holidays" rows="3" disabled="disabled"></textarea>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <div class="row justify-content-center">
+            <div class="row mt-2 justify-content-center">
                 <div class="col-md-10">
                     <h4 class="mb-3">Procesos</h4>
                     <form id="schedulesForm" novalidate="novalidate" action="/demo/schedules" method="POST">

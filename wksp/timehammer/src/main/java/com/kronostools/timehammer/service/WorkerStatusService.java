@@ -34,7 +34,7 @@ public class WorkerStatusService {
             case TICK:
                 switch (comunytekStatusDto.getStatus()) {
                     case INITIAL:
-                        if (workerCurrentPreferences.isTimeToStartWorking()) {
+                        if (workerCurrentPreferences.isTimeToStartWorking(timestamp.toLocalTime())) {
                             Set<String> workerChats = workerChatManager.getWorkerChats(comunytekStatusDto.getUsername());
 
                             notificationService.question(workerChats, QuestionType.START, timestamp);
@@ -42,11 +42,11 @@ public class WorkerStatusService {
 
                         break;
                     case STARTED:
-                        if (workerCurrentPreferences.isTimeToStartLunch()) {
+                        if (workerCurrentPreferences.isTimeToStartLunch(timestamp.toLocalTime())) {
                             Set<String> workerChats = workerChatManager.getWorkerChats(comunytekStatusDto.getUsername());
 
                             notificationService.question(workerChats, QuestionType.LUNCH_START, timestamp);
-                        } else if (workerCurrentPreferences.isTimeToEndWorking()) {
+                        } else if (workerCurrentPreferences.isTimeToEndWorking(timestamp.toLocalTime())) {
                             Set<String> workerChats = workerChatManager.getWorkerChats(comunytekStatusDto.getUsername());
 
                             notificationService.question(workerChats, QuestionType.END, timestamp);
@@ -54,7 +54,7 @@ public class WorkerStatusService {
 
                         break;
                     case PAUSED:
-                        if (workerCurrentPreferences.isTimeToEndLunch()) {
+                        if (workerCurrentPreferences.isTimeToEndLunch(timestamp.toLocalTime())) {
                             Set<String> workerChats = workerChatManager.getWorkerChats(comunytekStatusDto.getUsername());
 
                             notificationService.question(workerChats, QuestionType.LUNCH_RESUME, timestamp);
@@ -62,7 +62,7 @@ public class WorkerStatusService {
 
                         break;
                     case RESUMED:
-                        if (workerCurrentPreferences.isTimeToEndWorking()) {
+                        if (workerCurrentPreferences.isTimeToEndWorking(timestamp.toLocalTime())) {
                             Set<String> workerChats = workerChatManager.getWorkerChats(comunytekStatusDto.getUsername());
 
                             notificationService.question(workerChats, QuestionType.END, timestamp);

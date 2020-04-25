@@ -219,10 +219,13 @@ $(document).ready(function() {
 
         const $form = $(event.currentTarget)
         const $workerExternalId = $form.find('#workerExternalId')
+        const $refreshWorkerInfoBtn = $form.find('#refreshWorkerInfo')
 
         const workerExternalId = $workerExternalId.val()
 
         if (workerExternalId && workerExternalId.length > 0) {
+            $refreshWorkerInfoBtn.addClass('fa-spin').addClass('disabled')
+
             $.ajax({
                 url: $form.attr('action') + '/' + workerExternalId,
                 method: $form.attr('method'),
@@ -233,6 +236,8 @@ $(document).ready(function() {
                     fieldId: '',
                     errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
                 }])
+            }).always(function() {
+                $refreshWorkerInfoBtn.removeClass('fa-spin').removeClass('disabled')
             })
         } else {
             $workerExternalId.effect('shake', { distance: 10 })
@@ -243,7 +248,11 @@ $(document).ready(function() {
         resetFormErrors($form)
 
         $form.find('#statusTimestamp').val(data.timestamp)
+        $form.find('#statusDayOfWeek').val(data.dayOfWeek)
+        $form.find('#work').val(data.work)
+        $form.find('#lunch').val(data.lunch)
         $form.find('#status').val(data.status)
+        $form.find('#holidays').val(data.holidays)
     }
 
     // Schedules form

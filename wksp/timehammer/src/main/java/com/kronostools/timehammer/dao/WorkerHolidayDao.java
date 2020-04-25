@@ -25,7 +25,8 @@ public class WorkerHolidayDao extends GenericDao {
         return em.createQuery(
                 "SELECT h " +
                         "FROM WorkerHoliday h " +
-                        "WHERE h.id.workerExternalId = :workerExternalId ", WorkerHoliday.class)
+                        "WHERE h.id.workerExternalId = :workerExternalId " +
+                        "ORDER BY h.id.day ASC", WorkerHoliday.class)
                 .setParameter("workerExternalId", workerExternalId)
                 .getResultList();
     }
@@ -34,7 +35,8 @@ public class WorkerHolidayDao extends GenericDao {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
-                        "WHERE id.workerExternalId = :workerExternalId", HolidayVo.class)
+                        "WHERE id.workerExternalId = :workerExternalId " +
+                        "ORDER BY id.day ASC", HolidayVo.class)
                 .setParameter("workerExternalId", workerExternalId)
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
@@ -45,7 +47,8 @@ public class WorkerHolidayDao extends GenericDao {
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
                         "WHERE id.workerExternalId = :workerExternalId " +
-                        "AND id.day >= :today", HolidayVo.class)
+                        "AND id.day >= :today " +
+                        "ORDER BY id.day ASC", HolidayVo.class)
                 .setParameter("workerExternalId", workerExternalId)
                 .setParameter("today", timeMachineService.getNow().toLocalDate())
                 .setHint(QueryHints.HINT_READONLY,true)

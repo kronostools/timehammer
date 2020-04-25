@@ -1,37 +1,61 @@
 package com.kronostools.timehammer.vo;
 
+import com.kronostools.timehammer.enums.NonWorkingReason;
+import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.service.TimeMachineService;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 public class WorkerCurrentPreferencesVo {
-    private final LocalDateTime timestamp;
+    private final LocalDate date;
     private final String workerExternalId;
     private final String workSsid;
+    private final LocalTime zonedWorkStart;
+    private final LocalTime zonedWorkEnd;
+    private final LocalTime zonedLunchStart;
+    private final LocalTime zonedLunchEnd;
     private final LocalTime workStart;
     private final LocalTime workEnd;
     private final LocalTime lunchStart;
     private final LocalTime lunchEnd;
     private final String cityCode;
-    private final String cityTimezone;
+    private final SupportedTimezone timezone;
+    private final Boolean workerHoliday;
+    private final Boolean cityHoliday;
 
-    public WorkerCurrentPreferencesVo(final LocalDateTime timestamp, final String workerExternalId, final String workSsid,
-                                      final LocalTime workStart, final LocalTime workEnd, final LocalTime lunchStart, final LocalTime lunchEnd,
-                                      final String cityCode, final String cityTimezone) {
-        this.timestamp = timestamp;
+    public WorkerCurrentPreferencesVo(final LocalDate date, final String workerExternalId, final String workSsid,
+                                      final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
+                                      final String cityCode, final SupportedTimezone timezone,
+                                      final Boolean workerHoliday, final Boolean cityHoliday) {
+        this.date = date;
         this.workerExternalId = workerExternalId;
         this.workSsid = workSsid;
-        this.workStart = workStart;
-        this.workEnd = workEnd;
-        this.lunchStart = lunchStart;
-        this.lunchEnd = lunchEnd;
+        this.zonedWorkStart = zonedWorkStart;
+        this.zonedWorkEnd = zonedWorkEnd;
+        this.zonedLunchStart = zonedLunchStart;
+        this.zonedLunchEnd = zonedLunchEnd;
+
+        final ZoneOffset zoneOffSet = timezone.getOffset(date);
+
+        this.workStart = TimeMachineService.getTimeWithOffset(zonedWorkStart, zoneOffSet);
+        this.workEnd = TimeMachineService.getTimeWithOffset(zonedWorkEnd, zoneOffSet);
+        this.lunchStart = TimeMachineService.getTimeWithOffset(zonedLunchStart, zoneOffSet);
+        this.lunchEnd = TimeMachineService.getTimeWithOffset(zonedLunchEnd, zoneOffSet);
+
         this.cityCode = cityCode;
-        this.cityTimezone = cityTimezone;
+        this.timezone = timezone;
+        this.workerHoliday = workerHoliday;
+        this.cityHoliday = cityHoliday;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public WorkerCurrentPreferencesVo(final Date date, final String workerExternalId, final String workSsid,
+                                      final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
+                                      final String cityCode, final SupportedTimezone timezone,
+                                      final Boolean workerHoliday, final Boolean cityHoliday) {
+        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, workerHoliday, cityHoliday);
     }
 
     public String getWorkerExternalId() {
@@ -42,70 +66,91 @@ public class WorkerCurrentPreferencesVo {
         return workSsid;
     }
 
-    public LocalTime getWorkStart() {
-        return workStart;
+    public LocalTime getZonedWorkStart() {
+        return zonedWorkStart;
     }
 
-    public LocalTime getWorkEnd() {
-        return workEnd;
+    public LocalTime getZonedWorkEnd() {
+        return zonedWorkEnd;
     }
 
-    public LocalTime getLunchStart() {
-        return lunchStart;
+    public LocalTime getZonedLunchStart() {
+        return zonedLunchStart;
     }
 
-    public LocalTime getLunchEnd() {
-        return lunchEnd;
+    public LocalTime getZonedLunchEnd() {
+        return zonedLunchEnd;
     }
 
     public String getCityCode() {
         return cityCode;
     }
 
-    public String getCityTimezone() {
-        return cityTimezone;
+    public SupportedTimezone getTimezone() {
+        return timezone;
     }
 
     public Boolean workToday() {
-        return workStart != null;
+        return !TimeMachineService.isWeekend(date)
+                && !workerHoliday
+                && !cityHoliday;
     }
 
-    public Boolean isTimeToStartWorking() {
-        return workToday()
-                && timestamp.toLocalTime().isAfter(workStart);
+    public NonWorkingReason getNonWorkingReason() {
+        NonWorkingReason result = NonWorkingReason.NONE;
+
+        if (workerHoliday) {
+            result = NonWorkingReason.WORKER_HOLIDAY;
+        } else if (cityHoliday) {
+            result = NonWorkingReason.CITY_HOLIDAY;
+        } else if (TimeMachineService.isWeekend(date)) {
+            result = NonWorkingReason.WEEKEND;
+        }
+
+        return result;
     }
 
-    public Boolean isTimeToEndWorking() {
+    public Boolean isTimeToStartWorking(final LocalTime time) {
         return workToday()
-                && timestamp.toLocalTime().isAfter(workEnd);
+                && time.isAfter(workStart);
+    }
+
+    public Boolean isTimeToEndWorking(final LocalTime time) {
+        return workToday()
+                && time.isAfter(workEnd);
     }
 
     public Boolean lunchToday() {
-        return lunchStart != null;
+        return !TimeMachineService.isWeekend(date)
+                && !workerHoliday
+                && !cityHoliday
+                && zonedLunchStart != null;
     }
 
-    public Boolean isTimeToStartLunch() {
+    public Boolean isTimeToStartLunch(final LocalTime time) {
         return lunchToday()
-                && timestamp.toLocalTime().isAfter(lunchStart);
+                && time.isAfter(lunchStart);
     }
 
-    public Boolean isTimeToEndLunch() {
+    public Boolean isTimeToEndLunch(final LocalTime time) {
         return lunchToday()
-                && timestamp.toLocalTime().isAfter(lunchEnd);
+                && time.isAfter(lunchEnd);
     }
 
     @Override
     public String toString() {
         return "WorkerCurrentPreferencesVo{" +
-                "timestamp='" + TimeMachineService.formatDateTimeFull(timestamp) + '\'' +
+                "date=" + TimeMachineService.formatDate(date) +
                 ", workerExternalId='" + workerExternalId + '\'' +
                 ", workSsid='" + workSsid + '\'' +
-                ", workStart=" + TimeMachineService.formatTimeSimple(workStart) +
-                ", workEnd=" + TimeMachineService.formatTimeSimple(workEnd) +
-                ", lunchStart=" + TimeMachineService.formatTimeSimple(lunchStart) +
-                ", lunchEnd=" + TimeMachineService.formatTimeSimple(lunchEnd) +
+                ", zonedWorkStart=" + TimeMachineService.formatTimeSimple(zonedWorkStart) +
+                ", zonedWorkEnd=" + TimeMachineService.formatTimeSimple(zonedWorkEnd) +
+                ", zonedLunchStart=" + TimeMachineService.formatTimeSimple(zonedLunchStart) +
+                ", zonedLunchEnd=" + TimeMachineService.formatTimeSimple(zonedLunchEnd) +
                 ", cityCode='" + cityCode + '\'' +
-                ", cityTimezone='" + cityTimezone + '\'' +
+                ", timezone='" + timezone.name() + '\'' +
+                ", workerHoliday='" + workerHoliday + '\'' +
+                ", cityHoliday='" + cityHoliday + '\'' +
                 '}';
     }
 }

@@ -7,10 +7,6 @@ import com.kronostools.timehammer.dto.form.RegistrationFormValidationAdapter;
 import com.kronostools.timehammer.dto.form.validation.RegistrationValidationOrder;
 import com.kronostools.timehammer.enums.QuestionType;
 import com.kronostools.timehammer.service.TimeMachineService;
-import com.kronostools.timehammer.service.WorkerService;
-import com.kronostools.timehammer.vo.WorkerAndPreferencesVo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -22,18 +18,13 @@ import java.util.Set;
 
 @Path("/tests")
 public class TestResource {
-    private static final Logger LOG = LoggerFactory.getLogger(TestResource.class);
-
-    private final WorkerService workerService;
     private final NotificationService notificationService;
     private final TimeMachineService timeMachineService;
     private final Validator validator;
 
-    public TestResource(final WorkerService workerService,
-                        final NotificationService notificationService,
+    public TestResource(final NotificationService notificationService,
                         final TimeMachineService timeMachineService,
                         final Validator validator) {
-        this.workerService = workerService;
         this.notificationService = notificationService;
         this.timeMachineService = timeMachineService;
         this.validator = validator;
@@ -43,13 +34,6 @@ public class TestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String hello() {
         return "hello";
-    }
-
-    @GET
-    @Path("/workerNonWorkingDays/{externalId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public WorkerAndPreferencesVo workerNonWorkingDays(@PathParam("externalId") String externalId) {
-        return workerService.getWorkerAndPreferencesByExternalId(externalId);
     }
 
     @POST

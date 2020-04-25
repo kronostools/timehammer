@@ -72,7 +72,7 @@ public class WorkerManager {
             workerDao.registerWorker(workerVo);
             workerPreferencesManager.registerWorkerPreferences(workerVo.getExternalId(), workerPreferencesVo);
             workerChatManager.addNewChat(workerVo.getExternalId(), workerChatVo.getChatId());
-            workerSsidTrackingInfoManager.initializeSsidTrackingInfo(workerVo.getExternalId(), workerPreferencesVo);
+            workerSsidTrackingInfoManager.initializeSsidTrackingInfo(workerVo.getExternalId());
         }
     }
 }

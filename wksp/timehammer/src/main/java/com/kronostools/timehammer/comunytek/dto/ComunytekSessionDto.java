@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.comunytek.dto;
 
+import static com.kronostools.timehammer.utils.Constants.LINE_BREAK;
+
 public class ComunytekSessionDto {
     private final String username;
     private final String fullname;
@@ -24,7 +26,7 @@ public class ComunytekSessionDto {
     }
 
     public static ComunytekSessionDto fromResponse(final String username, final String response) {
-        final String[] responseParts = response.split("\n");
+        final String[] responseParts = response.split(LINE_BREAK);
 
         return new ComunytekSessionDto(username, responseParts[0], responseParts[2]);
     }

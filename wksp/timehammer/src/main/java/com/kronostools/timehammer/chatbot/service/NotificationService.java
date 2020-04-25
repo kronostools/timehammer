@@ -125,7 +125,7 @@ public class NotificationService {
 
     private static OutgoingMessage getOutgoingMessage(final String chatId, final String text, final ReplyMarkup replyMarkup) {
         OutgoingMessage message = new OutgoingTextMessage.Builder()
-                .text(Utils.isDemoMode() ? String.format("%s%s", RoutesConstants.Messages.DEMO_MODE_PREFIX, text) : text)
+                .text(Utils.isDemoMode() ? Utils.stringFormat("{}{}", RoutesConstants.Messages.DEMO_MODE_PREFIX, text) : text)
                 .parseMode(TelegramParseMode.MARKDOWN.getCode())
                 .replyMarkup(replyMarkup)
                 .build();

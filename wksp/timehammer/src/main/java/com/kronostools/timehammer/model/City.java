@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.model;
 
+import com.kronostools.timehammer.enums.SupportedTimezone;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -15,8 +17,9 @@ public class City {
     @Column(nullable = false, insertable = false, updatable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, insertable = false, updatable = false)
-    private String timezone;
+    private SupportedTimezone timezone;
 
     @OneToMany(mappedBy = "city", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CityHoliday> holidays = new HashSet<>();
@@ -37,11 +40,11 @@ public class City {
         this.name = name;
     }
 
-    public String getTimezone() {
+    public SupportedTimezone getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(String timezone) {
+    public void setTimezone(SupportedTimezone timezone) {
         this.timezone = timezone;
     }
 

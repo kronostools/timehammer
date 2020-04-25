@@ -5,11 +5,16 @@ import com.kronostools.timehammer.comunytek.dto.ComunytekHolidaysDto;
 import com.kronostools.timehammer.comunytek.dto.ComunytekStatusDto;
 import com.kronostools.timehammer.comunytek.enums.ComunytekStatusValue;
 import com.kronostools.timehammer.config.TimehammerConfig;
-import com.kronostools.timehammer.dao.SsidTrackingEventDao;
 import com.kronostools.timehammer.enums.WorkerStatusEventType;
-import com.kronostools.timehammer.manager.*;
+import com.kronostools.timehammer.manager.WorkerChatManager;
+import com.kronostools.timehammer.manager.WorkerHolidayManager;
+import com.kronostools.timehammer.manager.WorkerManager;
+import com.kronostools.timehammer.manager.WorkerPreferencesManager;
 import com.kronostools.timehammer.utils.Constants;
-import com.kronostools.timehammer.vo.*;
+import com.kronostools.timehammer.vo.WorkerChatVo;
+import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
+import com.kronostools.timehammer.vo.WorkerPreferencesVo;
+import com.kronostools.timehammer.vo.WorkerVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,32 +35,26 @@ public class WorkerService {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerService.class);
 
     private final TimehammerConfig timehammerConfig;
-    private final SsidTrackingEventDao ssidTrackingEventDao;
     private final WorkerManager workerManager;
     private final WorkerHolidayManager workerHolidayManager;
     private final WorkerChatManager workerChatManager;
-    private final CityHolidayManager cityHolidayManager;
     private final WorkerPreferencesManager workerPreferencesManager;
     private final WorkerStatusService workerStatusService;
     private final ComunytekClient comunytekClient;
 
-    private AtomicLong workerStatusAvgProcessingTime = new AtomicLong(Constants.WORKER_STATUS_INITIAL_AVG_PROCESSING_TIME);
+    private final AtomicLong workerStatusAvgProcessingTime = new AtomicLong(Constants.WORKER_STATUS_INITIAL_AVG_PROCESSING_TIME);
 
     public WorkerService(final TimehammerConfig timehammerConfig,
-                         final SsidTrackingEventDao ssidTrackingEventDao,
                          final WorkerManager workerManager,
                          final WorkerHolidayManager workerHolidayManager,
                          final WorkerChatManager workerChatManager,
-                         final CityHolidayManager cityHolidayManager,
                          final WorkerPreferencesManager workerPreferencesManager,
                          final WorkerStatusService workerStatusService,
                          final ComunytekClient comunytekClient) {
         this.timehammerConfig = timehammerConfig;
-        this.ssidTrackingEventDao = ssidTrackingEventDao;
         this.workerManager = workerManager;
         this.workerHolidayManager = workerHolidayManager;
         this.workerChatManager = workerChatManager;
-        this.cityHolidayManager = cityHolidayManager;
         this.workerPreferencesManager = workerPreferencesManager;
         this.workerStatusService = workerStatusService;
         this.comunytekClient = comunytekClient;
@@ -71,20 +70,16 @@ public class WorkerService {
         getWorkerByChatId(chatId).ifPresent(workerVo -> workerChatManager.removeChat(workerVo.getExternalId(), chatId));
     }
 
-    public WorkerAndPreferencesVo getWorkerAndPreferencesByExternalId(final String externalId) {
-        WorkerVo workerVo = workerManager.getWorkerByExternalId(externalId);
-        WorkerPreferencesVo preferencesVo = workerPreferencesManager.getWorkerPreferences(externalId);
-
-        return new WorkerAndPreferencesVo(workerVo, preferencesVo);
+    public WorkerPreferencesVo getWorkerPreferencesByExternalId(final String externalId) {
+        return workerPreferencesManager.getWorkerPreferences(externalId);
     }
 
-    public WorkerNonWorkingDaysVo getNonWorkingDays(final String externalId) {
-        WorkerPreferencesVo workerPreferencesVo = workerPreferencesManager.getWorkerPreferences(externalId);
+    public WorkerCurrentPreferencesVo getWorkerCurrentPreferencesByExternalId(final String externalId, final LocalDateTime timestamp) {
+        return workerPreferencesManager.getWorkerCurrentPreferences(externalId, timestamp);
+    }
 
-        Set<LocalDate> workerHolidays = workerHolidayManager.getPendingWorkerHolidays(externalId);
-        Set<LocalDate> cityHolidays = cityHolidayManager.getPendingCityHolidays(workerPreferencesVo.getCityCode());
-
-        return new WorkerNonWorkingDaysVo(externalId, workerHolidays, cityHolidays);
+    public Set<LocalDate> getPendingWorkerHolidays(final String externalId) {
+        return workerHolidayManager.getPendingWorkerHolidays(externalId);
     }
 
     @Transactional
@@ -119,15 +114,16 @@ public class WorkerService {
     }
 
     public void updateWorkersStatus(final LocalDateTime timestamp) {
+        LOG.debug("BEGIN updateWorkersStatus: [{}]", TimeMachineService.formatDateTimeFull(timestamp));
+
         final long numberOfWorkersToProcess = Double.valueOf(timehammerConfig.getSchedules().getUpdateWorkersStatus().getIntervalInMillis() * 0.80 / workerStatusAvgProcessingTime.get()).intValue();
 
         AtomicInteger workersProcessedSuccessfully = new AtomicInteger(0);
         AtomicInteger workersProcessedWithError = new AtomicInteger(0);
         AtomicLong workersTotalProcessingTime = new AtomicLong(0L);
 
-        final List<WorkerCurrentPreferencesVo> workersToProcess = workerPreferencesManager.getAllWorkersPreferences()
+        final List<WorkerCurrentPreferencesVo> workersToProcess = workerPreferencesManager.getAllWorkersCurrentPreferences(timestamp)
                 .stream()
-                .map(wp -> wp.getAt(timestamp))
                 .filter(WorkerCurrentPreferencesVo::workToday)
                 .collect(Collectors.toList());
 
@@ -153,6 +149,8 @@ public class WorkerService {
         if (workersProcessedSuccessfully.get() > 0) {
             workerStatusAvgProcessingTime.set(workersTotalProcessingTime.get() / workersProcessedSuccessfully.get());
         }
+
+        LOG.debug("END updateWorkersStatus");
     }
 
     public long updateWorkerStatus(final LocalDateTime timestamp, final WorkerCurrentPreferencesVo workerCurrentPreferences) {

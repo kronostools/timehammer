@@ -38,7 +38,9 @@ quarkus:
         expire-after-write: 8h
       worker-by-chatid-as-workervo-cache:
         expire-after-write: 8h
-      all-worker-preferences-cache:
+      all-workers-current-preferences-cache:
+        expire-after-write: 8h
+      worker-current-preferences-cache:
         expire-after-write: 8h
       worker-preferences-cache:
         expire-after-write: 8h
@@ -123,6 +125,10 @@ timehammer:
           expire-after-write: 10s
         comunytek-status-cache:
           expire-after-write: 10s
+        all-workers-current-preferences-cache:
+          expire-after-write: 10s
+        worker-current-preferences-cache:
+          expire-after-write: 10s
         worker-preferences-cache:
           expire-after-write: 10s
         worker-holidays-cache:
@@ -144,6 +150,10 @@ timehammer:
         comunytek-session-cache:
           expire-after-write: 10s
         comunytek-status-cache:
+          expire-after-write: 10s
+        all-workers-current-preferences-cache:
+          expire-after-write: 10s
+        worker-current-preferences-cache:
           expire-after-write: 10s
         worker-preferences-cache:
           expire-after-write: 10s

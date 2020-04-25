@@ -4,7 +4,9 @@ import com.kronostools.timehammer.enums.SsidTrackingEventType;
 import io.quarkus.runtime.configuration.ProfileManager;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Utils {
     public static SsidTrackingEventType getSsidTrackingEventType(final String oldSsid, final String newSsid, final String referenceSsid) {
@@ -20,12 +22,22 @@ public class Utils {
     }
 
     public static int getRandomNumberInRange(final int minInclusive, final int maxExclusive) {
-        Random r = new Random();
+        final Random r = new Random();
         return r.ints(minInclusive, maxExclusive).findFirst().getAsInt();
     }
 
     public static <T> T getRandomElementFromArray(final T[] array) {
         return array[Utils.getRandomNumberInRange(0, array.length)];
+    }
+
+    public static <T> Set<T> getNDifferentRandomElementsFromArray(final T[] array, final int n) {
+        final Set<T> result = new HashSet<>();
+
+        while (result.size() < n) {
+            result.add(getRandomElementFromArray(array));
+        }
+
+        return result;
     }
 
     public static String stringFormat(String format, Object... params) {
