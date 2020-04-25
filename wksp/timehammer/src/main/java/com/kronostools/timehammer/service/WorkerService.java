@@ -181,4 +181,9 @@ public class WorkerService {
 
         return System.currentTimeMillis() - start;
     }
+
+    @Transactional
+    public void cleanPastWorkersHolidaysUntil(final LocalDateTime timestamp) {
+        workerHolidayManager.cleanPastWorkersHolidaysUntil(timestamp);
+    }
 }

@@ -128,4 +128,8 @@ public class DemoService {
     public void updateWorkersHolidays() {
         workerService.updateWorkersHolidays();
     }
+
+    public void cleanPastWorkersHolidays() {
+        workerService.cleanPastWorkersHolidaysUntil(timeMachineService.getNow());
+    }
 }

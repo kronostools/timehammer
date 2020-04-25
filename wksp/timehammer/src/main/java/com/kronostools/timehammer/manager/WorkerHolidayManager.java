@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -86,5 +87,9 @@ public class WorkerHolidayManager {
                 .forEach(workerHolidayDao::persist);
 
         LOG.debug("END updateWorkerHolidays");
+    }
+
+    public void cleanPastWorkersHolidaysUntil(final LocalDateTime timestamp) {
+        workerHolidayDao.cleanPastWorkersHolidaysUntil(timestamp);
     }
 }

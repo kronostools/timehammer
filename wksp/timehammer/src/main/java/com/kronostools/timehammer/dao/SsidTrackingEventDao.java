@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,8 +21,9 @@ public class SsidTrackingEventDao extends GenericDao {
     }
 
     public int cleanSsidTrackingEventsUntil(final LocalDateTime timestamp) {
-        Query deleteSsidTrackingEventsQuery = em.createQuery("DELETE FROM WorkerSsidTrackingEvent WHERE occurred < :timestamp");
-        return deleteSsidTrackingEventsQuery.setParameter("timestamp", timestamp).executeUpdate();
+        return em.createQuery("DELETE FROM WorkerSsidTrackingEvent WHERE occurred < :timestamp")
+                .setParameter("timestamp", timestamp)
+                .executeUpdate();
     }
 
     public List<SsidTrackingEventVo> getSsidTrackingEventsBetween(final LocalDateTime begin, final LocalDateTime end) {

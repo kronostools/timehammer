@@ -101,6 +101,17 @@ public class DemoResource {
         }
     }
 
+    @POST
+    @Path("/schedules/cleanPastWorkersHolidays")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void cleanPastWorkersHolidays() {
+        if (Utils.isDemoMode()) {
+            demoService.cleanPastWorkersHolidays();
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
     private SupportedTimezone getTimezone() {
         return SupportedTimezone.EUROPE_MADRID;
     }

@@ -10,28 +10,28 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
-public class WorkersHolidaysSchedule extends Schedule {
+public class CleanPastWorkersHolidaysSchedule extends Schedule {
     private final WorkerService workerService;
 
-    public WorkersHolidaysSchedule(final TimehammerConfig timehammerConfig,
-                                   final TimeMachineService timeMachineService,
-                                   final WorkerService workerService) {
+    public CleanPastWorkersHolidaysSchedule(final TimehammerConfig timehammerConfig,
+                                            final TimeMachineService timeMachineService,
+                                            final WorkerService workerService) {
         super(timehammerConfig, timeMachineService);
         this.workerService = workerService;
     }
 
-    @Scheduled(cron = "{timehammer.schedules.updateWorkersHolidays.cron}")
-    void updateWorkersHolidays() {
+    @Scheduled(cron = "{timehammer.schedules.cleanPastWorkersHolidays.cron}")
+    void cleanPastWorkersHolidays() {
         run();
     }
 
     @Override
     protected void mainLogic(LocalDateTime timestamp) {
-        workerService.updateWorkersHolidays();
+        workerService.cleanPastWorkersHolidaysUntil(timestamp);
     }
 
     @Override
     protected ScheduleName getScheduleName() {
-        return ScheduleName.UPDATE_WORKERS_HOLIDAYS;
+        return ScheduleName.CLEAN_PAST_WORKERS_HOLIDAYS;
     }
 }

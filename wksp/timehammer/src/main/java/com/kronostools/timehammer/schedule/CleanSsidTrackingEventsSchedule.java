@@ -10,13 +10,13 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
-public class WorkerSsidTrackingEventsSchedule extends Schedule {
+public class CleanSsidTrackingEventsSchedule extends Schedule {
 
     private final WorkerSsidTrackingEventService workerSsidTrackingEventService;
 
-    public WorkerSsidTrackingEventsSchedule(final TimehammerConfig timehammerConfig,
-                                            final TimeMachineService timeMachineService,
-                                            final WorkerSsidTrackingEventService workerSsidTrackingEventService) {
+    public CleanSsidTrackingEventsSchedule(final TimehammerConfig timehammerConfig,
+                                           final TimeMachineService timeMachineService,
+                                           final WorkerSsidTrackingEventService workerSsidTrackingEventService) {
         super(timehammerConfig, timeMachineService);
         this.workerSsidTrackingEventService = workerSsidTrackingEventService;
     }

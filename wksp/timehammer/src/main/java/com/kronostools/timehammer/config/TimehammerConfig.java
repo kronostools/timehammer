@@ -162,13 +162,14 @@ public class TimehammerConfig {
     }
 
     public static enum ScheduleName {
-        UPDATE_WORKERS_STATUS, UPDATE_WORKERS_HOLIDAYS, CLEAN_SSID_TRACKING_EVENTS;
+        UPDATE_WORKERS_STATUS, UPDATE_WORKERS_HOLIDAYS, CLEAN_PAST_WORKERS_HOLIDAYS, CLEAN_SSID_TRACKING_EVENTS;
     }
 
     public static class Schedules {
         private ScheduledProcessConfig updateWorkersStatus;
         private ScheduledProcessConfig updateWorkersHolidays;
         private ScheduledProcessConfig cleanSsidTrackingEvents;
+        private ScheduledProcessConfig cleanPastWorkersHolidays;
 
         public ScheduledProcessConfig getUpdateWorkersStatus() {
             return updateWorkersStatus;
@@ -194,6 +195,14 @@ public class TimehammerConfig {
             this.cleanSsidTrackingEvents = cleanSsidTrackingEvents;
         }
 
+        public ScheduledProcessConfig getCleanPastWorkersHolidays() {
+            return cleanPastWorkersHolidays;
+        }
+
+        public void setCleanPastWorkersHolidays(ScheduledProcessConfig cleanPastWorkersHolidays) {
+            this.cleanPastWorkersHolidays = cleanPastWorkersHolidays;
+        }
+
         public ScheduledProcessConfig getByScheduleName(final ScheduleName scheduleName) {
             ScheduledProcessConfig result = null;
 
@@ -206,6 +215,9 @@ public class TimehammerConfig {
                     break;
                 case CLEAN_SSID_TRACKING_EVENTS:
                     result = cleanSsidTrackingEvents;
+                    break;
+                case CLEAN_PAST_WORKERS_HOLIDAYS:
+                    result = cleanPastWorkersHolidays;
                     break;
             }
 

@@ -1,6 +1,5 @@
 # TODO
 
-- Añadir batch para el día 1 del año para borrar las vacaciones del año anterior
 - Añadir al usuario campo empresa
     - En el registro se tiene que elegir la empresa
 - Elegir el cliente en función de la empresa

@@ -9,6 +9,7 @@ import org.hibernate.jpa.QueryHints;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -69,5 +70,11 @@ public class WorkerHolidayDao extends GenericDao {
 
     public void delete(final WorkerHoliday workerHoliday) {
         em.remove(workerHoliday);
+    }
+
+    public void cleanPastWorkersHolidaysUntil(final LocalDateTime timestamp) {
+        em.createQuery("DELETE FROM WorkerHoliday WHERE id.day < :day")
+                .setParameter("day", timestamp.toLocalDate())
+                .executeUpdate();
     }
 }
