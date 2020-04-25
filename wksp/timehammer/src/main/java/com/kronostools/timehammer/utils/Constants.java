@@ -8,6 +8,7 @@ public class Constants {
     public static final String DEMO_PASSWORD = "demo";
     public static final String LINE_BREAK = "\n";
     public static final String TAB = "\t";
+    public static final int DEFAULT_TEXT_TRUNCATE_WIDTH = 100;
 
     public class Caches {
         public static final String COMUNYTEK_SESSION = "comunytek-session-cache";
@@ -26,6 +27,7 @@ public class Constants {
     public class Buses {
         public static final String UPDATE_WORKER_SSID_TRACKING_INFO = "updateWorkerSsidTrackingInfo";
         public static final String ADD_SSID_TRACKING_EVENT = "addSsidTrackingEvent";
+        public static final String ADD_TRASH_MESSAGE = "addTrashMessage";
     }
 
     public class RegistrationErrorMessages {

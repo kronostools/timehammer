@@ -3,8 +3,11 @@ package com.kronostools.timehammer.chatbot.utils;
 import com.kronostools.timehammer.chatbot.enums.ChatbotCommand;
 import com.kronostools.timehammer.enums.AnswerType;
 import com.kronostools.timehammer.enums.QuestionType;
+import com.kronostools.timehammer.service.TimeMachineService;
+import com.kronostools.timehammer.vo.TrashMessageVo;
 import com.kronostools.timehammer.vo.WorkerVo;
 import org.apache.camel.Exchange;
+import org.apache.camel.component.telegram.model.IncomingMessage;
 
 import java.util.Optional;
 
@@ -67,5 +70,9 @@ public class RoutesUtils {
 
     public static AnswerType getAnswer(final Exchange exchange) {
         return exchange.getMessage().getHeader(RoutesConstants.Headers.ANSWER, AnswerType.class);
+    }
+
+    public static TrashMessageVo getTrashMessage(final IncomingMessage incomingMessage) {
+        return new TrashMessageVo(incomingMessage.getChat().getId(), TimeMachineService.getDateTime(incomingMessage.getDate()), incomingMessage.getText());
     }
 }

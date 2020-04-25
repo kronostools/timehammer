@@ -7,8 +7,11 @@ import com.kronostools.timehammer.config.TimehammerConfig;
 import com.kronostools.timehammer.exceptions.ChatbotAlreadyRegisteredException;
 import com.kronostools.timehammer.service.AuthService;
 import com.kronostools.timehammer.utils.ChatbotMessages;
+import com.kronostools.timehammer.utils.Constants.Buses;
 import com.kronostools.timehammer.vo.ChatbotRegistrationResponseVo;
+import com.kronostools.timehammer.vo.TrashMessageVo;
 import com.kronostools.timehammer.vo.WorkerVo;
+import io.vertx.axle.core.eventbus.EventBus;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.telegram.model.IncomingMessage;
@@ -24,11 +27,14 @@ public class TelegramMessageProcessor implements Processor {
 
     private final TimehammerConfig timehammerConfig;
     private final AuthService authService;
+    private final EventBus bus;
 
     public TelegramMessageProcessor(final TimehammerConfig timehammerConfig,
-                                    final AuthService authService) {
+                                    final AuthService authService,
+                                    final EventBus bus) {
         this.timehammerConfig = timehammerConfig;
         this.authService = authService;
+        this.bus = bus;
     }
 
     @Override
@@ -96,7 +102,7 @@ public class TelegramMessageProcessor implements Processor {
 
                 outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNRECOGNIZED);
 
-                // TODO: insert message in trash_message table
+                storeTrashMessage(incomingMessage);
             }
         } else {
             LOG.debug("Message has not any command");
@@ -111,9 +117,17 @@ public class TelegramMessageProcessor implements Processor {
                 outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_MISSING_UNREGISTERED);
             }
 
-            // TODO: insert message in trash_message table
+            storeTrashMessage(incomingMessage);
         }
 
         exchange.getMessage().setBody(outgoingMessage);
+    }
+
+    private void storeTrashMessage(final IncomingMessage incomingMessage) {
+        final TrashMessageVo trashMessage = RoutesUtils.getTrashMessage(incomingMessage);
+
+        bus.publish(Buses.ADD_TRASH_MESSAGE, trashMessage);
+
+        LOG.debug("Emited event [{}] in bus '{}'", trashMessage, Buses.ADD_TRASH_MESSAGE);
     }
 }

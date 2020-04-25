@@ -6,6 +6,7 @@ import com.kronostools.timehammer.enums.SsidTrackingEventType;
 import com.kronostools.timehammer.model.WorkerSsidTrackingInfo;
 import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Constants.Buses;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.SsidTrackingEventVo;
 import com.kronostools.timehammer.vo.SsidTrackingInfoVo;
@@ -50,11 +51,9 @@ public class WorkerSsidTrackingInfoManager {
         if (ssidTrackingEventType != SsidTrackingEventType.NONE) {
             final SsidTrackingEventVo newSsidTrackingEvent = new SsidTrackingEventVo(workerPreferencesVo.getWorkerExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
 
-            final String busName = Constants.Buses.ADD_SSID_TRACKING_EVENT;
+            bus.publish(Buses.ADD_SSID_TRACKING_EVENT, newSsidTrackingEvent);
 
-            bus.<Void>request(busName, newSsidTrackingEvent);
-
-            LOG.debug("Emited event [{}] in bus '{}'", newSsidTrackingEvent, busName);
+            LOG.debug("Emited event [{}] in bus '{}'", newSsidTrackingEvent, Buses.ADD_SSID_TRACKING_EVENT);
         }
 
         LOG.debug("END updateWorkerSsidTrackingInfo");

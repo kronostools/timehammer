@@ -6,7 +6,6 @@
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
-- Los mensajes sin catalogar se guardan en tabla "basura" (asincronamente). Para poder hacer en el futuro NLP
 - Probar que funciona después de incorporar el servicio TimeMachineService
 - Revisar idea de
     - Acciones clockin / clockout

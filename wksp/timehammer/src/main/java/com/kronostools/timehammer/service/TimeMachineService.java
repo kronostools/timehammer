@@ -108,6 +108,10 @@ public class TimeMachineService {
                 .orElse(null);
     }
 
+    public static LocalDateTime getDateTime(final Instant instant) {
+        return instant.atOffset(ZoneOffset.UTC).toLocalDateTime();
+    }
+
     public static LocalDateTime parseDateTime(final String dateTime, final String dateTimeFormat) {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
     }

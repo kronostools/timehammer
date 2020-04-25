@@ -1,9 +1,8 @@
 package com.kronostools.timehammer.model;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import com.kronostools.timehammer.enums.TrashMessageStatus;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "TrashMessage")
@@ -11,6 +10,10 @@ import java.util.Objects;
 public class TrashMessage {
     @EmbeddedId
     private TrashMessageId id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TrashMessageStatus status;
 
     @Column(nullable = false, updatable = false)
     private String text;
@@ -21,6 +24,14 @@ public class TrashMessage {
 
     public void setId(TrashMessageId id) {
         this.id = id;
+    }
+
+    public TrashMessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TrashMessageStatus status) {
+        this.status = status;
     }
 
     public String getText() {

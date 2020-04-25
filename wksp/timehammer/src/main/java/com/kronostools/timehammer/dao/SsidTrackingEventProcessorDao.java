@@ -2,7 +2,7 @@ package com.kronostools.timehammer.dao;
 
 import com.kronostools.timehammer.model.WorkerSsidTrackingEvent;
 import com.kronostools.timehammer.model.WorkerSsidTrackingEventId;
-import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Constants.Buses;
 import com.kronostools.timehammer.vo.SsidTrackingEventVo;
 import io.quarkus.vertx.ConsumeEvent;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class SsidTrackingEventProcessorDao {
         this.ssidTrackingEventDao = ssidTrackingEventDao;
     }
 
-    @ConsumeEvent(value = Constants.Buses.ADD_SSID_TRACKING_EVENT, blocking = true)
+    @ConsumeEvent(value = Buses.ADD_SSID_TRACKING_EVENT, blocking = true)
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void addSsidTrackingEventProcessor(final SsidTrackingEventVo newSsidTrackingEventVo) {
         LOG.debug("BEGIN addSsidTrackingEventProcessor: [{}]", newSsidTrackingEventVo);

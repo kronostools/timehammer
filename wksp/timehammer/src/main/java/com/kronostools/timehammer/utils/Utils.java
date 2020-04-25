@@ -40,8 +40,22 @@ public class Utils {
         return result;
     }
 
-    public static String stringFormat(String format, Object... params) {
+    public static String stringFormat(final String format, final Object... params) {
         return MessageFormatter.arrayFormat(format, params).getMessage();
+    }
+
+    public static String truncateString(final String text) {
+        return truncateString(text, Constants.DEFAULT_TEXT_TRUNCATE_WIDTH);
+    }
+
+    public static String truncateString(final String text, final int width) {
+        String result = text;
+
+        if (text.length() > width) {
+            result = text.substring(0, width - 3) + "...";
+        }
+
+        return result;
     }
 
     public static boolean isDemoMode() {

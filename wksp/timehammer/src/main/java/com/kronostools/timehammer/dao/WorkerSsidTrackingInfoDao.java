@@ -6,6 +6,7 @@ import com.kronostools.timehammer.model.Worker;
 import com.kronostools.timehammer.model.WorkerSsidTrackingInfo;
 import com.kronostools.timehammer.service.TimeMachineService;
 import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Constants.Buses;
 import com.kronostools.timehammer.vo.SsidTrackingInfoVo;
 import io.vertx.axle.core.eventbus.EventBus;
 import org.hibernate.Session;
@@ -89,9 +90,8 @@ public class WorkerSsidTrackingInfoDao extends GenericDao {
     private void updateWorkerSsidTrackingInfoAsync(final SsidTrackingInfoVo newSsidTrackingInfoVo) {
         LOG.debug("BEGIN updateWorkerSsidTrackingInfoAsync: [{}]", newSsidTrackingInfoVo);
 
-        final String busName = Constants.Buses.UPDATE_WORKER_SSID_TRACKING_INFO;
-        bus.<Void>request(busName, newSsidTrackingInfoVo);
-        LOG.debug("Emited event [{}] in bus '{}'", newSsidTrackingInfoVo, busName);
+        bus.publish(Buses.UPDATE_WORKER_SSID_TRACKING_INFO, newSsidTrackingInfoVo);
+        LOG.debug("Emited event [{}] in bus '{}'", newSsidTrackingInfoVo, Buses.UPDATE_WORKER_SSID_TRACKING_INFO);
 
         LOG.debug("END updateWorkerSsidTrackingInfoAsync");
     }
