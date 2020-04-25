@@ -16,6 +16,7 @@ import com.kronostools.timehammer.dto.form.RegistrationFormValidationAdapter;
 import com.kronostools.timehammer.dto.form.TimetableForm;
 import com.kronostools.timehammer.dto.form.validation.RegistrationValidationOrder;
 import com.kronostools.timehammer.exceptions.ChatbotAlreadyRegisteredException;
+import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.vo.*;
 import org.slf4j.Logger;
@@ -129,8 +130,7 @@ public class AuthService {
 
                     registeredChatbotsCache.put(chatbotRegistrationRequestVo.get().getChatId(), registrationForm.getRegistrationId());
 
-                    // TODO: store message in a constant or create a utility method to generate predefined messages
-                    notificationService.notify(chatbotRegistrationRequestVo.get().getChatId(), "¡Enhorabuena! El registro se ha realizado satisfactoriamente. Si en algún momento quieres cancelar el registro, envía /unregister. Para conocer cómo funciona esto, envía /help.");
+                    notificationService.notify(chatbotRegistrationRequestVo.get().getChatId(), ChatbotMessages.SUCCESSFUL_REGISTRATION);
                 } catch (ComunytekAuthenticationException e) {
                     LOG.warn("Incorrect credentials submitted");
                     formResponseBuilder.addFormError("Incorrect authentication credentials");

@@ -61,7 +61,6 @@ public class DemoResource {
     @Produces(MediaType.APPLICATION_JSON)
     public FormResponse updateNow(final DemoTimestampForm newTimestampFormDto) {
         if (Utils.isDemoMode()) {
-            // TODO: continuar después de comer (crear un DemoTimestampVo con un SupportedTimestamp en vez del String)
             return demoService.updateNow(newTimestampFormDto);
         } else {
             throw new ForbiddenException();

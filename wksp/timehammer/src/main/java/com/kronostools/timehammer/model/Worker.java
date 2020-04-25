@@ -25,14 +25,6 @@ public class Worker {
     @Column(nullable = false, updatable = false)
     private Profile profile;
 
-    // TODO: remove if not necesary anymore
-    //@OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    //private Set<WorkerHoliday> holidays = new HashSet<>();
-
-    // TODO: remove if not necesary anymore
-    //@OneToMany(mappedBy = "worker", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<WorkerSsidTrackingEvent> workerSsidTrackingEventList = new ArrayList<>();
-
     public String getRegistrationId() {
         return registrationId;
     }

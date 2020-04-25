@@ -60,7 +60,8 @@ public class TelegramMessageProcessor implements Processor {
                             authService.cancelChatbotRegistration(chatId);
                             outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNREGISTER);
                         } else if (chatbotCommand == ChatbotCommand.SETTINGS) {
-                            // TODO
+                            // TODO: implement this functionality
+                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNIMPLEMENTED);
                         }
                     } else {
                         LOG.info("Authentication is required but no user is logged in");

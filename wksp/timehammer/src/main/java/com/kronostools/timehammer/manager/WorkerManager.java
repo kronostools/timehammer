@@ -5,6 +5,7 @@ import com.kronostools.timehammer.utils.Constants.Caches;
 import com.kronostools.timehammer.vo.WorkerChatVo;
 import com.kronostools.timehammer.vo.WorkerPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerVo;
+import io.quarkus.cache.CacheInvalidateAll;
 import io.quarkus.cache.CacheResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +66,7 @@ public class WorkerManager {
         return workerVo;
     }
 
+    @CacheInvalidateAll(cacheName = Caches.ALL_WORKERS_CURRENT_PREFERENCES)
     public void registerWorker(final WorkerVo workerVo, final WorkerPreferencesVo workerPreferencesVo, final WorkerChatVo workerChatVo) {
         if (workerDao.workerAlreadyExists(workerVo.getExternalId())) {
             workerChatManager.addNewChat(workerVo.getExternalId(), workerChatVo.getChatId());
