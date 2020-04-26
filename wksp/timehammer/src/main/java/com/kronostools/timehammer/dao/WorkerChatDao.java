@@ -16,12 +16,12 @@ public class WorkerChatDao extends GenericDao {
         super(em);
     }
 
-    public List<WorkerChatVo> findWorkerChatAsWorkerChatVoByWorkerExternalId(final String workerExternalId) {
+    public List<WorkerChatVo> findWorkerChatAsWorkerChatVoByWorkerInternalId(final String workerInternalId) {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.WorkerChatVo(id.chatId) " +
                         "FROM WorkerChat " +
-                        "WHERE id.workerExternalId = :workerExternalId ", WorkerChatVo.class)
-                .setParameter("workerExternalId", workerExternalId)
+                        "WHERE id.workerInternalId = :workerInternalId ", WorkerChatVo.class)
+                .setParameter("workerInternalId", workerInternalId)
                 .getResultList();
     }
 
@@ -29,7 +29,7 @@ public class WorkerChatDao extends GenericDao {
         if (workerChat.getWorker() == null) {
             Session session = em.unwrap(Session.class);
 
-            Worker worker = session.load(Worker.class, workerChat.getId().getWorkerExternalId());
+            Worker worker = session.load(Worker.class, workerChat.getId().getWorkerInternalId());
 
             workerChat.setWorker(worker);
         }

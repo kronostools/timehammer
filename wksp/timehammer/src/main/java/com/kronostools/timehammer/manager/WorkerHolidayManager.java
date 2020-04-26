@@ -31,10 +31,10 @@ public class WorkerHolidayManager {
         this.workerHolidayDao = workerHolidayDao;
     }
 
-    public Set<LocalDate> getAllWorkerHolidays(final String workerExternalId) {
-        LOG.debug("BEGIN getAllWorkerHolidays: [{}]", workerExternalId);
+    public Set<LocalDate> getAllWorkerHolidays(final String workerInternalId) {
+        LOG.debug("BEGIN getAllWorkerHolidays: [{}]", workerInternalId);
 
-        List<HolidayVo> holidayVoList = workerHolidayDao.fetchAllWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
+        List<HolidayVo> holidayVoList = workerHolidayDao.fetchAllWorkerHolidayAsHolidayVoByWorkerInternalId(workerInternalId);
 
         Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
@@ -45,10 +45,10 @@ public class WorkerHolidayManager {
 
     @CacheResult(cacheName = Caches.WORKER_HOLIDAYS)
     @Transactional
-    public Set<LocalDate> getPendingWorkerHolidays(final String workerExternalId) {
-        LOG.debug("BEGIN getPendingWorkerHolidays: [{}]", workerExternalId);
+    public Set<LocalDate> getPendingWorkerHolidays(final String workerInternalId) {
+        LOG.debug("BEGIN getPendingWorkerHolidays: [{}]", workerInternalId);
 
-        List<HolidayVo> holidayVoList = workerHolidayDao.fetchPendingWorkerHolidayAsHolidayVoByWorkerExternalId(workerExternalId);
+        List<HolidayVo> holidayVoList = workerHolidayDao.fetchPendingWorkerHolidayAsHolidayVoByWorkerInternalId(workerInternalId);
 
         Set<LocalDate> holidays = holidayVoList.stream().map(HolidayVo::getDay).collect(Collectors.toCollection(LinkedHashSet::new));
 
@@ -58,10 +58,10 @@ public class WorkerHolidayManager {
     }
 
     @CacheInvalidate(cacheName = Caches.WORKER_HOLIDAYS)
-    public void updateWorkerHolidays(@CacheKey final String workerExternalId, final ComunytekHolidaysDto comunytekHolidaysDto) {
-        LOG.debug("BEGIN updateWorkerHolidays: [{}] [{}]", workerExternalId, comunytekHolidaysDto);
+    public void updateWorkerHolidays(@CacheKey final String workerInternalId, final ComunytekHolidaysDto comunytekHolidaysDto) {
+        LOG.debug("BEGIN updateWorkerHolidays: [{}] [{}]", workerInternalId, comunytekHolidaysDto);
 
-        List<WorkerHoliday> workerHolidays = workerHolidayDao.fetchAllWorkerHolidayByWorkerExternalId(workerExternalId);
+        List<WorkerHoliday> workerHolidays = workerHolidayDao.fetchAllWorkerHolidayByWorkerInternalId(workerInternalId);
 
         // Delete holidays not declared anymore
         workerHolidays.stream()
@@ -73,7 +73,7 @@ public class WorkerHolidayManager {
                 .map(day -> {
                     WorkerHolidayId workerHolidayId = new WorkerHolidayId();
                     workerHolidayId.setDay(day);
-                    workerHolidayId.setWorkerExternalId(comunytekHolidaysDto.getUsername());
+                    workerHolidayId.setWorkerInternalId(comunytekHolidaysDto.getUsername());
 
                     return workerHolidayId;
                 })

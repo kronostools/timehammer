@@ -36,7 +36,7 @@ public class WorkerSsidTrackingInfoManager {
     public SsidTrackingEventDto updateWorkerSsidTrackingInfo(WorkerPreferencesVo workerPreferencesVo, final SsidTrackingInfoVo newSsidTrackingInfoVo) {
         LOG.debug("BEGIN updateWorkerSsidTrackingInfo: [{}] [{}]", newSsidTrackingInfoVo, workerPreferencesVo);
 
-        final SsidTrackingInfoVo lastSsidTrackingInfoVo = workerSsidTrackingInfoDao.fetchByWorkerExternalId(workerPreferencesVo.getWorkerExternalId());
+        final SsidTrackingInfoVo lastSsidTrackingInfoVo = workerSsidTrackingInfoDao.fetchByWorkerInternalId(workerPreferencesVo.getWorkerInternalId());
 
         LOG.debug("Last ssid tracking info of worker [{}]", lastSsidTrackingInfoVo);
 
@@ -49,7 +49,7 @@ public class WorkerSsidTrackingInfoManager {
         LOG.debug("Generated ssid tracking event: {}", ssidTrackingEventType);
 
         if (ssidTrackingEventType != SsidTrackingEventType.NONE) {
-            final SsidTrackingEventVo newSsidTrackingEvent = new SsidTrackingEventVo(workerPreferencesVo.getWorkerExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
+            final SsidTrackingEventVo newSsidTrackingEvent = new SsidTrackingEventVo(workerPreferencesVo.getWorkerInternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
 
             bus.publish(Buses.ADD_SSID_TRACKING_EVENT, newSsidTrackingEvent);
 
@@ -58,12 +58,12 @@ public class WorkerSsidTrackingInfoManager {
 
         LOG.debug("END updateWorkerSsidTrackingInfo");
 
-        return new SsidTrackingEventDto(workerPreferencesVo.getWorkerExternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
+        return new SsidTrackingEventDto(workerPreferencesVo.getWorkerInternalId(), ssidTrackingEventType, newSsidTrackingInfoVo.getReported());
     }
 
-    public void initializeSsidTrackingInfo(final String workerExternalId) {
+    public void initializeSsidTrackingInfo(final String workerInternalId) {
         WorkerSsidTrackingInfo workerSsidTrackingInfo = new WorkerSsidTrackingInfo();
-        workerSsidTrackingInfo.setWorkerExternalId(workerExternalId);
+        workerSsidTrackingInfo.setWorkerInternalId(workerInternalId);
         workerSsidTrackingInfo.setSsidReported(Constants.NO_SSID);
         workerSsidTrackingInfo.setReported(timeMachineService.getNow());
 

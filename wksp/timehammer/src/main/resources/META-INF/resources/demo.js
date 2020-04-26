@@ -218,16 +218,16 @@ $(document).ready(function() {
         event.stopPropagation()
 
         const $form = $(event.currentTarget)
-        const $workerExternalId = $form.find('#workerExternalId')
+        const $workerInternalId = $form.find('#workerInternalId')
         const $refreshWorkerInfoBtn = $form.find('#refreshWorkerInfo')
 
-        const workerExternalId = $workerExternalId.val()
+        const workerInternalId = $workerInternalId.val()
 
-        if (workerExternalId && workerExternalId.length > 0) {
+        if (workerInternalId && workerInternalId.length > 0) {
             $refreshWorkerInfoBtn.addClass('fa-spin').addClass('disabled')
 
             $.ajax({
-                url: $form.attr('action') + '/' + workerExternalId,
+                url: $form.attr('action') + '/' + workerInternalId,
                 method: $form.attr('method'),
             }).done(function(data, textStatus, jqXHR) {
                 updateWorkerStatusForm($('#workerStatusForm'), data)
@@ -240,7 +240,7 @@ $(document).ready(function() {
                 $refreshWorkerInfoBtn.removeClass('fa-spin').removeClass('disabled')
             })
         } else {
-            $workerExternalId.effect('shake', { distance: 10 })
+            $workerInternalId.effect('shake', { distance: 10 })
         }
     })
 

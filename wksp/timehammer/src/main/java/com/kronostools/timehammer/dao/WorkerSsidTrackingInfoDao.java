@@ -45,23 +45,21 @@ public class WorkerSsidTrackingInfoDao extends GenericDao {
                 .build();
     }
 
-    public SsidTrackingInfoVo fetchByWorkerExternalId(final String workerExternalId) {
-        LOG.debug("BEGIN fetchByWorkerExternalId: {}", workerExternalId);
-
-        SsidTrackingInfoVo result = null;
+    public SsidTrackingInfoVo fetchByWorkerInternalId(final String workerInternalId) {
+        LOG.debug("BEGIN fetchByWorkerInternalId: {}", workerInternalId);
 
         final LocalDateTime todayAtMidnight = timeMachineService.getTodayAtMidnight();
 
-        return cache.get(workerExternalId, key -> {
+        return cache.get(workerInternalId, key -> {
             LOG.debug("Worker ssid tracking info was not found in cache, getting from database ...");
 
-            SsidTrackingInfoVo ssidTrackingInfoVo = em.createQuery(
+            return em.createQuery(
                     "SELECT new com.kronostools.timehammer.vo.SsidTrackingInfoVo(workerExternalId, ssidReported, reported) " +
                             "FROM WorkerSsidTrackingInfo " +
-                            "WHERE workerExternalId = :workerExternalId " +
+                            "WHERE workerInternalId = :workerInternalId " +
                             "AND reported >= :reported " +
                             "ORDER BY reported DESC", SsidTrackingInfoVo.class)
-                    .setParameter("workerExternalId", key)
+                    .setParameter("workerInternalId", key)
                     .setParameter("reported", todayAtMidnight)
                     .setHint(QueryHints.READ_ONLY, true)
                     .setMaxResults(1)
@@ -71,15 +69,13 @@ public class WorkerSsidTrackingInfoDao extends GenericDao {
 
                             return new SsidTrackingInfoVo(key, Constants.NO_SSID, todayAtMidnight);
                         });
-
-            return ssidTrackingInfoVo;
         });
     }
 
     public void updateWorkerSsidTrackingInfo(final SsidTrackingInfoVo newSsidTrackingInfoVo) {
         LOG.debug("BEGIN updateWorkerSsidTrackingInfo: [{}]", newSsidTrackingInfoVo);
 
-        cache.put(newSsidTrackingInfoVo.getWorkerExternalId(), newSsidTrackingInfoVo);
+        cache.put(newSsidTrackingInfoVo.getWorkerInternalId(), newSsidTrackingInfoVo);
         LOG.debug("Updated worker ssid tracking info [{}] in cache", newSsidTrackingInfoVo);
 
         this.updateWorkerSsidTrackingInfoAsync(newSsidTrackingInfoVo);
@@ -103,7 +99,7 @@ public class WorkerSsidTrackingInfoDao extends GenericDao {
         Session session = em.unwrap(Session.class);
 
         if (newWorkerSsidTrackingInfo.getWorker() == null) {
-            Worker worker = session.load(Worker.class, newWorkerSsidTrackingInfo.getWorkerExternalId());
+            Worker worker = session.load(Worker.class, newWorkerSsidTrackingInfo.getWorkerInternalId());
             newWorkerSsidTrackingInfo.setWorker(worker);
         }
 
@@ -116,7 +112,7 @@ public class WorkerSsidTrackingInfoDao extends GenericDao {
         if (workerSsidTrackingInfo.getWorker() == null) {
             Session session = em.unwrap(Session.class);
 
-            Worker worker = session.load(Worker.class, workerSsidTrackingInfo.getWorkerExternalId());
+            Worker worker = session.load(Worker.class, workerSsidTrackingInfo.getWorkerInternalId());
             workerSsidTrackingInfo.setWorker(worker);
         }
 

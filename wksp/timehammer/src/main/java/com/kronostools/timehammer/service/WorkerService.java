@@ -67,19 +67,19 @@ public class WorkerService {
 
     @Transactional
     public void removeChat(final String chatId) {
-        getWorkerByChatId(chatId).ifPresent(workerVo -> workerChatManager.removeChat(workerVo.getExternalId(), chatId));
+        getWorkerByChatId(chatId).ifPresent(workerVo -> workerChatManager.removeChat(workerVo.getInternalId(), chatId));
     }
 
-    public WorkerPreferencesVo getWorkerPreferencesByExternalId(final String externalId) {
-        return workerPreferencesManager.getWorkerPreferences(externalId);
+    public WorkerPreferencesVo getWorkerPreferencesByInternalId(final String internalId) {
+        return workerPreferencesManager.getWorkerPreferencesByInternalId(internalId);
     }
 
-    public WorkerCurrentPreferencesVo getWorkerCurrentPreferencesByExternalId(final String externalId, final LocalDateTime timestamp) {
-        return workerPreferencesManager.getWorkerCurrentPreferences(externalId, timestamp);
+    public WorkerCurrentPreferencesVo getWorkerCurrentPreferencesByInternalId(final String internalId, final LocalDateTime timestamp) {
+        return workerPreferencesManager.getWorkerCurrentPreferencesByInternalId(internalId, timestamp);
     }
 
-    public Set<LocalDate> getPendingWorkerHolidays(final String externalId) {
-        return workerHolidayManager.getPendingWorkerHolidays(externalId);
+    public Set<LocalDate> getPendingWorkerHolidays(final String internalId) {
+        return workerHolidayManager.getPendingWorkerHolidays(internalId);
     }
 
     @Transactional
@@ -92,23 +92,24 @@ public class WorkerService {
     }
 
     public void updateWorkersHolidays() {
-        workerManager.getAllWorkers().forEach(worker -> {
+        workerPreferencesManager.getAllWorkersPreferences().forEach(worker -> {
             try {
                 this.updateWorkerHolidays(worker);
-                LOG.info("Holidays of worker '{}' updated successfully", worker.getExternalId());
+                LOG.info("Holidays of worker '{}' updated successfully", worker.getWorkerInternalId());
             } catch (Exception e) {
-                LOG.warn("Holidays of worker '{}' could NOT be updated. Error: {}", worker.getExternalId(), e.getMessage());
+                LOG.warn("Holidays of worker '{}' could NOT be updated. Error: {}", worker.getWorkerInternalId(), e.getMessage());
             }
         });
     }
 
     @Transactional
-    public void updateWorkerHolidays(final WorkerVo workerCredentialsDto) {
-        LOG.debug("BEGIN updateWorkerHolidays: [{}]", workerCredentialsDto);
+    public void updateWorkerHolidays(final WorkerPreferencesVo workerPreferences) {
+        LOG.debug("BEGIN updateWorkerHolidays: [{}]", workerPreferences);
 
-        ComunytekHolidaysDto comunytekHolidaysDto = comunytekClient.getHolidays(workerCredentialsDto.getExternalId(), workerCredentialsDto.getExternalPassword());
+        final WorkerVo worker = workerManager.getWorkerByInternalId(workerPreferences.getWorkerInternalId());
+        final ComunytekHolidaysDto comunytekHolidaysDto = comunytekClient.getHolidays(workerPreferences.getWorkerExternalId(), worker.getExternalPassword());
 
-        workerHolidayManager.updateWorkerHolidays(workerCredentialsDto.getExternalId(), comunytekHolidaysDto);
+        workerHolidayManager.updateWorkerHolidays(workerPreferences.getWorkerInternalId(), comunytekHolidaysDto);
 
         LOG.debug("END updateWorkerHolidays");
     }
@@ -134,12 +135,12 @@ public class WorkerService {
         workersToProcess.stream().limit(numberOfWorkersToProcess).forEach(worker -> {
             try {
                 long workerProcessingTime = this.updateWorkerStatus(timestamp, worker);
-                LOG.info("Status of worker '{}' updated successfully (processed in {} millis)", worker.getWorkerExternalId(), workerProcessingTime);
+                LOG.info("Status of worker '{}' updated successfully (processed in {} millis)", worker.getWorkerInternalId(), workerProcessingTime);
 
                 workersProcessedSuccessfully.incrementAndGet();
                 workersTotalProcessingTime.addAndGet(workerProcessingTime);
             } catch (Exception e) {
-                LOG.warn("Status of worker '{}' could NOT be updated. Error: {}", worker.getWorkerExternalId(), e.getMessage());
+                LOG.warn("Status of worker '{}' could NOT be updated. Error: {}", worker.getWorkerInternalId(), e.getMessage());
                 workersProcessedWithError.incrementAndGet();
             }
         });
@@ -153,17 +154,14 @@ public class WorkerService {
         LOG.debug("END updateWorkersStatus");
     }
 
-    public ComunytekStatusDto getWorkerStatus(final String externalId, final String externalPassword, final LocalDateTime timestamp) {
-        return comunytekClient.getStatus(externalId, externalPassword, timestamp);
-    }
-
+    @Transactional
     public long updateWorkerStatus(final LocalDateTime timestamp, final WorkerCurrentPreferencesVo workerCurrentPreferences) {
         LOG.debug("BEGIN updateWorkerStatus: [{}]", workerCurrentPreferences);
 
         final long start = System.currentTimeMillis();
 
-        final WorkerVo workerVo = workerManager.getWorkerByExternalId(workerCurrentPreferences.getWorkerExternalId());
-        final ComunytekStatusDto workerCurrentStatus = comunytekClient.getStatus(workerVo.getExternalId(), workerVo.getExternalPassword(), timestamp);
+        final WorkerVo worker = workerManager.getWorkerByInternalId(workerCurrentPreferences.getWorkerInternalId());
+        final ComunytekStatusDto workerCurrentStatus = comunytekClient.getStatus(workerCurrentPreferences.getWorkerExternalId(), worker.getExternalPassword(), timestamp);
 
         if (workerCurrentStatus.getStatus() == ComunytekStatusValue.UNKNOWN) {
             LOG.warn("Status of worker could not be updated because the status obtained is UNKNOWN");
@@ -184,6 +182,12 @@ public class WorkerService {
         LOG.debug("END updateWorkerStatus");
 
         return System.currentTimeMillis() - start;
+    }
+
+    public ComunytekStatusDto getWorkerStatus(final String internalId, final String externalPassword, final LocalDateTime timestamp) {
+        final WorkerPreferencesVo workerPreferences = workerPreferencesManager.getWorkerPreferencesByInternalId(internalId);
+
+        return comunytekClient.getStatus(workerPreferences.getWorkerExternalId(), externalPassword, timestamp);
     }
 
     @Transactional

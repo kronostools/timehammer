@@ -69,17 +69,17 @@ public class AuthService {
     }
 
     public ChatbotRegistrationResponseVo newChatbotRegistration(final String chatId) throws ChatbotAlreadyRegisteredException {
-        String registrationId = registeredChatbotsCache.get(chatId, key -> workerService.getWorkerByChatId(key).map(WorkerVo::getRegistrationId).orElse(null));
+        String internalId = registeredChatbotsCache.get(chatId, key -> workerService.getWorkerByChatId(key).map(WorkerVo::getInternalId).orElse(null));
 
-        if (registrationId != null ) {
+        if (internalId != null ) {
             throw new ChatbotAlreadyRegisteredException();
         } else {
-            registrationId = UUID.randomUUID().toString();
-            final ChatbotRegistrationRequestVo chatbotRegistrationRequestVo = new ChatbotRegistrationRequestVo(registrationId, chatId, timeMachineService.getNow());
+            internalId = UUID.randomUUID().toString();
+            final ChatbotRegistrationRequestVo chatbotRegistrationRequestVo = new ChatbotRegistrationRequestVo(internalId, chatId, timeMachineService.getNow());
 
-            chatbotRegistrationRequestCache.put(registrationId, chatbotRegistrationRequestVo);
+            chatbotRegistrationRequestCache.put(internalId, chatbotRegistrationRequestVo);
 
-            return new ChatbotRegistrationResponseVo(timehammerConfig.getRegistrationUrl(registrationId));
+            return new ChatbotRegistrationResponseVo(timehammerConfig.getRegistrationUrl(internalId));
         }
     }
 
@@ -98,7 +98,7 @@ public class AuthService {
 
     public Optional<ChatbotRegistrationRequestVo> getChatbotRegistrationRequest(final RegistrationForm registrationForm) {
         validateRegistrationForm(registrationForm);
-        return Optional.ofNullable(chatbotRegistrationRequestCache.getIfPresent(registrationForm.getRegistrationId()));
+        return Optional.ofNullable(chatbotRegistrationRequestCache.getIfPresent(registrationForm.getInternalId()));
     }
 
     public FormResponse processRegistrationForm(final RegistrationForm registrationForm) {
@@ -111,12 +111,12 @@ public class AuthService {
                 try {
                     final ComunytekSessionDto comunytekSessionDto = comunytekClient.login(registrationForm.getExternalId(), registrationForm.getExternalPassword());
 
-                    final WorkerVo workerVo = new WorkerVo(registrationForm.getRegistrationId(), registrationForm.getExternalId(), registrationForm.getExternalPassword(), comunytekSessionDto.getFullname(), timehammerConfig.getProfile(registrationForm.getExternalId()));
+                    final WorkerVo workerVo = new WorkerVo(registrationForm.getInternalId(), registrationForm.getExternalPassword(), comunytekSessionDto.getFullname(), timehammerConfig.getProfile(registrationForm.getExternalId()));
 
                     // One timetable is required and first is the default one
                     final TimetableForm timetableForm = registrationForm.getTimetables().get(0);
 
-                    final WorkerPreferencesVo workerPreferencesVo = new WorkerPreferencesVo(workerVo.getExternalId(), registrationForm.getWorkSsid(),
+                    final WorkerPreferencesVo workerPreferencesVo = new WorkerPreferencesVo(registrationForm.getInternalId(), registrationForm.getExternalId(), registrationForm.getWorkSsid(),
                             timetableForm.getWorkStarMon(), timetableForm.getWorkEndMon(), timetableForm.getLunchStarMon(), timetableForm.getLunchEndMon(),
                             timetableForm.getWorkStarTue(), timetableForm.getWorkEndTue(), timetableForm.getLunchStarTue(), timetableForm.getLunchEndTue(),
                             timetableForm.getWorkStarWed(), timetableForm.getWorkEndWed(), timetableForm.getLunchStarWed(), timetableForm.getLunchEndWed(),
@@ -128,7 +128,7 @@ public class AuthService {
 
                     workerService.registerWorker(workerVo, workerPreferencesVo, workerChatVo);
 
-                    registeredChatbotsCache.put(chatbotRegistrationRequestVo.get().getChatId(), registrationForm.getRegistrationId());
+                    registeredChatbotsCache.put(chatbotRegistrationRequestVo.get().getChatId(), registrationForm.getInternalId());
 
                     notificationService.notify(chatbotRegistrationRequestVo.get().getChatId(), ChatbotMessages.SUCCESSFUL_REGISTRATION);
                 } catch (ComunytekAuthenticationException e) {
@@ -139,7 +139,7 @@ public class AuthService {
                     formResponseBuilder.addFormError(Constants.RegistrationErrorMessages.UNEXPEDTED_ERROR);
                 }
             } else {
-                LOG.warn("Registration '{}' has expired", registrationForm.getRegistrationId());
+                LOG.warn("Registration '{}' has expired", registrationForm.getInternalId());
                 formResponseBuilder.addFormError(Constants.RegistrationErrorMessages.REGISTRATION_EXPIRED);
             }
         } catch (ConstraintViolationException e) {

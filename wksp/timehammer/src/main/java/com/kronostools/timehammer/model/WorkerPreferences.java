@@ -10,7 +10,10 @@ import java.util.Objects;
 @Table(name = "worker_preferences")
 public class WorkerPreferences {
     @Id
-    @Column(name = "worker_external_id", nullable = false, unique = true, updatable = false)
+    @Column(name = "worker_internal_id", nullable = false, unique = true, updatable = false)
+    private String workerInternalId;
+
+    @Column(name = "worker_external_id", nullable = false)
     private String workerExternalId;
 
     @Column(name = "work_ssid", nullable = false)
@@ -72,6 +75,14 @@ public class WorkerPreferences {
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     private Worker worker;
+
+    public String getWorkerInternalId() {
+        return workerInternalId;
+    }
+
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
+    }
 
     public String getWorkerExternalId() {
         return workerExternalId;
@@ -278,11 +289,11 @@ public class WorkerPreferences {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkerPreferences that = (WorkerPreferences) o;
-        return workerExternalId.equals(that.workerExternalId);
+        return workerInternalId.equals(that.workerInternalId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerExternalId);
+        return Objects.hash(workerInternalId);
     }
 }

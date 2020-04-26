@@ -5,6 +5,7 @@ import com.kronostools.timehammer.comunytek.dto.ComunytekStatusDto;
 import com.kronostools.timehammer.dto.DemoTimestampForm;
 import com.kronostools.timehammer.dto.DemoWorkerStatusForm;
 import com.kronostools.timehammer.dto.FormResponse;
+import com.kronostools.timehammer.dto.WorkerDto;
 import com.kronostools.timehammer.dto.form.DemoTimestampFormValidation;
 import com.kronostools.timehammer.dto.form.DemoTimestampFormValidationAdapter;
 import com.kronostools.timehammer.dto.form.FormError;
@@ -12,7 +13,6 @@ import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
-import com.kronostools.timehammer.vo.WorkerVo;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.validation.ConstraintViolation;
@@ -48,22 +48,21 @@ public class DemoService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getWorkers() {
+    public Set<WorkerDto> getWorkers() {
         return workerService.getAllWorkers()
                 .stream()
-                .map(WorkerVo::getExternalId)
+                .map(w -> new WorkerDto(w.getInternalId(), w.getFullName()))
                 .collect(Collectors.toSet());
     }
 
-    public DemoWorkerStatusForm getWorkerStatus(final String workerExternalId, final SupportedTimezone timezone) {
-        final ComunytekStatusDto workerStatus = workerService.getWorkerStatus(workerExternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
-        final WorkerCurrentPreferencesVo currentPreferences = workerService.getWorkerCurrentPreferencesByExternalId(workerExternalId, timeMachineService.getNow());
-        final Set<LocalDate> workerHolidays = workerService.getPendingWorkerHolidays(workerExternalId);
+    public DemoWorkerStatusForm getWorkerStatus(final String workerInternalId, final SupportedTimezone timezone) {
+        final ComunytekStatusDto workerStatus = workerService.getWorkerStatus(workerInternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
+        final WorkerCurrentPreferencesVo currentPreferences = workerService.getWorkerCurrentPreferencesByInternalId(workerInternalId, timeMachineService.getNow());
+        final Set<LocalDate> workerHolidays = workerService.getPendingWorkerHolidays(workerInternalId);
 
         final LocalDateTime workerStatusDateTime = TimeMachineService.getDateTimeAtZone(workerStatus.getTimestamp(), timezone);
 
         DemoWorkerStatusForm result = new DemoWorkerStatusForm();
-        result.setExternalId(workerStatus.getUsername());
         result.setTimestamp(TimeMachineService.formatDateTime(workerStatusDateTime, "dd/MM/yyyy HH:mm:ss.SSS"));
         result.setDayOfWeek(TimeMachineService.getDayOfWeekFull(workerStatusDateTime, TimeMachineService.LOCALE_ES_ES));
         result.setStatus(workerStatus.getStatus().getText());

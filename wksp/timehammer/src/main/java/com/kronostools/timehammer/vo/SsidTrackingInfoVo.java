@@ -5,18 +5,18 @@ import com.kronostools.timehammer.service.TimeMachineService;
 import java.time.LocalDateTime;
 
 public class SsidTrackingInfoVo {
-    private final String workerExternalId;
+    private final String workerInternalId;
     private final String ssid;
     private final LocalDateTime reported;
 
-    public SsidTrackingInfoVo(final String workerExternalId, final String ssid, final LocalDateTime timestamp) {
-        this.workerExternalId = workerExternalId;
+    public SsidTrackingInfoVo(final String workerInternalId, final String ssid, final LocalDateTime timestamp) {
+        this.workerInternalId = workerInternalId;
         this.ssid = ssid;
         this.reported = timestamp;
     }
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
     public String getSsid() {
@@ -30,7 +30,7 @@ public class SsidTrackingInfoVo {
     @Override
     public String toString() {
         return "WorkerSsidTrackingInfoVo{" +
-                "workerExternalId='" + workerExternalId + '\'' +
+                "workerInternalId='" + workerInternalId + '\'' +
                 ", ssid='" + ssid + '\'' +
                 ", reported=" + TimeMachineService.formatDateTimeFull(reported) +
                 '}';

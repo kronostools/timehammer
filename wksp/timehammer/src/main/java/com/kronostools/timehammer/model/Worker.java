@@ -8,12 +8,9 @@ import java.util.Objects;
 @Entity(name = "Worker")
 @Table(name = "worker")
 public class Worker {
-    @Column(name = "registration_id", nullable = false, unique = true, updatable = false)
-    private String registrationId;
-
     @Id
-    @Column(name = "external_id", nullable = false, unique = true, updatable = false)
-    private String externalId;
+    @Column(name = "internal_id", nullable = false, unique = true, updatable = false)
+    private String internalId;
 
     @Column(name = "external_password", nullable = false)
     private String externalPassword;
@@ -25,20 +22,12 @@ public class Worker {
     @Column(nullable = false, updatable = false)
     private Profile profile;
 
-    public String getRegistrationId() {
-        return registrationId;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
-    }
-
-    public String getExternalId() {
-        return externalId;
-    }
-
-    public void setExternalId(String externalId) {
-        this.externalId = externalId;
+    public void setInternalId(String internalId) {
+        this.internalId = internalId;
     }
 
     public String getExternalPassword() {
@@ -70,11 +59,11 @@ public class Worker {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Worker worker = (Worker) o;
-        return externalId.equals(worker.externalId);
+        return internalId.equals(worker.internalId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(externalId);
+        return Objects.hash(internalId);
     }
 }

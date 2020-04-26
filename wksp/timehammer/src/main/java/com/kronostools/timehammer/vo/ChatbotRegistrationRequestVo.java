@@ -5,18 +5,18 @@ import com.kronostools.timehammer.service.TimeMachineService;
 import java.time.LocalDateTime;
 
 public class ChatbotRegistrationRequestVo {
-    private final String registrationId;
+    private final String internalId;
     private final String chatId;
     private final LocalDateTime requested;
 
-    public ChatbotRegistrationRequestVo(final String registrationId, final String chatId, final LocalDateTime requested) {
-        this.registrationId = registrationId;
+    public ChatbotRegistrationRequestVo(final String internalId, final String chatId, final LocalDateTime requested) {
+        this.internalId = internalId;
         this.chatId = chatId;
         this.requested = requested;
     }
 
-    public String getRegistrationId() {
-        return registrationId;
+    public String getInternalId() {
+        return internalId;
     }
 
     public String getChatId() {
@@ -30,7 +30,7 @@ public class ChatbotRegistrationRequestVo {
     @Override
     public String toString() {
         return "ChatbotRegistrationRequestVo{" +
-                "registrationId='" + registrationId + '\'' +
+                "internalId='" + internalId + '\'' +
                 ", chatId=" + chatId +
                 ", requested=" + TimeMachineService.formatDateTimeFull(requested) +
                 '}';

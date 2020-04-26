@@ -44,14 +44,14 @@ public class WorkerManager {
         return workerVoList;
     }
 
-    @CacheResult(cacheName = Caches.WORKER_BY_EXTERNAL_ID_AS_WORKERVO)
+    @CacheResult(cacheName = Caches.WORKER_BY_INTERNAL_ID_AS_WORKERVO)
     @Transactional
-    public WorkerVo getWorkerByExternalId(final String externalId) {
-        LOG.debug("BEGIN getWorkerByExternalId: [{}]", externalId);
+    public WorkerVo getWorkerByInternalId(final String internalId) {
+        LOG.debug("BEGIN getWorkerByInternalId: [{}]", internalId);
 
-        WorkerVo workerVo = workerDao.fetchByExternalIdAsWorkerVo(externalId);
+        WorkerVo workerVo = workerDao.fetchByInternalIdAsWorkerVo(internalId);
 
-        LOG.debug("END getWorkerByExternalId");
+        LOG.debug("END getWorkerByInternalId");
 
         return workerVo;
     }
@@ -68,13 +68,13 @@ public class WorkerManager {
 
     @CacheInvalidateAll(cacheName = Caches.ALL_WORKERS_CURRENT_PREFERENCES)
     public void registerWorker(final WorkerVo workerVo, final WorkerPreferencesVo workerPreferencesVo, final WorkerChatVo workerChatVo) {
-        if (workerDao.workerAlreadyExists(workerVo.getExternalId())) {
-            workerChatManager.addNewChat(workerVo.getExternalId(), workerChatVo.getChatId());
+        if (workerDao.workerAlreadyExists(workerVo.getInternalId())) {
+            workerChatManager.addNewChat(workerVo.getInternalId(), workerChatVo.getChatId());
         } else {
             workerDao.registerWorker(workerVo);
-            workerPreferencesManager.registerWorkerPreferences(workerVo.getExternalId(), workerPreferencesVo);
-            workerChatManager.addNewChat(workerVo.getExternalId(), workerChatVo.getChatId());
-            workerSsidTrackingInfoManager.initializeSsidTrackingInfo(workerVo.getExternalId());
+            workerPreferencesManager.registerWorkerPreferences(workerVo.getInternalId(), workerPreferencesVo);
+            workerChatManager.addNewChat(workerVo.getInternalId(), workerChatVo.getChatId());
+            workerSsidTrackingInfoManager.initializeSsidTrackingInfo(workerVo.getInternalId());
         }
     }
 }

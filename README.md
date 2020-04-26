@@ -1,10 +1,9 @@
 # TODO
 
-- Independizar el externalId del usuario con su Id interno
 - Las claves de los usuarios se guardan en memoria
     - Hacer página para establecer la contraseña
     - Cambiar los flujos para saber si se dispone de la contraseña del usuario al principio
-        - Si no es así se le envía un mensaje
+        - Si no es así se le envía un mensaje con enlace a página para meter la contraseña
 - Elegir el cliente en función de la empresa
 - Revisar idea de
     - Acciones clockin / clockout

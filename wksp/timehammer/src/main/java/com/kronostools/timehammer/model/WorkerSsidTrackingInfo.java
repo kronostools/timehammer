@@ -8,8 +8,8 @@ import java.util.Objects;
 @Table(name = "worker_ssid_tracking_info")
 public class WorkerSsidTrackingInfo {
     @Id
-    @Column(name = "worker_external_id", nullable = false, unique = true, updatable = false)
-    private String workerExternalId;
+    @Column(name = "worker_internal_id", nullable = false, unique = true, updatable = false)
+    private String workerInternalId;
 
     @Column(name = "ssid_reported")
     private String ssidReported;
@@ -21,12 +21,12 @@ public class WorkerSsidTrackingInfo {
     @OneToOne(fetch = FetchType.LAZY)
     private Worker worker;
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
-    public void setWorkerExternalId(String workerExternalId) {
-        this.workerExternalId = workerExternalId;
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
     }
 
     public String getSsidReported() {
@@ -58,11 +58,11 @@ public class WorkerSsidTrackingInfo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkerSsidTrackingInfo that = (WorkerSsidTrackingInfo) o;
-        return workerExternalId.equals(that.workerExternalId);
+        return workerInternalId.equals(that.workerInternalId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerExternalId);
+        return Objects.hash(workerInternalId);
     }
 }

@@ -9,7 +9,7 @@ public class WorkerSsidTrackingEvent {
     @EmbeddedId
     private WorkerSsidTrackingEventId id;
 
-    @MapsId("workerExtenalId")
+    @MapsId("workerInternalId")
     @ManyToOne(fetch = FetchType.LAZY)
     private Worker worker;
 

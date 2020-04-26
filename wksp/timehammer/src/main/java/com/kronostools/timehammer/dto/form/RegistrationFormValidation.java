@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface RegistrationFormValidation {
     @NotBlank
-    String getRegistrationId();
+    String getInternalId();
 
     @NotNull
     @CompanyValid

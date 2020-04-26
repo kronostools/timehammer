@@ -3,7 +3,9 @@ package com.kronostools.timehammer.chatbot.utils;
 public class RoutesConstants {
 
     public class Headers {
+        public static final String TIMESTAMP = "timestamp";
         public static final String WORKER = "worker";
+        public static final String WORKER_CURRENT_PREFERENCES = "worker-current-preferences";
         public static final String COMMAND_PRESENT = "command-present";
         public static final String COMMAND_RECOGNIZED = "command-recognized";
         public static final String COMMAND = "command";

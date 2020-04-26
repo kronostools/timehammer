@@ -8,6 +8,7 @@ import com.kronostools.timehammer.comunytek.dto.ComunytekActionResponseDto;
 import com.kronostools.timehammer.comunytek.enums.ComunytekAction;
 import com.kronostools.timehammer.enums.AnswerType;
 import com.kronostools.timehammer.enums.QuestionType;
+import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerVo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -50,8 +51,9 @@ public class TelegramAnswerProcessor implements Processor {
         Boolean answerProcessedSuccessfully = Boolean.TRUE;
 
         if (answer == AnswerType.Y) {
+            final WorkerCurrentPreferencesVo workerCurrentPreferences = RoutesUtils.getWorkerCurrentPreferences(exchange);
             final ComunytekAction comunytekAction = questionTypeToComunytekActionConverter.convert(question);
-            final ComunytekActionResponseDto response = comunytekClient.executeAction(worker.getExternalId(), worker.getExternalPassword(), comunytekAction);
+            final ComunytekActionResponseDto response = comunytekClient.executeAction(workerCurrentPreferences.getWorkerExternalId(), worker.getExternalPassword(), comunytekAction);
             answerProcessedSuccessfully = response.getResult();
         }
 

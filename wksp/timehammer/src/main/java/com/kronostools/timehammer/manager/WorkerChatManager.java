@@ -29,10 +29,10 @@ public class WorkerChatManager {
 
     @CacheResult(cacheName = Caches.WORKER_CHATS)
     @Transactional
-    public Set<String> getWorkerChats(final String workerExternalId) {
-        LOG.debug("BEGIN getWorkerChats: [{}]", workerExternalId);
+    public Set<String> getWorkerChatsByInternalId(final String workerInternalId) {
+        LOG.debug("BEGIN getWorkerChats: [{}]", workerInternalId);
 
-        List<WorkerChatVo> chatVoList = workerChatDao.findWorkerChatAsWorkerChatVoByWorkerExternalId(workerExternalId);
+        List<WorkerChatVo> chatVoList = workerChatDao.findWorkerChatAsWorkerChatVoByWorkerInternalId(workerInternalId);
 
         Set<String> chats = chatVoList.stream().map(WorkerChatVo::getChatId).collect(Collectors.toSet());
 
@@ -42,11 +42,11 @@ public class WorkerChatManager {
     }
 
     @CacheInvalidate(cacheName = Caches.WORKER_CHATS)
-    public void addNewChat(@CacheKey final String workerExternalId, final String chatId) {
-        LOG.debug("BEGIN addNewChat: [{}] [{}]", workerExternalId, chatId);
+    public void addNewChat(@CacheKey final String workerInternalId, final String chatId) {
+        LOG.debug("BEGIN addNewChat: [{}] [{}]", workerInternalId, chatId);
 
         WorkerChatId workerChatId = new WorkerChatId();
-        workerChatId.setWorkerExternalId(workerExternalId);
+        workerChatId.setWorkerInternalId(workerInternalId);
         workerChatId.setChatId(chatId);
 
         WorkerChat workerChat = new WorkerChat();
@@ -58,11 +58,11 @@ public class WorkerChatManager {
     }
 
     @CacheInvalidate(cacheName = Caches.WORKER_CHATS)
-    public void removeChat(@CacheKey final String workerExternalId, final String chatId) {
-        LOG.debug("BEGIN removeChat: [{}] [{}]", workerExternalId, chatId);
+    public void removeChat(@CacheKey final String workerInternalId, final String chatId) {
+        LOG.debug("BEGIN removeChat: [{}] [{}]", workerInternalId, chatId);
 
         WorkerChatId workerChatId = new WorkerChatId();
-        workerChatId.setWorkerExternalId(workerExternalId);
+        workerChatId.setWorkerInternalId(workerInternalId);
         workerChatId.setChatId(chatId);
 
         workerChatDao.delete(workerChatId);

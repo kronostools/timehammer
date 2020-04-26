@@ -10,7 +10,7 @@ public class WorkerChat {
     private WorkerChatId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "worker_external_id", insertable = false, updatable = false)
+    @JoinColumn(name = "worker_internal_id", insertable = false, updatable = false)
     private Worker worker;
 
     public WorkerChatId getId() {

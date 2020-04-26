@@ -15,8 +15,8 @@ public class RegistrationFormValidationAdapter implements RegistrationFormValida
     }
 
     @Override
-    public String getRegistrationId() {
-        return registrationFormSubmit.getRegistrationId();
+    public String getInternalId() {
+        return registrationFormSubmit.getInternalId();
     }
 
     @Override

@@ -13,9 +13,10 @@ public class Constants {
     public class Caches {
         public static final String COMUNYTEK_SESSION = "comunytek-session-cache";
         public static final String COMUNYTEK_STATUS = "comunytek-status-cache";
-        public static final String WORKER_BY_EXTERNAL_ID_AS_WORKERVO = "worker-by-externalid-as-workervo-cache";
+        public static final String WORKER_BY_INTERNAL_ID_AS_WORKERVO = "worker-by-internalid-as-workervo-cache";
         public static final String WORKER_BY_CHATID_AS_WORKERVO = "worker-by-chatid-as-workervo-cache";
         public static final String ALL_WORKERS_CURRENT_PREFERENCES = "all-workers-current-preferences-cache";
+        public static final String ALL_WORKERS_PREFERENCES = "all-workers-preferences-cache";
         public static final String WORKER_PREFERENCES = "worker-preferences-cache";
         public static final String WORKER_CURRENT_PREFERENCES = "worker-current-preferences-cache";
         public static final String WORKER_HOLIDAYS = "worker-holidays-cache";

@@ -22,35 +22,35 @@ public class WorkerHolidayDao extends GenericDao {
         this.timeMachineService = timeMachineService;
     }
 
-    public List<WorkerHoliday> fetchAllWorkerHolidayByWorkerExternalId(final String workerExternalId) {
+    public List<WorkerHoliday> fetchAllWorkerHolidayByWorkerInternalId(final String workerInternalId) {
         return em.createQuery(
                 "SELECT h " +
                         "FROM WorkerHoliday h " +
-                        "WHERE h.id.workerExternalId = :workerExternalId " +
+                        "WHERE h.id.workerInternalId = :workerInternalId " +
                         "ORDER BY h.id.day ASC", WorkerHoliday.class)
-                .setParameter("workerExternalId", workerExternalId)
+                .setParameter("workerInternalId", workerInternalId)
                 .getResultList();
     }
 
-    public List<HolidayVo> fetchAllWorkerHolidayAsHolidayVoByWorkerExternalId(final String workerExternalId) {
+    public List<HolidayVo> fetchAllWorkerHolidayAsHolidayVoByWorkerInternalId(final String workerInternalId) {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
-                        "WHERE id.workerExternalId = :workerExternalId " +
+                        "WHERE id.workerInternalId = :workerInternalId " +
                         "ORDER BY id.day ASC", HolidayVo.class)
-                .setParameter("workerExternalId", workerExternalId)
+                .setParameter("workerInternalId", workerInternalId)
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }
 
-    public List<HolidayVo> fetchPendingWorkerHolidayAsHolidayVoByWorkerExternalId(final String workerExternalId) {
+    public List<HolidayVo> fetchPendingWorkerHolidayAsHolidayVoByWorkerInternalId(final String workerInternalId) {
         return em.createQuery(
                 "SELECT new com.kronostools.timehammer.vo.HolidayVo(id.day) " +
                         "FROM WorkerHoliday " +
-                        "WHERE id.workerExternalId = :workerExternalId " +
+                        "WHERE id.workerInternalId = :workerInternalId " +
                         "AND id.day >= :today " +
                         "ORDER BY id.day ASC", HolidayVo.class)
-                .setParameter("workerExternalId", workerExternalId)
+                .setParameter("workerInternalId", workerInternalId)
                 .setParameter("today", timeMachineService.getNow().toLocalDate())
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
@@ -60,7 +60,7 @@ public class WorkerHolidayDao extends GenericDao {
         if (workerHoliday.getWorker() == null) {
             Session session = em.unwrap(Session.class);
 
-            Worker worker = session.load(Worker.class, workerHoliday.getId().getWorkerExternalId());
+            Worker worker = session.load(Worker.class, workerHoliday.getId().getWorkerInternalId());
 
             workerHoliday.setWorker(worker);
         }

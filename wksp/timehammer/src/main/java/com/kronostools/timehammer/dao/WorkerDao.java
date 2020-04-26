@@ -17,25 +17,25 @@ public class WorkerDao extends GenericDao {
 
     public List<WorkerVo> fetchAllAsWorkerVo() {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.registrationId, w.externalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
                         "FROM Worker w ", WorkerVo.class)
                 .setHint(QueryHints.READ_ONLY, true)
                 .getResultList();
     }
 
-    public WorkerVo fetchByExternalIdAsWorkerVo(final String externalId) {
+    public WorkerVo fetchByInternalIdAsWorkerVo(final String internalId) {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.registrationId, w.externalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
                         "FROM Worker w " +
-                        "WHERE externalId = :externalId", WorkerVo.class)
-                .setParameter("externalId", externalId)
+                        "WHERE internalId = :internalId", WorkerVo.class)
+                .setParameter("internalId", internalId)
                 .setHint(QueryHints.READ_ONLY, true)
                 .getSingleResult();
     }
 
     public Optional<WorkerVo> fetchByChatIdAsWorkerVo(final String chatId) {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.registrationId, w.externalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
                         "FROM WorkerChat wc " +
                         "JOIN wc.worker w " +
                         "WHERE wc.id.chatId = :chatId", WorkerVo.class)
@@ -44,12 +44,12 @@ public class WorkerDao extends GenericDao {
                 .getResultStream().findFirst();
     }
 
-    public Boolean workerAlreadyExists(final String externalId) {
+    public Boolean workerAlreadyExists(final String internalId) {
         Long workerCount = em.createQuery(
                 "SELECT count(w) " +
                         "FROM Worker w " +
-                        "WHERE externalId = :externalId", Long.class)
-                .setParameter("externalId", externalId)
+                        "WHERE internalId = :internalId", Long.class)
+                .setParameter("internalId", internalId)
                 .getSingleResult();
 
         return workerCount > 0;
@@ -57,8 +57,7 @@ public class WorkerDao extends GenericDao {
 
     public void registerWorker(final WorkerVo workerVo) {
         Worker worker = new Worker();
-        worker.setRegistrationId(workerVo.getRegistrationId());
-        worker.setExternalId(workerVo.getExternalId());
+        worker.setInternalId(workerVo.getInternalId());
         worker.setExternalPassword(workerVo.getExternalPassword());
         worker.setFullName(workerVo.getFullName());
         worker.setProfile(workerVo.getProfile());

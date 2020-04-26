@@ -7,18 +7,18 @@ import java.util.Objects;
 
 @Embeddable
 public class WorkerChatId implements Serializable {
-    @Column(name = "worker_external_id", nullable = false)
-    private String workerExternalId;
+    @Column(name = "worker_internal_id", nullable = false)
+    private String workerInternalId;
 
     @Column(name = "chat_id", nullable = false, unique = true)
     private String chatId;
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
-    public void setWorkerExternalId(String workerExternalId) {
-        this.workerExternalId = workerExternalId;
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
     }
 
     public String getChatId() {
@@ -34,12 +34,12 @@ public class WorkerChatId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkerChatId that = (WorkerChatId) o;
-        return workerExternalId.equals(that.workerExternalId) &&
+        return workerInternalId.equals(that.workerInternalId) &&
                 chatId.equals(that.chatId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerExternalId, chatId);
+        return Objects.hash(workerInternalId, chatId);
     }
 }

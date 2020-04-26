@@ -10,6 +10,7 @@ import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Constants.Buses;
 import com.kronostools.timehammer.vo.ChatbotRegistrationResponseVo;
 import com.kronostools.timehammer.vo.TrashMessageVo;
+import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerVo;
 import io.vertx.axle.core.eventbus.EventBus;
 import org.apache.camel.Exchange;
@@ -58,9 +59,9 @@ public class TelegramMessageProcessor implements Processor {
 
                 if (chatbotCommand.isAuthenticationRequired()) {
                     if (RoutesUtils.isLoggedIn(exchange)) {
-                        WorkerVo worker = RoutesUtils.getWorker(exchange);
+                        final WorkerVo worker = RoutesUtils.getWorker(exchange);
 
-                        LOG.debug("Authentication is required and logged in user is: {}", worker.getExternalId());
+                        LOG.debug("Authentication is required and logged in user is: {}", worker.getInternalId());
 
                         if (chatbotCommand == ChatbotCommand.UNREGISTER) {
                             authService.cancelChatbotRegistration(chatId);
@@ -85,13 +86,13 @@ public class TelegramMessageProcessor implements Processor {
                         }
                     } else if (chatbotCommand == ChatbotCommand.REGISTER) {
                         try {
-                            ChatbotRegistrationResponseVo chatbotRegistrationResponse = authService.newChatbotRegistration(chatId);
+                            final ChatbotRegistrationResponseVo chatbotRegistrationResponse = authService.newChatbotRegistration(chatId);
 
                             outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTER_INIT(chatbotRegistrationResponse.getLoginUrl()));
                         } catch (ChatbotAlreadyRegisteredException e) {
-                            WorkerVo worker = RoutesUtils.getWorker(exchange);
+                            final WorkerCurrentPreferencesVo workerCurrentPreferences = RoutesUtils.getWorkerCurrentPreferences(exchange);
 
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTER_REGISTERED(worker.getExternalId()));
+                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTER_REGISTERED(workerCurrentPreferences.getWorkerExternalId()));
                         }
                     } else if (chatbotCommand == ChatbotCommand.HELP) {
                         outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_HELP(timehammerConfig.getHelpUrl()));

@@ -7,18 +7,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WorkerNonWorkingDaysVo {
-    private final String workerExternalId;
+    private final String workerInternalId;
     private final Set<LocalDate> workerHolidays;
     private final Set<LocalDate> cityHolidays;
 
-    public WorkerNonWorkingDaysVo(final String workerExternalId, final Set<LocalDate> workerHolidays, final Set<LocalDate> cityHolidays) {
-        this.workerExternalId = workerExternalId;
+    public WorkerNonWorkingDaysVo(final String workerInternalId, final Set<LocalDate> workerHolidays, final Set<LocalDate> cityHolidays) {
+        this.workerInternalId = workerInternalId;
         this.workerHolidays = workerHolidays;
         this.cityHolidays = cityHolidays;
     }
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
     public Set<LocalDate> getWorkerHolidays() {
@@ -32,7 +32,7 @@ public class WorkerNonWorkingDaysVo {
     @Override
     public String toString() {
         return "WorkerNonWorkingDaysVo{" +
-                "workerExternalId='" + workerExternalId + '\'' +
+                "workerInternalId='" + workerInternalId + '\'' +
                 ", holidays=" + workerHolidays.stream().map(TimeMachineService::formatDate).collect(Collectors.joining(",", "[", "]")) +
                 ", nonWorkingDays=" + cityHolidays.stream().map(TimeMachineService::formatDate).collect(Collectors.joining(",", "[", "]")) +
                 '}';

@@ -8,18 +8,18 @@ import java.util.Objects;
 
 @Embeddable
 public class WorkerHolidayId implements Serializable {
-    @Column(name = "worker_external_id", nullable = false)
-    private String workerExternalId;
+    @Column(name = "worker_internal_id", nullable = false)
+    private String workerInternalId;
 
     @Column(nullable = false)
     private LocalDate day;
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
-    public void setWorkerExternalId(String workerExternalId) {
-        this.workerExternalId = workerExternalId;
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
     }
 
     public LocalDate getDay() {
@@ -35,12 +35,12 @@ public class WorkerHolidayId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkerHolidayId that = (WorkerHolidayId) o;
-        return workerExternalId.equals(that.workerExternalId) &&
+        return workerInternalId.equals(that.workerInternalId) &&
                 day.equals(that.day);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerExternalId, day);
+        return Objects.hash(workerInternalId, day);
     }
 }

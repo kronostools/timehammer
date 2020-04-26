@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RegistrationForm {
-    private String registrationId;
+    private String internalId;
     private Company company;
     private String externalId;
     private String externalPassword;
@@ -16,12 +16,12 @@ public class RegistrationForm {
     private String workSsid;
     private List<TimetableForm> timetables;
 
-    public String getRegistrationId() {
-        return registrationId;
+    public String getInternalId() {
+        return internalId;
     }
 
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
+    public void setInternalId(String internalId) {
+        this.internalId = internalId;
     }
 
     public Company getCompany() {
@@ -75,7 +75,7 @@ public class RegistrationForm {
     @Override
     public String toString() {
         return "RegistrationForm{" +
-                "registrationId='" + registrationId + '\'' +
+                "internalId='" + internalId + '\'' +
                 ", company='" + company + '\'' +
                 ", externalId='" + externalId + '\'' +
                 ", workCity='" + workCity + '\'' +

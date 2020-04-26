@@ -30,13 +30,13 @@ public class WorkerSsidTrackingInfoService {
         LOG.debug("BEGIN newSsidTrackingReport: [{}]", newSsidTrackingReportDto);
 
         // TODO: obtener el usuario de la autenticacion
-        final String workerExternalId = "DCV";
+        final String workerInternalId = "DCV";
 
-        LOG.warn("Considered '{}' as reported because no security has been implemented", workerExternalId);
+        LOG.warn("Considered '{}' as reported because no security has been implemented", workerInternalId);
 
-        WorkerPreferencesVo workerPreferencesVo = workerService.getWorkerPreferencesByExternalId(workerExternalId);
+        WorkerPreferencesVo workerPreferencesVo = workerService.getWorkerPreferencesByInternalId(workerInternalId);
 
-        SsidTrackingEventDto result = workerSsidTrackingInfoManager.updateWorkerSsidTrackingInfo(workerPreferencesVo, new SsidTrackingInfoVo(workerExternalId, newSsidTrackingReportDto.getSsid(), timeMachineService.getNow()));
+        SsidTrackingEventDto result = workerSsidTrackingInfoManager.updateWorkerSsidTrackingInfo(workerPreferencesVo, new SsidTrackingInfoVo(workerInternalId, newSsidTrackingReportDto.getSsid(), timeMachineService.getNow()));
 
         LOG.debug("END newSsidTrackingReport");
 

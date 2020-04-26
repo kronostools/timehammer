@@ -2,6 +2,7 @@ package com.kronostools.timehammer.config;
 
 import com.kronostools.timehammer.chatbot.enums.ChatbotCommand;
 import com.kronostools.timehammer.chatbot.restclient.TelegramRestClient;
+import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.apache.camel.component.telegram.model.BotCommand;
 import org.apache.camel.component.telegram.model.SetMyCommandsMessage;
@@ -26,7 +27,7 @@ public class TimehammerLifecycle {
     TelegramRestClient telegramRestClient;
 
     void onStartup(@Observes StartupEvent event) {
-        LOG.info("BEGIN onStart");
+        LOG.info("BEGIN onStartup");
 
         LOG.debug("Configuring chatbot commands ...");
         final List<BotCommand> commands = Stream.of(ChatbotCommand.values())
@@ -45,10 +46,18 @@ public class TimehammerLifecycle {
             LOG.warn("Chatbot commands could not be configured because there was an unexpected error while configuring them");
         }
 
-        LOG.info("END onStart");
+        // TODO: read credencials from tmp dir and delete file
+
+        LOG.info("END onStartup");
     }
 
     void onCamelAfterStart(@Observes CamelMainEvents.AfterStart event) {
         LOG.info("Left here in case it is required");
+    }
+
+    void onShutdown(@Observes ShutdownEvent event) {
+        LOG.info("BEGIN onShutdown");
+        // TODO: write user credentials to tmp dir
+        LOG.info("END onShutdown");
     }
 }

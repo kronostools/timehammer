@@ -12,6 +12,7 @@ import java.util.Date;
 
 public class WorkerCurrentPreferencesVo {
     private final LocalDate date;
+    private final String workerInternalId;
     private final String workerExternalId;
     private final String workSsid;
     private final LocalTime zonedWorkStart;
@@ -28,11 +29,12 @@ public class WorkerCurrentPreferencesVo {
     private final Boolean workerHoliday;
     private final Boolean cityHoliday;
 
-    public WorkerCurrentPreferencesVo(final LocalDate date, final String workerExternalId, final String workSsid,
+    public WorkerCurrentPreferencesVo(final LocalDate date, final String workerInternalId, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
                                       final String cityCode, final SupportedTimezone timezone, final Company company,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
         this.date = date;
+        this.workerInternalId = workerInternalId;
         this.workerExternalId = workerExternalId;
         this.workSsid = workSsid;
         this.zonedWorkStart = zonedWorkStart;
@@ -54,11 +56,18 @@ public class WorkerCurrentPreferencesVo {
         this.cityHoliday = cityHoliday;
     }
 
-    public WorkerCurrentPreferencesVo(final Date date, final String workerExternalId, final String workSsid,
+    public WorkerCurrentPreferencesVo(final Date date, final String workerInternalId, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
                                       final String cityCode, final SupportedTimezone timezone, final Company company,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
-        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, company, workerHoliday, cityHoliday);
+        this(TimeMachineService.toLocalDate(date), workerInternalId, workerExternalId, workSsid,
+                zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd,
+                cityCode, timezone, company,
+                workerHoliday, cityHoliday);
+    }
+
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
     public String getWorkerExternalId() {
@@ -148,6 +157,7 @@ public class WorkerCurrentPreferencesVo {
     public String toString() {
         return "WorkerCurrentPreferencesVo{" +
                 "date=" + TimeMachineService.formatDate(date) +
+                ", workerInternalId='" + workerInternalId + '\'' +
                 ", workerExternalId='" + workerExternalId + '\'' +
                 ", workSsid='" + workSsid + '\'' +
                 ", zonedWorkStart=" + TimeMachineService.formatTimeSimple(zonedWorkStart) +

@@ -26,7 +26,7 @@ public class WorkerSsidTrackingInfoProcessorDao {
         LOG.debug("BEGIN updateWorkerSsidTrackingInfoProcessor: [{}]", newSsidTrackingInfoVo);
 
         WorkerSsidTrackingInfo newWorkerSsidTrackingInfo = new WorkerSsidTrackingInfo();
-        newWorkerSsidTrackingInfo.setWorkerExternalId(newSsidTrackingInfoVo.getWorkerExternalId());
+        newWorkerSsidTrackingInfo.setWorkerInternalId(newSsidTrackingInfoVo.getWorkerInternalId());
         newWorkerSsidTrackingInfo.setSsidReported(newSsidTrackingInfoVo.getSsid());
         newWorkerSsidTrackingInfo.setReported(newSsidTrackingInfoVo.getReported());
 

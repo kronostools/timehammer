@@ -36,11 +36,13 @@ quarkus:
         expire-after-write: 10m
       comunytek-status-cache:
         expire-after-write: 5m
-      worker-by-externalid-as-workervo-cache:
+      worker-by-internalid-as-workervo-cache:
         expire-after-write: 8h
       worker-by-chatid-as-workervo-cache:
         expire-after-write: 8h
       all-workers-current-preferences-cache:
+        expire-after-write: 8h
+      all-workers-preferences-cache:
         expire-after-write: 8h
       worker-current-preferences-cache:
         expire-after-write: 8h

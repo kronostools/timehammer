@@ -23,7 +23,7 @@ public class WorkerPreferencesDao extends GenericDao {
         final String dayOfWeek = timestamp.toLocalDate().getDayOfWeek().name();
 
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo(cast(:date as date), p.workerExternalId, p.workSsid, " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo(cast(:date as date), p.workerInternalId, p.workerExternalId, p.workSsid, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workStartFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workEndFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchStartFri ELSE NULL END) END) END) END) END, " +
@@ -35,18 +35,18 @@ public class WorkerPreferencesDao extends GenericDao {
                         "JOIN p.workCity c " +
                         "JOIN p.company co" +
                         "LEFT JOIN c.holidays ch WITH ch.id.day = :date " +
-                        "LEFT JOIN WorkerHoliday wh WITH wh.id.workerExternalId = p.workerExternalId AND wh.id.day = :date ", WorkerCurrentPreferencesVo.class)
+                        "LEFT JOIN WorkerHoliday wh WITH wh.id.workerInternalId = p.workerInternalId AND wh.id.day = :date ", WorkerCurrentPreferencesVo.class)
                 .setParameter("date", timestamp.toLocalDate())
                 .setParameter("dayOfWeek", dayOfWeek)
                 .setHint(QueryHints.READ_ONLY, true)
                 .getResultList();
     }
 
-    public WorkerCurrentPreferencesVo fetchByWorkerExternalIdAsWorkerCurrentPreferencesVo(final String workerExternalId, final LocalDateTime timestamp) {
+    public WorkerCurrentPreferencesVo fetchByWorkerInternalIdAsWorkerCurrentPreferencesVo(final String workerInternalId, final LocalDateTime timestamp) {
         final String dayOfWeek = timestamp.toLocalDate().getDayOfWeek().name();
 
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo(cast(:date as date), p.workerExternalId, p.workSsid, " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo(cast(:date as date), p.workerInternalId, p.workerExternalId, p.workSsid, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workStartFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workEndFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchStartFri ELSE NULL END) END) END) END) END, " +
@@ -58,18 +58,34 @@ public class WorkerPreferencesDao extends GenericDao {
                         "JOIN p.workCity c " +
                         "JOIN p.company co" +
                         "LEFT JOIN c.holidays ch WITH ch.id.day = :date " +
-                        "LEFT JOIN WorkerHoliday wh WITH wh.id.workerExternalId = p.workerExternalId AND wh.id.day = :date " +
-                        "WHERE p.workerExternalId = :workerExternalId", WorkerCurrentPreferencesVo.class)
-                .setParameter("workerExternalId", workerExternalId)
+                        "LEFT JOIN WorkerHoliday wh WITH wh.id.workerInternalId = p.workerInternalId AND wh.id.day = :date " +
+                        "WHERE p.workerInternalId = :workerInternalId", WorkerCurrentPreferencesVo.class)
+                .setParameter("workerInternalId", workerInternalId)
                 .setParameter("date", timestamp.toLocalDate())
                 .setParameter("dayOfWeek", dayOfWeek)
                 .setHint(QueryHints.READ_ONLY, true)
                 .getSingleResult();
     }
 
-    public WorkerPreferencesVo fetchByWorkerExternalIdAsWorkerPreferencesVo(final String workerExternalId) {
+    public List<WorkerPreferencesVo> fetchAllAsWorkerPreferencesVo() {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerPreferencesVo(p.workerExternalId, p.workSsid, " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerPreferencesVo(p.workerInternalId, p.workerExternalId, p.workSsid, " +
+                        "p.workStartMon, p.workEndMon, p.lunchStartMon, p.lunchEndMon, " +
+                        "p.workStartTue, p.workEndTue, p.lunchStartTue, p.lunchEndTue, " +
+                        "p.workStartWed, p.workEndWed, p.lunchStartWed, p.lunchEndWed, " +
+                        "p.workStartThu, p.workEndThu, p.lunchStartThu, p.lunchEndThu, " +
+                        "p.workStartFri, p.workEndFri, p.lunchStartFri, p.lunchEndFri, " +
+                        "c.code, c.timezone, co.code) " +
+                        "FROM WorkerPreferences p " +
+                        "JOIN p.workCity c " +
+                        "JOIN p.company co", WorkerPreferencesVo.class)
+                .setHint(QueryHints.READ_ONLY, true)
+                .getResultList();
+    }
+
+    public WorkerPreferencesVo fetchByWorkerInternalIdAsWorkerPreferencesVo(final String workerInternalId) {
+        return em.createQuery(
+                "SELECT new com.kronostools.timehammer.vo.WorkerPreferencesVo(p.workerInternalId, p.workerExternalId, p.workSsid, " +
                         "p.workStartMon, p.workEndMon, p.lunchStartMon, p.lunchEndMon, " +
                         "p.workStartTue, p.workEndTue, p.lunchStartTue, p.lunchEndTue, " +
                         "p.workStartWed, p.workEndWed, p.lunchStartWed, p.lunchEndWed, " +
@@ -79,14 +95,16 @@ public class WorkerPreferencesDao extends GenericDao {
                         "FROM WorkerPreferences p " +
                         "JOIN p.workCity c " +
                         "JOIN p.company co" +
-                        "WHERE p.workerExternalId = :workerExternalId", WorkerPreferencesVo.class)
-                .setParameter("workerExternalId", workerExternalId)
+                        "WHERE p.workerInternalId = :workerInternalId", WorkerPreferencesVo.class)
+                .setParameter("workerInternalId", workerInternalId)
+                .setHint(QueryHints.READ_ONLY, true)
                 .getSingleResult();
     }
 
-    public void registerWorkerPreferences(final String workerExternalId, final WorkerPreferencesVo workerPreferencesVo) {
+    public void registerWorkerPreferences(final WorkerPreferencesVo workerPreferencesVo) {
         WorkerPreferences workerPreferences = new WorkerPreferences();
-        workerPreferences.setWorkerExternalId(workerExternalId);
+        workerPreferences.setWorkerInternalId(workerPreferencesVo.getWorkerInternalId());
+        workerPreferences.setWorkerExternalId(workerPreferencesVo.getWorkerExternalId());
         workerPreferences.setWorkSsid(workerPreferencesVo.getWorkSsid());
         workerPreferences.setWorkStartMon(workerPreferencesVo.getZonedWorkStartMon());
         workerPreferences.setWorkEndMon(workerPreferencesVo.getZonedWorkEndMon());
@@ -115,7 +133,7 @@ public class WorkerPreferencesDao extends GenericDao {
         City workCity = session.load(City.class, workerPreferencesVo.getCityCode());
         workerPreferences.setWorkCity(workCity);
 
-        Worker worker = session.load(Worker.class, workerExternalId);
+        Worker worker = session.load(Worker.class, workerPreferencesVo.getWorkerInternalId());
         workerPreferences.setWorker(worker);
 
         em.persist(workerPreferences);

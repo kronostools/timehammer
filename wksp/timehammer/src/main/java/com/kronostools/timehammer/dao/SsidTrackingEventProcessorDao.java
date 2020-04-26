@@ -27,7 +27,7 @@ public class SsidTrackingEventProcessorDao {
         LOG.debug("BEGIN addSsidTrackingEventProcessor: [{}]", newSsidTrackingEventVo);
 
         WorkerSsidTrackingEventId newWorkerSsidTrackingEventId = new WorkerSsidTrackingEventId();
-        newWorkerSsidTrackingEventId.setWorkerExternalId(newSsidTrackingEventVo.getWorkerExternalId());
+        newWorkerSsidTrackingEventId.setWorkerInternalId(newSsidTrackingEventVo.getWorkerInternalId());
         newWorkerSsidTrackingEventId.setEventType(newSsidTrackingEventVo.getEventType());
         newWorkerSsidTrackingEventId.setOccurred(newSsidTrackingEventVo.getOccurred());
 

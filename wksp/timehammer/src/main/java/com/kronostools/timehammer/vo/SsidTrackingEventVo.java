@@ -6,18 +6,18 @@ import com.kronostools.timehammer.service.TimeMachineService;
 import java.time.LocalDateTime;
 
 public class SsidTrackingEventVo {
-    private final String workerExternalId;
+    private final String workerInternalId;
     private final SsidTrackingEventType eventType;
     private final LocalDateTime occurred;
 
-    public SsidTrackingEventVo(final String workerExternalId, final SsidTrackingEventType eventType, final LocalDateTime occurred) {
-        this.workerExternalId = workerExternalId;
+    public SsidTrackingEventVo(final String workerInternalId, final SsidTrackingEventType eventType, final LocalDateTime occurred) {
+        this.workerInternalId = workerInternalId;
         this.eventType = eventType;
         this.occurred = occurred;
     }
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
     public SsidTrackingEventType getEventType() {
@@ -31,7 +31,7 @@ public class SsidTrackingEventVo {
     @Override
     public String toString() {
         return "SsidTrackingEventVo{" +
-                "workerExtenalId='" + workerExternalId + '\'' +
+                "workerInternalId='" + workerInternalId + '\'' +
                 ", eventType=" + eventType +
                 ", occurred=" + TimeMachineService.formatDateTimeFull(occurred) +
                 '}';

@@ -12,8 +12,8 @@ import java.util.Objects;
 
 @Embeddable
 public class WorkerSsidTrackingEventId implements Serializable {
-    @Column(name = "worker_external_id", nullable = false, updatable = false)
-    private String workerExternalId;
+    @Column(name = "worker_internal_id", nullable = false, updatable = false)
+    private String workerInternalId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
@@ -22,12 +22,12 @@ public class WorkerSsidTrackingEventId implements Serializable {
     @Column(nullable = false)
     private LocalDateTime occurred;
 
-    public String getWorkerExternalId() {
-        return workerExternalId;
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
-    public void setWorkerExternalId(String workerExtenalId) {
-        this.workerExternalId = workerExtenalId;
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
     }
 
     public SsidTrackingEventType getEventType() {
@@ -51,13 +51,13 @@ public class WorkerSsidTrackingEventId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         WorkerSsidTrackingEventId that = (WorkerSsidTrackingEventId) o;
-        return workerExternalId.equals(that.workerExternalId) &&
+        return workerInternalId.equals(that.workerInternalId) &&
                 eventType == that.eventType &&
                 occurred.equals(that.occurred);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerExternalId, eventType, occurred);
+        return Objects.hash(workerInternalId, eventType, occurred);
     }
 }

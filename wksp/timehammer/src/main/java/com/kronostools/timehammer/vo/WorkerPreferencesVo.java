@@ -7,6 +7,7 @@ import com.kronostools.timehammer.service.TimeMachineService;
 import java.time.LocalTime;
 
 public class WorkerPreferencesVo {
+    private final String workerInternalId;
     private final String workerExternalId;
     private final String workSsid;
     private final LocalTime zonedWorkStartMon;
@@ -33,13 +34,14 @@ public class WorkerPreferencesVo {
     private final SupportedTimezone timezone;
     private final Company company;
 
-    public WorkerPreferencesVo(final String workerExternalId, final String workSsid,
+    public WorkerPreferencesVo(final String workerInternalId, final String workerExternalId, final String workSsid,
                                final LocalTime zonedWorkStartMon, final LocalTime zonedWorkEndMon, final LocalTime zonedLunchStartMon, final LocalTime zonedLunchEndMon,
                                final LocalTime zonedWorkStartTue, final LocalTime zonedWorkEndTue, final LocalTime zonedLunchStartTue, final LocalTime zonedLunchEndTue,
                                final LocalTime zonedWorkStartWed, final LocalTime zonedWorkEndWed, final LocalTime zonedLunchStartWed, final LocalTime zonedLunchEndWed,
                                final LocalTime zonedWorkStartThu, final LocalTime zonedWorkEndThu, final LocalTime zonedLunchStartThu, final LocalTime zonedLunchEndThu,
                                final LocalTime zonedWorkStartFri, final LocalTime zonedWorkEndFri, final LocalTime zonedLunchStartFri, final LocalTime zonedLunchEndFri,
                                final String cityCode, final SupportedTimezone timezone, final Company company) {
+        this.workerInternalId = workerInternalId;
         this.workerExternalId = workerExternalId;
         this.workSsid = workSsid;
         this.zonedWorkStartMon = zonedWorkStartMon;
@@ -69,6 +71,10 @@ public class WorkerPreferencesVo {
 
     public String getWorkerExternalId() {
         return workerExternalId;
+    }
+
+    public String getWorkerInternalId() {
+        return workerInternalId;
     }
 
     public String getWorkSsid() {
@@ -170,7 +176,8 @@ public class WorkerPreferencesVo {
     @Override
     public String toString() {
         return "WorkerPreferencesVo{" +
-                "workerExternalId='" + workerExternalId + '\'' +
+                "workerInternalId='" + workerInternalId + '\'' +
+                ", workerExternalId='" + workerExternalId + '\'' +
                 ", workSsid='" + workSsid + '\'' +
                 ", zonedWorkStartMon=" + TimeMachineService.formatTimeSimple(zonedWorkStartMon) +
                 ", zonedWorkEndMon=" + TimeMachineService.formatTimeSimple(zonedWorkEndMon) +

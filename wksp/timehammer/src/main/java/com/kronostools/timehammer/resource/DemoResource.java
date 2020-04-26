@@ -68,11 +68,11 @@ public class DemoResource {
     }
 
     @GET
-    @Path("/workers/{workerExternalId}")
+    @Path("/workers/{workerInternalId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public DemoWorkerStatusForm getWorkerStatus(@PathParam("workerExternalId") final String workerExternalId) {
+    public DemoWorkerStatusForm getWorkerStatus(@PathParam("workerInternalId") final String workerInternalId) {
         if (Utils.isDemoMode()) {
-            return demoService.getWorkerStatus(workerExternalId, getTimezone());
+            return demoService.getWorkerStatus(workerInternalId, getTimezone());
         } else {
             throw new ForbiddenException();
         }

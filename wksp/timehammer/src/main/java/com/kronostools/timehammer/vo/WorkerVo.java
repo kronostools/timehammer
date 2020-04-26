@@ -3,26 +3,20 @@ package com.kronostools.timehammer.vo;
 import com.kronostools.timehammer.enums.Profile;
 
 public class WorkerVo {
-    private final String registrationId;
-    private final String externalId;
+    private final String internalId;
     private final String externalPassword;
     private final String fullName;
     private final Profile profile;
 
-    public WorkerVo(final String registrationId, final String externalId, final String externalPassword, final String fullName, final Profile profile) {
-        this.registrationId = registrationId;
-        this.externalId = externalId;
+    public WorkerVo(final String internalId, final String externalPassword, final String fullName, final Profile profile) {
+        this.internalId = internalId;
         this.externalPassword = externalPassword;
         this.fullName = fullName;
         this.profile = profile;
     }
 
-    public String getRegistrationId() {
-        return registrationId;
-    }
-
-    public String getExternalId() {
-        return externalId;
+    public String getInternalId() {
+        return internalId;
     }
 
     public String getExternalPassword() {
@@ -40,8 +34,7 @@ public class WorkerVo {
     @Override
     public String toString() {
         return "WorkerVo{" +
-                "registrationId='" + registrationId + '\'' +
-                ", externalId='" + externalId + '\'' +
+                "internalId='" + internalId + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", profile='" + profile + '\'' +
                 '}';

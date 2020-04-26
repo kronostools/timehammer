@@ -43,7 +43,7 @@ public class SsidTrackingEventDao extends GenericDao {
         Session session = em.unwrap(Session.class);
 
         if (workerSsidTrackingEvent.getWorker() == null) {
-            Worker worker = session.load(Worker.class, workerSsidTrackingEvent.getId().getWorkerExternalId());
+            Worker worker = session.load(Worker.class, workerSsidTrackingEvent.getId().getWorkerInternalId());
 
             workerSsidTrackingEvent.setWorker(worker);
         }

@@ -30,9 +30,21 @@ public class WorkerPreferencesManager {
     @CacheResult(cacheName = Caches.ALL_WORKERS_CURRENT_PREFERENCES)
     @Transactional
     public List<WorkerCurrentPreferencesVo> getAllWorkersCurrentPreferences(final LocalDateTime timestamp) {
-        LOG.debug("BEGIN getAllWorkersPreferences: [{}]", TimeMachineService.formatDateTimeFull(timestamp));
+        LOG.debug("BEGIN getAllWorkersCurrentPreferences: [{}]", TimeMachineService.formatDateTimeFull(timestamp));
 
         List<WorkerCurrentPreferencesVo> allWorkersPreferences = workerPreferencesDao.fetchAllAsWorkerCurrentPreferencesVo(timestamp);
+
+        LOG.debug("END getAllWorkersCurrentPreferences");
+
+        return allWorkersPreferences;
+    }
+
+    @CacheResult(cacheName = Caches.ALL_WORKERS_PREFERENCES)
+    @Transactional
+    public List<WorkerPreferencesVo> getAllWorkersPreferences() {
+        LOG.debug("BEGIN getAllWorkersPreferences");
+
+        List<WorkerPreferencesVo> allWorkersPreferences = workerPreferencesDao.fetchAllAsWorkerPreferencesVo();
 
         LOG.debug("END getAllWorkersPreferences");
 
@@ -41,24 +53,24 @@ public class WorkerPreferencesManager {
 
     @CacheResult(cacheName = Caches.WORKER_PREFERENCES)
     @Transactional
-    public WorkerPreferencesVo getWorkerPreferences(final String workerExternalId) {
-        LOG.debug("BEGIN getWorkerPreferences: [{}]", workerExternalId);
+    public WorkerPreferencesVo getWorkerPreferencesByInternalId(final String workerInternalId) {
+        LOG.debug("BEGIN getWorkerPreferencesByInternalId: [{}]", workerInternalId);
 
-        final WorkerPreferencesVo workerPreferences = workerPreferencesDao.fetchByWorkerExternalIdAsWorkerPreferencesVo(workerExternalId);
+        final WorkerPreferencesVo workerPreferences = workerPreferencesDao.fetchByWorkerInternalIdAsWorkerPreferencesVo(workerInternalId);
 
-        LOG.debug("END getWorkerPreferences");
+        LOG.debug("END getWorkerPreferencesByInternalId");
 
         return workerPreferences;
     }
 
     @CacheResult(cacheName = Caches.WORKER_CURRENT_PREFERENCES)
     @Transactional
-    public WorkerCurrentPreferencesVo getWorkerCurrentPreferences(@CacheKey final String workerExternalId, final LocalDateTime timestamp) {
-        LOG.debug("BEGIN getWorkerCurrentPreferences: [{}] [{}]", workerExternalId, TimeMachineService.formatDateTimeFull(timestamp));
+    public WorkerCurrentPreferencesVo getWorkerCurrentPreferencesByInternalId(@CacheKey final String workerInternalId, final LocalDateTime timestamp) {
+        LOG.debug("BEGIN getWorkerCurrentPreferencesByInternalId: [{}] [{}]", workerInternalId, TimeMachineService.formatDateTimeFull(timestamp));
 
-        final WorkerCurrentPreferencesVo workerCurrentPreferences = workerPreferencesDao.fetchByWorkerExternalIdAsWorkerCurrentPreferencesVo(workerExternalId, timestamp);
+        final WorkerCurrentPreferencesVo workerCurrentPreferences = workerPreferencesDao.fetchByWorkerInternalIdAsWorkerCurrentPreferencesVo(workerInternalId, timestamp);
 
-        LOG.debug("END getWorkerCurrentPreferences");
+        LOG.debug("END getWorkerCurrentPreferencesByInternalId");
 
         return workerCurrentPreferences;
     }
@@ -66,10 +78,10 @@ public class WorkerPreferencesManager {
     @CacheInvalidateAll(cacheName = Caches.ALL_WORKERS_CURRENT_PREFERENCES)
     @CacheInvalidate(cacheName = Caches.WORKER_PREFERENCES)
     @CacheInvalidate(cacheName = Caches.WORKER_CURRENT_PREFERENCES)
-    public void registerWorkerPreferences(@CacheKey final String workerExternalId, final WorkerPreferencesVo workerPreferencesVo) {
-        LOG.debug("BEGIN registerWorkerPreferences: [{}] [{}]", workerExternalId, workerPreferencesVo);
+    public void registerWorkerPreferences(@CacheKey final String workerInternalId, final WorkerPreferencesVo workerPreferencesVo) {
+        LOG.debug("BEGIN registerWorkerPreferences: [{}] [{}]", workerInternalId, workerPreferencesVo);
 
-        workerPreferencesDao.registerWorkerPreferences(workerExternalId, workerPreferencesVo);
+        workerPreferencesDao.registerWorkerPreferences(workerPreferencesVo);
 
         LOG.debug("END registerWorkerPreferences");
     }
