@@ -122,7 +122,7 @@ public class AuthService {
                             timetableForm.getWorkStarWed(), timetableForm.getWorkEndWed(), timetableForm.getLunchStarWed(), timetableForm.getLunchEndWed(),
                             timetableForm.getWorkStarThu(), timetableForm.getWorkEndThu(), timetableForm.getLunchStarThu(), timetableForm.getLunchEndThu(),
                             timetableForm.getWorkStarFri(), timetableForm.getWorkEndFri(), timetableForm.getLunchStarFri(), timetableForm.getLunchEndFri(),
-                            registrationForm.getWorkCity(), registrationForm.getCompany());
+                            registrationForm.getWorkCity().getCode(), registrationForm.getWorkCity().getTimezone(), registrationForm.getCompany());
 
                     final WorkerChatVo workerChatVo = new WorkerChatVo(chatbotRegistrationRequestVo.get().getChatId());
 

@@ -1,11 +1,13 @@
 package com.kronostools.timehammer.dao;
 
 import com.kronostools.timehammer.dto.CityDto;
+import com.kronostools.timehammer.vo.CityVo;
 import org.hibernate.jpa.QueryHints;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class CityDao extends GenericDao {
@@ -22,13 +24,14 @@ public class CityDao extends GenericDao {
                 .getResultList();
     }
 
-    public boolean cityByCodeExists(final String code) {
+    public Optional<CityVo> findByCode(final String code) {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.dto.CityDto(code, name) " +
+                "SELECT new com.kronostools.timehammer.vo.CityVo(code, timezone) " +
                         "FROM City " +
-                        "WHERE code = :code", CityDto.class)
+                        "WHERE code = :code", CityVo.class)
                 .setParameter("code", code)
                 .setHint(QueryHints.HINT_READONLY,true)
-                .getResultStream().count() > 0;
+                .getResultStream()
+                .findFirst();
     }
 }

@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.model;
 
+import com.kronostools.timehammer.enums.Company;
+
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.Objects;
@@ -63,8 +65,8 @@ public class WorkerPreferences {
     @JoinColumn(name = "work_city_code")
     private City workCity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_code")
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Company company;
 
     @MapsId

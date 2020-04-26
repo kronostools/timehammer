@@ -23,8 +23,6 @@ public class Constants {
         public static final String CITY_LIST = "city-list-cache";
         public static final String CITY_BY_CODE = "city-by-code-cache";
         public static final String CITY_HOLIDAYS = "city-holidays-cache";
-        public static final String COMPANY_LIST = "company-list-cache";
-        public static final String COMPANY_BY_CODE = "company-by-code-cache";
     }
 
     public class Buses {

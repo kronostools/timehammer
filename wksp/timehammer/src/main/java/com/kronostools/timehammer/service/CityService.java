@@ -2,9 +2,11 @@ package com.kronostools.timehammer.service;
 
 import com.kronostools.timehammer.dto.CityDto;
 import com.kronostools.timehammer.manager.CityManager;
+import com.kronostools.timehammer.vo.CityVo;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public class CityService {
@@ -18,7 +20,7 @@ public class CityService {
         return cityManager.getAllCities();
     }
 
-    public boolean cityByCodeExists(final String code) {
-        return cityManager.cityByCodeExists(code);
+    public Optional<CityVo> findByCode(final String code) {
+        return cityManager.findByCode(code);
     }
 }

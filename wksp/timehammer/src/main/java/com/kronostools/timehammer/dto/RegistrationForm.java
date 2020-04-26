@@ -1,16 +1,18 @@
 package com.kronostools.timehammer.dto;
 
 import com.kronostools.timehammer.dto.form.TimetableForm;
+import com.kronostools.timehammer.enums.Company;
+import com.kronostools.timehammer.vo.CityVo;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class RegistrationForm {
     private String registrationId;
-    private String company;
+    private Company company;
     private String externalId;
     private String externalPassword;
-    private String workCity;
+    private CityVo workCity;
     private String workSsid;
     private List<TimetableForm> timetables;
 
@@ -22,11 +24,11 @@ public class RegistrationForm {
         this.registrationId = registrationId;
     }
 
-    public String getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 
@@ -46,11 +48,11 @@ public class RegistrationForm {
         this.externalPassword = externalPassword;
     }
 
-    public String getWorkCity() {
+    public CityVo getWorkCity() {
         return workCity;
     }
 
-    public void setWorkCity(String workCity) {
+    public void setWorkCity(CityVo workCity) {
         this.workCity = workCity;
     }
 

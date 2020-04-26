@@ -1,24 +1,19 @@
 package com.kronostools.timehammer.service;
 
 import com.kronostools.timehammer.dto.CompanyDto;
-import com.kronostools.timehammer.manager.CompanyManager;
+import com.kronostools.timehammer.enums.Company;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ApplicationScoped
 public class CompanyService {
-    private final CompanyManager companyManager;
-
-    public CompanyService(final CompanyManager companyManager) {
-        this.companyManager = companyManager;
-    }
-
-    public List<CompanyDto> getAllCompanies() {
-        return companyManager.getAllCompanies();
-    }
-
-    public boolean companyByCodeExists(final String code) {
-        return companyManager.companyByCodeExists(code);
+    public Set<CompanyDto> getAllCompanies() {
+        return Stream.of(Company.values())
+                .filter(Company::isSelectionable)
+                .map(c -> new CompanyDto(c.getCode(), c.getText()))
+                .collect(Collectors.toSet());
     }
 }

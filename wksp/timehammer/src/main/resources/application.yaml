@@ -52,10 +52,6 @@ quarkus:
         expire-after-write: 8h
       city-holidays-cache:
         expire-after-write: 8h
-      company-list-cache:
-        expire-after-write: 8h
-      company-by-code-cache:
-        expire-after-write: 8h
 
   # quarkus-camel
   camel:

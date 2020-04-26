@@ -32,7 +32,7 @@ public class SsidTrackingEventVo {
     public String toString() {
         return "SsidTrackingEventVo{" +
                 "workerExtenalId='" + workerExternalId + '\'' +
-                ", eventType=" + eventType.name() +
+                ", eventType=" + eventType +
                 ", occurred=" + TimeMachineService.formatDateTimeFull(occurred) +
                 '}';
     }

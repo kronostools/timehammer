@@ -153,6 +153,10 @@ public class WorkerService {
         LOG.debug("END updateWorkersStatus");
     }
 
+    public ComunytekStatusDto getWorkerStatus(final String externalId, final String externalPassword, final LocalDateTime timestamp) {
+        return comunytekClient.getStatus(externalId, externalPassword, timestamp);
+    }
+
     public long updateWorkerStatus(final LocalDateTime timestamp, final WorkerCurrentPreferencesVo workerCurrentPreferences) {
         LOG.debug("BEGIN updateWorkerStatus: [{}]", workerCurrentPreferences);
 

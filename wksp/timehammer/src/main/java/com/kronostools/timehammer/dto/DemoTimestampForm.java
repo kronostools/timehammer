@@ -79,7 +79,7 @@ public class DemoTimestampForm {
     @Override
     public String toString() {
         return "DemoTimestampForm{" +
-                "timezone='" + timezone.name() + '\'' +
+                "timezone='" + timezone + '\'' +
                 ", day='" + day + '\'' +
                 ", month='" + month + '\'' +
                 ", year='" + year + '\'' +

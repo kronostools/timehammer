@@ -2,9 +2,12 @@ package com.kronostools.timehammer.dto.form;
 
 import com.kronostools.timehammer.dto.form.validation.CityValid;
 import com.kronostools.timehammer.dto.form.validation.CompanyValid;
+import com.kronostools.timehammer.enums.Company;
+import com.kronostools.timehammer.vo.CityVo;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -12,9 +15,9 @@ public interface RegistrationFormValidation {
     @NotBlank
     String getRegistrationId();
 
-    @NotBlank
+    @NotNull
     @CompanyValid
-    String getCompany();
+    Company getCompany();
 
     @NotBlank
     String getExternalId();
@@ -22,9 +25,9 @@ public interface RegistrationFormValidation {
     @NotBlank
     String getExternalPassword();
 
-    @NotBlank
+    @NotNull
     @CityValid
-    String getWorkCity();
+    CityVo getWorkCity();
 
     String getWorkSsid();
 

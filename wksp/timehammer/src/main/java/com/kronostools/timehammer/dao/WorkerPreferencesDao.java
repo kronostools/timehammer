@@ -1,7 +1,6 @@
 package com.kronostools.timehammer.dao;
 
 import com.kronostools.timehammer.model.City;
-import com.kronostools.timehammer.model.Company;
 import com.kronostools.timehammer.model.Worker;
 import com.kronostools.timehammer.model.WorkerPreferences;
 import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
@@ -109,14 +108,12 @@ public class WorkerPreferencesDao extends GenericDao {
         workerPreferences.setWorkEndFri(workerPreferencesVo.getZonedWorkEndFri());
         workerPreferences.setLunchStartFri(workerPreferencesVo.getZonedLunchStartFri());
         workerPreferences.setLunchEndFri(workerPreferencesVo.getZonedLunchEndFri());
+        workerPreferences.setCompany(workerPreferencesVo.getCompany());
 
         Session session = em.unwrap(Session.class);
 
         City workCity = session.load(City.class, workerPreferencesVo.getCityCode());
         workerPreferences.setWorkCity(workCity);
-
-        Company company = session.load(Company.class, workerPreferencesVo.getCompanyCode());
-        workerPreferences.setCompany(company);
 
         Worker worker = session.load(Worker.class, workerExternalId);
         workerPreferences.setWorker(worker);

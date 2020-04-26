@@ -1,6 +1,8 @@
 package com.kronostools.timehammer.dto.form;
 
 import com.kronostools.timehammer.dto.RegistrationForm;
+import com.kronostools.timehammer.enums.Company;
+import com.kronostools.timehammer.vo.CityVo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +20,7 @@ public class RegistrationFormValidationAdapter implements RegistrationFormValida
     }
 
     @Override
-    public String getCompany() {
+    public Company getCompany() {
         return registrationFormSubmit.getCompany();
     }
 
@@ -33,7 +35,7 @@ public class RegistrationFormValidationAdapter implements RegistrationFormValida
     }
 
     @Override
-    public String getWorkCity() {
+    public CityVo getWorkCity() {
         return registrationFormSubmit.getWorkCity();
     }
 

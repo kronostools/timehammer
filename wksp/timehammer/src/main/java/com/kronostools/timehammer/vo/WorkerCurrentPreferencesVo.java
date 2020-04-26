@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.vo;
 
+import com.kronostools.timehammer.enums.Company;
 import com.kronostools.timehammer.enums.NonWorkingReason;
 import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.service.TimeMachineService;
@@ -23,13 +24,13 @@ public class WorkerCurrentPreferencesVo {
     private final LocalTime lunchEnd;
     private final String cityCode;
     private final SupportedTimezone timezone;
-    private final String companyCode;
+    private final Company company;
     private final Boolean workerHoliday;
     private final Boolean cityHoliday;
 
     public WorkerCurrentPreferencesVo(final LocalDate date, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
-                                      final String cityCode, final SupportedTimezone timezone, final String companyCode,
+                                      final String cityCode, final SupportedTimezone timezone, final Company company,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
         this.date = date;
         this.workerExternalId = workerExternalId;
@@ -48,16 +49,16 @@ public class WorkerCurrentPreferencesVo {
 
         this.cityCode = cityCode;
         this.timezone = timezone;
-        this.companyCode = companyCode;
+        this.company = company;
         this.workerHoliday = workerHoliday;
         this.cityHoliday = cityHoliday;
     }
 
     public WorkerCurrentPreferencesVo(final Date date, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
-                                      final String cityCode, final SupportedTimezone timezone, final String companyCode,
+                                      final String cityCode, final SupportedTimezone timezone, final Company company,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
-        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, companyCode, workerHoliday, cityHoliday);
+        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, company, workerHoliday, cityHoliday);
     }
 
     public String getWorkerExternalId() {
@@ -90,6 +91,10 @@ public class WorkerCurrentPreferencesVo {
 
     public SupportedTimezone getTimezone() {
         return timezone;
+    }
+
+    public Company getCompany() {
+        return company;
     }
 
     public Boolean workToday() {
@@ -150,7 +155,8 @@ public class WorkerCurrentPreferencesVo {
                 ", zonedLunchStart=" + TimeMachineService.formatTimeSimple(zonedLunchStart) +
                 ", zonedLunchEnd=" + TimeMachineService.formatTimeSimple(zonedLunchEnd) +
                 ", cityCode='" + cityCode + '\'' +
-                ", timezone='" + timezone.name() + '\'' +
+                ", timezone='" + timezone + '\'' +
+                ", company='" + company + '\'' +
                 ", workerHoliday='" + workerHoliday + '\'' +
                 ", cityHoliday='" + cityHoliday + '\'' +
                 '}';

@@ -70,14 +70,14 @@ public class WorkerStatusService {
 
                         break;
                     default:
-                        LOG.debug("Nothing to do with event {} when worker status is {}", workerStatusEvent.name(), comunytekStatusDto.getStatus().name());
+                        LOG.debug("Nothing to do with event {} when worker status is {}", workerStatusEvent, comunytekStatusDto.getStatus());
 
                         break;
                 }
 
                 break;
             default:
-                LOG.warn("Business logic not implemented for event {}", workerStatusEvent.name());
+                LOG.warn("Business logic not implemented for event {}", workerStatusEvent);
 
                 break;
         }

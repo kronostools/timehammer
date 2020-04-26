@@ -56,7 +56,7 @@ public class DemoService {
     }
 
     public DemoWorkerStatusForm getWorkerStatus(final String workerExternalId, final SupportedTimezone timezone) {
-        final ComunytekStatusDto workerStatus = comunytekClient.getStatus(workerExternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
+        final ComunytekStatusDto workerStatus = workerService.getWorkerStatus(workerExternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
         final WorkerCurrentPreferencesVo currentPreferences = workerService.getWorkerCurrentPreferencesByExternalId(workerExternalId, timeMachineService.getNow());
         final Set<LocalDate> workerHolidays = workerService.getPendingWorkerHolidays(workerExternalId);
 

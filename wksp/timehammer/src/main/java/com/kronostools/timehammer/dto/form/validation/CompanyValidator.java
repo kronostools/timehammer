@@ -1,28 +1,21 @@
 package com.kronostools.timehammer.dto.form.validation;
 
-import com.kronostools.timehammer.service.CompanyService;
+import com.kronostools.timehammer.enums.Company;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-@ApplicationScoped
-public class CompanyValidator implements ConstraintValidator<CompanyValid, String> {
-    private final CompanyService companyService;
-
-    public CompanyValidator(final CompanyService companyService) {
-        this.companyService = companyService;
-    }
+public class CompanyValidator implements ConstraintValidator<CompanyValid, Company> {
 
     @Override
     public void initialize(CompanyValid constraintAnnotation) {}
 
     @Override
-    public boolean isValid(String code, ConstraintValidatorContext context) {
+    public boolean isValid(Company company, ConstraintValidatorContext context) {
         Boolean result = Boolean.TRUE;
 
-        if (code != null) {
-            result = companyService.companyByCodeExists(code);
+        if (company != null) {
+            result = company != Company.UNKNOWN;
         }
 
         return result;

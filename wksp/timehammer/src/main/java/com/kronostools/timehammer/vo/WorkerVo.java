@@ -43,7 +43,7 @@ public class WorkerVo {
                 "registrationId='" + registrationId + '\'' +
                 ", externalId='" + externalId + '\'' +
                 ", fullName='" + fullName + '\'' +
-                ", profile='" + profile.name() + '\'' +
+                ", profile='" + profile + '\'' +
                 '}';
     }
 }
