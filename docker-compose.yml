@@ -13,18 +13,6 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-  kv:
-    image: vault:1.4.0
-    container_name: timehammer-kv
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: myroot
-      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
-      VAULT_ADDR: http://0.0.0.0:8200
-    cap_add:
-      - IPC_LOCK
-    networks:
-      - timehammer
-    restart: unless-stopped
   reverseproxy:
     image: linuxserver/letsencrypt:1.3.0-ls109
     container_name: timehammer-reverseproxy

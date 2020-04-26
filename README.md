@@ -1,5 +1,10 @@
 # TODO
 
+- Independizar el externalId del usuario con su Id interno
+- Las claves de los usuarios se guardan en memoria
+    - Hacer página para establecer la contraseña
+    - Cambiar los flujos para saber si se dispone de la contraseña del usuario al principio
+        - Si no es así se le envía un mensaje
 - Elegir el cliente en función de la empresa
 - Revisar idea de
     - Acciones clockin / clockout
@@ -8,9 +13,7 @@
         - Supone un cambio de estado
         - Acción en Comunytek (traductor de acciones con distintas implementaciones)
     - Estado INIT, WORKING, LUNCHING, ENDED
-    - Acciones Comunitek Entrada, Pausar (Motivo), Reanudar, Salida
-- Almacen de claves
-    - El almacén de claves tendrá un usuario por clave y solo ese usuario puede leer y escribir (así el admin de timehammer no puede ver nada, el admin solo puede borrar por si a alguien se le olvidase la contraseña)
+    - Acciones Comunitek Entrada, Pausar (Motivo), Reanudar, Salida 
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
@@ -123,14 +126,6 @@ https://camel.apache.org/components/latest/telegram-component.html
 ## Telegram - API
 
 https://core.telegram.org/bots/api
-
-## Vault
-
-https://quarkus.io/guides/vault
-https://hub.docker.com/_/vault
-https://learn.hashicorp.com/vault/getting-started/install
-https://www.vaultproject.io/docs/what-is-vault
-https://hub.docker.com/r/keybaseio/client
 
 ## NGINX + Let's encrypt
 

@@ -1,8 +1,5 @@
 version: '3'
 services:
-  kv:
-    ports:
-      - 8200:8200
   timehammer:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
