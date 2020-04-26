@@ -21,4 +21,14 @@ public class CityDao extends GenericDao {
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }
+
+    public boolean cityByCodeExists(final String code) {
+        return em.createQuery(
+                "SELECT new com.kronostools.timehammer.dto.CityDto(code, name) " +
+                        "FROM City " +
+                        "WHERE code = :code", CityDto.class)
+                .setParameter("code", code)
+                .setHint(QueryHints.HINT_READONLY,true)
+                .getResultStream().count() > 0;
+    }
 }

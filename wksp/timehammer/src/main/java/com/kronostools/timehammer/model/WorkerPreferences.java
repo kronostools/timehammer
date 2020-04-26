@@ -63,6 +63,10 @@ public class WorkerPreferences {
     @JoinColumn(name = "work_city_code")
     private City workCity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_code")
+    private Company company;
+
     @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     private Worker worker;
@@ -249,6 +253,14 @@ public class WorkerPreferences {
 
     public void setWorkCity(City workCity) {
         this.workCity = workCity;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Worker getWorker() {

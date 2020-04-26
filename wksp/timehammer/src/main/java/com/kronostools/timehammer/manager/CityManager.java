@@ -22,4 +22,10 @@ public class CityManager {
     public List<CityDto> getAllCities() {
         return cityDao.getAllCities();
     }
+
+    @CacheResult(cacheName = Caches.CITY_BY_CODE)
+    @Transactional
+    public boolean cityByCodeExists(final String code) {
+        return cityDao.cityByCodeExists(code);
+    }
 }

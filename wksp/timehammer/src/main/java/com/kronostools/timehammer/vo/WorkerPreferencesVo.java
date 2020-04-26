@@ -30,6 +30,7 @@ public class WorkerPreferencesVo {
     private final LocalTime zonedLunchEndFri;
     private final String cityCode;
     private final SupportedTimezone timezone;
+    private final String companyCode;
 
     public WorkerPreferencesVo(final String workerExternalId, final String workSsid,
                                final LocalTime zonedWorkStartMon, final LocalTime zonedWorkEndMon, final LocalTime zonedLunchStartMon, final LocalTime zonedLunchEndMon,
@@ -37,14 +38,14 @@ public class WorkerPreferencesVo {
                                final LocalTime zonedWorkStartWed, final LocalTime zonedWorkEndWed, final LocalTime zonedLunchStartWed, final LocalTime zonedLunchEndWed,
                                final LocalTime zonedWorkStartThu, final LocalTime zonedWorkEndThu, final LocalTime zonedLunchStartThu, final LocalTime zonedLunchEndThu,
                                final LocalTime zonedWorkStartFri, final LocalTime zonedWorkEndFri, final LocalTime zonedLunchStartFri, final LocalTime zonedLunchEndFri,
-                               final String cityCode) {
+                               final String cityCode, final String companyCode) {
         this(workerExternalId, workSsid,
                 zonedWorkStartMon, zonedWorkEndMon, zonedLunchStartMon, zonedLunchEndMon,
                 zonedWorkStartTue, zonedWorkEndTue, zonedLunchStartTue, zonedLunchEndTue,
                 zonedWorkStartWed, zonedWorkEndWed, zonedLunchStartWed, zonedLunchEndWed,
                 zonedWorkStartThu, zonedWorkEndThu, zonedLunchStartThu, zonedLunchEndThu,
                 zonedWorkStartFri, zonedWorkEndFri, zonedLunchStartFri, zonedLunchEndFri,
-                cityCode, null);
+                cityCode, null, companyCode);
     }
 
     public WorkerPreferencesVo(final String workerExternalId, final String workSsid,
@@ -53,7 +54,7 @@ public class WorkerPreferencesVo {
                                final LocalTime zonedWorkStartWed, final LocalTime zonedWorkEndWed, final LocalTime zonedLunchStartWed, final LocalTime zonedLunchEndWed,
                                final LocalTime zonedWorkStartThu, final LocalTime zonedWorkEndThu, final LocalTime zonedLunchStartThu, final LocalTime zonedLunchEndThu,
                                final LocalTime zonedWorkStartFri, final LocalTime zonedWorkEndFri, final LocalTime zonedLunchStartFri, final LocalTime zonedLunchEndFri,
-                               final String cityCode, final SupportedTimezone timezone) {
+                               final String cityCode, final SupportedTimezone timezone, final String companyCode) {
         this.workerExternalId = workerExternalId;
         this.workSsid = workSsid;
         this.zonedWorkStartMon = zonedWorkStartMon;
@@ -78,6 +79,7 @@ public class WorkerPreferencesVo {
         this.zonedLunchEndFri = zonedLunchEndFri;
         this.cityCode = cityCode;
         this.timezone = timezone;
+        this.companyCode = companyCode;
     }
 
     public String getWorkerExternalId() {
@@ -176,6 +178,10 @@ public class WorkerPreferencesVo {
         return timezone;
     }
 
+    public String getCompanyCode() {
+        return companyCode;
+    }
+
     @Override
     public String toString() {
         return "WorkerPreferencesVo{" +
@@ -203,6 +209,7 @@ public class WorkerPreferencesVo {
                 ", zonedLunchEndFri=" + TimeMachineService.formatTimeSimple(zonedLunchEndFri) +
                 ", cityCode='" + cityCode + '\'' +
                 ", timezone='" + timezone.name() + '\'' +
+                ", companyCode='" + companyCode + '\'' +
                 '}';
     }
 }

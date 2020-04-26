@@ -17,4 +17,8 @@ public class CityService {
     public List<CityDto> getAllCities() {
         return cityManager.getAllCities();
     }
+
+    public boolean cityByCodeExists(final String code) {
+        return cityManager.cityByCodeExists(code);
+    }
 }

@@ -17,4 +17,8 @@ public class CompanyService {
     public List<CompanyDto> getAllCompanies() {
         return companyManager.getAllCompanies();
     }
+
+    public boolean companyByCodeExists(final String code) {
+        return companyManager.companyByCodeExists(code);
+    }
 }

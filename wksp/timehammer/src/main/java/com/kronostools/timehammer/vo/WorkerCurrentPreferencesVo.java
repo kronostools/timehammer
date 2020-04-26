@@ -23,12 +23,13 @@ public class WorkerCurrentPreferencesVo {
     private final LocalTime lunchEnd;
     private final String cityCode;
     private final SupportedTimezone timezone;
+    private final String companyCode;
     private final Boolean workerHoliday;
     private final Boolean cityHoliday;
 
     public WorkerCurrentPreferencesVo(final LocalDate date, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
-                                      final String cityCode, final SupportedTimezone timezone,
+                                      final String cityCode, final SupportedTimezone timezone, final String companyCode,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
         this.date = date;
         this.workerExternalId = workerExternalId;
@@ -47,15 +48,16 @@ public class WorkerCurrentPreferencesVo {
 
         this.cityCode = cityCode;
         this.timezone = timezone;
+        this.companyCode = companyCode;
         this.workerHoliday = workerHoliday;
         this.cityHoliday = cityHoliday;
     }
 
     public WorkerCurrentPreferencesVo(final Date date, final String workerExternalId, final String workSsid,
                                       final LocalTime zonedWorkStart, final LocalTime zonedWorkEnd, final LocalTime zonedLunchStart, final LocalTime zonedLunchEnd,
-                                      final String cityCode, final SupportedTimezone timezone,
+                                      final String cityCode, final SupportedTimezone timezone, final String companyCode,
                                       final Boolean workerHoliday, final Boolean cityHoliday) {
-        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, workerHoliday, cityHoliday);
+        this(TimeMachineService.toLocalDate(date), workerExternalId, workSsid, zonedWorkStart, zonedWorkEnd, zonedLunchStart, zonedLunchEnd, cityCode, timezone, companyCode, workerHoliday, cityHoliday);
     }
 
     public String getWorkerExternalId() {

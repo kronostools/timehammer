@@ -21,4 +21,14 @@ public class CompanyDao extends GenericDao {
                 .setHint(QueryHints.HINT_READONLY,true)
                 .getResultList();
     }
+
+    public boolean companyByCodeExists(final String code) {
+        return em.createQuery(
+                "SELECT new com.kronostools.timehammer.dto.CompanyDto(code, name) " +
+                        "FROM Company " +
+                        "WHERE code = :code", CompanyDto.class)
+                .setParameter("code", code)
+                .setHint(QueryHints.HINT_READONLY,true)
+                .getResultStream().count() > 0;
+    }
 }

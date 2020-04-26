@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.dao;
 
 import com.kronostools.timehammer.model.City;
+import com.kronostools.timehammer.model.Company;
 import com.kronostools.timehammer.model.Worker;
 import com.kronostools.timehammer.model.WorkerPreferences;
 import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
@@ -28,11 +29,12 @@ public class WorkerPreferencesDao extends GenericDao {
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workEndFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchStartFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchEndFri ELSE NULL END) END) END) END) END, " +
-                        "c.code, c.timezone, " +
+                        "c.code, c.timezone, co.code " +
                         "wh.id.day is not null, " +
                         "ch.id.day is not null) " +
                         "FROM WorkerPreferences p " +
                         "JOIN p.workCity c " +
+                        "JOIN p.company co" +
                         "LEFT JOIN c.holidays ch WITH ch.id.day = :date " +
                         "LEFT JOIN WorkerHoliday wh WITH wh.id.workerExternalId = p.workerExternalId AND wh.id.day = :date ", WorkerCurrentPreferencesVo.class)
                 .setParameter("date", timestamp.toLocalDate())
@@ -50,11 +52,12 @@ public class WorkerPreferencesDao extends GenericDao {
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.workEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.workEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.workEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.workEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.workEndFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchStartMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchStartTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchStartWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchStartThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchStartFri ELSE NULL END) END) END) END) END, " +
                         "CASE WHEN :dayOfWeek = 'MONDAY' THEN p.lunchEndMon ELSE (CASE WHEN :dayOfWeek = 'TUESDAY' THEN p.lunchEndTue ELSE (CASE WHEN :dayOfWeek = 'WEDNESDAY' THEN p.lunchEndWed ELSE (CASE WHEN :dayOfWeek = 'THURSDAY' THEN p.lunchEndThu ELSE (CASE WHEN :dayOfWeek = 'FRIDAY' THEN p.lunchEndFri ELSE NULL END) END) END) END) END, " +
-                        "c.code, c.timezone, " +
+                        "c.code, c.timezone, co.code " +
                         "wh.id.day is not null, " +
                         "ch.id.day is not null) " +
                         "FROM WorkerPreferences p " +
                         "JOIN p.workCity c " +
+                        "JOIN p.company co" +
                         "LEFT JOIN c.holidays ch WITH ch.id.day = :date " +
                         "LEFT JOIN WorkerHoliday wh WITH wh.id.workerExternalId = p.workerExternalId AND wh.id.day = :date " +
                         "WHERE p.workerExternalId = :workerExternalId", WorkerCurrentPreferencesVo.class)
@@ -73,9 +76,10 @@ public class WorkerPreferencesDao extends GenericDao {
                         "p.workStartWed, p.workEndWed, p.lunchStartWed, p.lunchEndWed, " +
                         "p.workStartThu, p.workEndThu, p.lunchStartThu, p.lunchEndThu, " +
                         "p.workStartFri, p.workEndFri, p.lunchStartFri, p.lunchEndFri, " +
-                        "c.code, c.timezone) " +
+                        "c.code, c.timezone, co.code) " +
                         "FROM WorkerPreferences p " +
                         "JOIN p.workCity c " +
+                        "JOIN p.company co" +
                         "WHERE p.workerExternalId = :workerExternalId", WorkerPreferencesVo.class)
                 .setParameter("workerExternalId", workerExternalId)
                 .getSingleResult();
@@ -110,6 +114,9 @@ public class WorkerPreferencesDao extends GenericDao {
 
         City workCity = session.load(City.class, workerPreferencesVo.getCityCode());
         workerPreferences.setWorkCity(workCity);
+
+        Company company = session.load(Company.class, workerPreferencesVo.getCompanyCode());
+        workerPreferences.setCompany(company);
 
         Worker worker = session.load(Worker.class, workerExternalId);
         workerPreferences.setWorker(worker);

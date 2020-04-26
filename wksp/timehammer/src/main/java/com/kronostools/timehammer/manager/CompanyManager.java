@@ -22,4 +22,10 @@ public class CompanyManager {
     public List<CompanyDto> getAllCompanies() {
         return companyDao.getAllCompanies();
     }
+
+    @CacheResult(cacheName = Caches.COMPANY_BY_CODE)
+    @Transactional
+    public boolean companyByCodeExists(final String code) {
+        return companyDao.companyByCodeExists(code);
+    }
 }

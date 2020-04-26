@@ -18,6 +18,11 @@ public class RegistrationFormValidationAdapter implements RegistrationFormValida
     }
 
     @Override
+    public String getCompany() {
+        return registrationFormSubmit.getCompany();
+    }
+
+    @Override
     public String getExternalId() {
         return registrationFormSubmit.getExternalId();
     }

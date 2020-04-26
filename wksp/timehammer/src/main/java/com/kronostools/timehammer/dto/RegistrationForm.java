@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 public class RegistrationForm {
     private String registrationId;
+    private String company;
     private String externalId;
     private String externalPassword;
     private String workCity;
@@ -19,6 +20,14 @@ public class RegistrationForm {
 
     public void setRegistrationId(String registrationId) {
         this.registrationId = registrationId;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
     }
 
     public String getExternalId() {
@@ -65,6 +74,7 @@ public class RegistrationForm {
     public String toString() {
         return "RegistrationForm{" +
                 "registrationId='" + registrationId + '\'' +
+                ", company='" + company + '\'' +
                 ", externalId='" + externalId + '\'' +
                 ", workCity='" + workCity + '\'' +
                 ", workSsid='" + workSsid + '\'' +

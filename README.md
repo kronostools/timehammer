@@ -1,7 +1,5 @@
 # TODO
 
-- Añadir al usuario campo empresa
-    - En el registro se tiene que elegir la empresa
 - Elegir el cliente en función de la empresa
 - Revisar idea de
     - Acciones clockin / clockout
@@ -24,6 +22,8 @@
     - Probar las validaciones con tests unitarios
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)
 - Modularizar ?
+- Icono TimeHammer
+- Icono KronosTools
 - Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
 - Añadir la posibilidad de meter excepciones al horario
     - cambiar widget
