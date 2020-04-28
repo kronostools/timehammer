@@ -27,7 +27,7 @@ public class UpdateWorkersHolidaysSchedule extends Schedule {
 
     @Override
     protected void mainLogic(LocalDateTime timestamp) {
-        workerService.updateWorkersHolidays();
+        workerService.updateWorkersHolidays(timestamp);
     }
 
     @Override

@@ -27,7 +27,11 @@ public class FormResponse {
         private Set<FormError> formErrors = new HashSet<>();
 
         public void addFormError(final String errorMessage) {
-            formErrors.add(new FormError(errorMessage));
+            addFormError(new FormError(errorMessage));
+        }
+
+        public void addFieldError(final String fieldName, final String errorMessage) {
+            formErrors.add(new FormError(fieldName, errorMessage));
         }
 
         public void addFormError(final FormError formError) {

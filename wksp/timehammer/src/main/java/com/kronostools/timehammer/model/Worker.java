@@ -12,9 +12,6 @@ public class Worker {
     @Column(name = "internal_id", nullable = false, unique = true, updatable = false)
     private String internalId;
 
-    @Column(name = "external_password", nullable = false)
-    private String externalPassword;
-
     @Column(name = "full_name")
     private String fullName;
 
@@ -28,14 +25,6 @@ public class Worker {
 
     public void setInternalId(String internalId) {
         this.internalId = internalId;
-    }
-
-    public String getExternalPassword() {
-        return externalPassword;
-    }
-
-    public void setExternalPassword(String externalPassword) {
-        this.externalPassword = externalPassword;
     }
 
     public String getFullName() {

@@ -153,6 +153,10 @@ public class WorkerCurrentPreferencesVo {
                 && time.isAfter(lunchEnd);
     }
 
+    public boolean canBeNotified(final LocalTime time) {
+        return workToday() && isTimeToStartWorking(time) && !isTimeToEndWorking(time);
+    }
+
     @Override
     public String toString() {
         return "WorkerCurrentPreferencesVo{" +

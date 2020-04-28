@@ -1,9 +1,13 @@
 # TODO
 
-- Las claves de los usuarios se guardan en memoria
-    - Hacer página para establecer la contraseña
-    - Cambiar los flujos para saber si se dispone de la contraseña del usuario al principio
-        - Si no es así se le envía un mensaje con enlace a página para meter la contraseña
+- Llevar servicio /auth/mock/chatbotRegistration a /demo
+- Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
+    - Si el usuario no existe se establece la contraseña
+    - Si el usuario existe la contraseña tiene que coincidir
+    - Es posible añadir servicio en /demo para cambiar la contraseña del ComunytekMockedClient???
+- Gestionar el caso en el que se ha cambiado la contraseña en la empresa y no en el chatbot y todo va a petar
+    - Controlar los petes
+    - Notificar al usuario de alguna manera
 - Elegir el cliente en función de la empresa
 - Revisar idea de
     - Acciones clockin / clockout

@@ -39,18 +39,6 @@ public class WorkerPreferencesManager {
         return allWorkersPreferences;
     }
 
-    @CacheResult(cacheName = Caches.ALL_WORKERS_PREFERENCES)
-    @Transactional
-    public List<WorkerPreferencesVo> getAllWorkersPreferences() {
-        LOG.debug("BEGIN getAllWorkersPreferences");
-
-        List<WorkerPreferencesVo> allWorkersPreferences = workerPreferencesDao.fetchAllAsWorkerPreferencesVo();
-
-        LOG.debug("END getAllWorkersPreferences");
-
-        return allWorkersPreferences;
-    }
-
     @CacheResult(cacheName = Caches.WORKER_PREFERENCES)
     @Transactional
     public WorkerPreferencesVo getWorkerPreferencesByInternalId(final String workerInternalId) {

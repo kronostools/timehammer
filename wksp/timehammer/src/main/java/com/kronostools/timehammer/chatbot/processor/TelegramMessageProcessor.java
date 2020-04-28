@@ -8,10 +8,7 @@ import com.kronostools.timehammer.exceptions.ChatbotAlreadyRegisteredException;
 import com.kronostools.timehammer.service.AuthService;
 import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Constants.Buses;
-import com.kronostools.timehammer.vo.ChatbotRegistrationResponseVo;
-import com.kronostools.timehammer.vo.TrashMessageVo;
-import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
-import com.kronostools.timehammer.vo.WorkerVo;
+import com.kronostools.timehammer.vo.*;
 import io.vertx.axle.core.eventbus.EventBus;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -64,11 +61,14 @@ public class TelegramMessageProcessor implements Processor {
                         LOG.debug("Authentication is required and logged in user is: {}", worker.getInternalId());
 
                         if (chatbotCommand == ChatbotCommand.UNREGISTER) {
-                            authService.cancelChatbotRegistration(chatId);
+                            authService.cancelChatbotRegistration(worker.getInternalId(), chatId);
                             outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNREGISTER);
                         } else if (chatbotCommand == ChatbotCommand.SETTINGS) {
                             // TODO: implement this functionality
                             outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNIMPLEMENTED);
+                        } else if (chatbotCommand == ChatbotCommand.UPDATE_PASSWORD) {
+                            final ChatbotUpdatePasswordResponseVo chatbotUpdatePasswordResponse = authService.chatbotUpdatePassword(worker.getInternalId());
+                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UPDATE_PASSWORD(chatbotUpdatePasswordResponse.getUpdatePasswordUrl()));
                         }
                     } else {
                         LOG.info("Authentication is required but no user is logged in");

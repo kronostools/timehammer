@@ -295,8 +295,12 @@ public class TimehammerConfig {
         this.schedules = schedules;
     }
 
-    public String getRegistrationUrl(final String registrationId) {
-        return baseUrl + "/auth/register?registrationId=" + registrationId;
+    public String getRegistrationUrl(final String internalId) {
+        return baseUrl + "/auth/register?internalId=" + internalId;
+    }
+
+    public String getUpdatePasswordUrl(final String internalId) {
+        return baseUrl + "/auth/updatePassword?internalId=" + internalId;
     }
 
     public String getHelpUrl() {

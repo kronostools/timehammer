@@ -8,11 +8,14 @@ import com.kronostools.timehammer.comunytek.dto.ComunytekActionResponseDto;
 import com.kronostools.timehammer.comunytek.enums.ComunytekAction;
 import com.kronostools.timehammer.enums.AnswerType;
 import com.kronostools.timehammer.enums.QuestionType;
+import com.kronostools.timehammer.service.WorkerCredentialsService;
+import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
 import com.kronostools.timehammer.vo.WorkerVo;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.telegram.model.IncomingCallbackQuery;
+import org.apache.camel.component.telegram.model.OutgoingMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +28,16 @@ public class TelegramAnswerProcessor implements Processor {
     private final NotificationService notificationService;
     private final ComunytekClient comunytekClient;
     private final QuestionTypeToComunytekActionConverter questionTypeToComunytekActionConverter;
+    private final WorkerCredentialsService workerCredentialsService;
 
     public TelegramAnswerProcessor(final NotificationService notificationService,
                                    final ComunytekClient comunytekClient,
-                                   final QuestionTypeToComunytekActionConverter questionTypeToComunytekActionConverter) {
+                                   final QuestionTypeToComunytekActionConverter questionTypeToComunytekActionConverter,
+                                   final WorkerCredentialsService workerCredentialsService) {
         this.notificationService = notificationService;
         this.comunytekClient = comunytekClient;
         this.questionTypeToComunytekActionConverter = questionTypeToComunytekActionConverter;
+        this.workerCredentialsService = workerCredentialsService;
     }
 
     @Override
@@ -48,15 +54,24 @@ public class TelegramAnswerProcessor implements Processor {
 
         exchange.getMessage().setBody(NotificationService.getOutgoingMessageToRemoveInlineKeyboard(chatId, incomingCallbackQuery.getMessage().getMessageId()));
 
-        Boolean answerProcessedSuccessfully = Boolean.TRUE;
+        String workerExternalPassword = workerCredentialsService.getWorkerCredentials(worker.getInternalId());
 
-        if (answer == AnswerType.Y) {
-            final WorkerCurrentPreferencesVo workerCurrentPreferences = RoutesUtils.getWorkerCurrentPreferences(exchange);
-            final ComunytekAction comunytekAction = questionTypeToComunytekActionConverter.convert(question);
-            final ComunytekActionResponseDto response = comunytekClient.executeAction(workerCurrentPreferences.getWorkerExternalId(), worker.getExternalPassword(), comunytekAction);
-            answerProcessedSuccessfully = response.getResult();
+        if (workerExternalPassword != null) {
+            Boolean answerProcessedSuccessfully = Boolean.TRUE;
+
+            if (answer == AnswerType.Y) {
+                final WorkerCurrentPreferencesVo workerCurrentPreferences = RoutesUtils.getWorkerCurrentPreferences(exchange);
+                final ComunytekAction comunytekAction = questionTypeToComunytekActionConverter.convert(question);
+
+                final ComunytekActionResponseDto response = comunytekClient.executeAction(workerCurrentPreferences.getWorkerExternalId(), workerExternalPassword, comunytekAction);
+                answerProcessedSuccessfully = response.getResult();
+            }
+
+            notificationService.answerQuestion(chatId, question, answer, answerProcessedSuccessfully);
+        } else {
+            final OutgoingMessage outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.MISSING_PASSWORD);
+
+            notificationService.notify(outgoingMessage);
         }
-
-        notificationService.answerQuestion(chatId, question, answer, answerProcessedSuccessfully);
     }
 }

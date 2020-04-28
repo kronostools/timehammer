@@ -10,14 +10,15 @@ import com.kronostools.timehammer.config.TimehammerConfig;
 import com.kronostools.timehammer.dto.FormResponse;
 import com.kronostools.timehammer.dto.FormResponse.FormResponseBuilder;
 import com.kronostools.timehammer.dto.RegistrationForm;
-import com.kronostools.timehammer.dto.form.FormError;
-import com.kronostools.timehammer.dto.form.RegistrationFormValidation;
-import com.kronostools.timehammer.dto.form.RegistrationFormValidationAdapter;
-import com.kronostools.timehammer.dto.form.TimetableForm;
+import com.kronostools.timehammer.dto.UpdatePasswordForm;
+import com.kronostools.timehammer.dto.form.*;
 import com.kronostools.timehammer.dto.form.validation.RegistrationValidationOrder;
 import com.kronostools.timehammer.exceptions.ChatbotAlreadyRegisteredException;
 import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Constants;
+import com.kronostools.timehammer.utils.Constants.GenericErrors;
+import com.kronostools.timehammer.utils.Constants.RegistrationFormFields;
+import com.kronostools.timehammer.utils.Constants.UpdatePasswordFormFields;
 import com.kronostools.timehammer.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,7 @@ public class AuthService {
     private final ComunytekClient comunytekClient;
     private final Validator validator;
     private final NotificationService notificationService;
+    private final WorkerCredentialsService workerCredentialsService;
 
     private Cache<String, String> registeredChatbotsCache;
     private Cache<String, ChatbotRegistrationRequestVo> chatbotRegistrationRequestCache;
@@ -51,13 +53,15 @@ public class AuthService {
                        final WorkerService workerService,
                        final ComunytekClient comunytekClient,
                        final Validator validator,
-                       final NotificationService notificationService) {
+                       final NotificationService notificationService,
+                       final WorkerCredentialsService workerCredentialsService) {
         this.timehammerConfig = timehammerConfig;
         this.timeMachineService = timeMachineService;
         this.workerService = workerService;
         this.comunytekClient = comunytekClient;
         this.validator = validator;
         this.notificationService = notificationService;
+        this.workerCredentialsService = workerCredentialsService;
     }
 
     @PostConstruct
@@ -69,7 +73,7 @@ public class AuthService {
     }
 
     public ChatbotRegistrationResponseVo newChatbotRegistration(final String chatId) throws ChatbotAlreadyRegisteredException {
-        String internalId = registeredChatbotsCache.get(chatId, key -> workerService.getWorkerByChatId(key).map(WorkerVo::getInternalId).orElse(null));
+        String internalId = registeredChatbotsCache.get(chatId, key -> workerService.findWorkerByChatId(key).map(WorkerVo::getInternalId).orElse(null));
 
         if (internalId != null ) {
             throw new ChatbotAlreadyRegisteredException();
@@ -83,9 +87,13 @@ public class AuthService {
         }
     }
 
-    public void cancelChatbotRegistration(final String chatId) {
-        workerService.removeChat(chatId);
+    public void cancelChatbotRegistration(final String internalId, final String chatId) {
+        workerService.removeChat(internalId, chatId);
         registeredChatbotsCache.invalidate(chatId);
+    }
+
+    public ChatbotUpdatePasswordResponseVo chatbotUpdatePassword(final String internalId) {
+        return new ChatbotUpdatePasswordResponseVo(timehammerConfig.getUpdatePasswordUrl(internalId));
     }
 
     private void validateRegistrationForm(final RegistrationForm registrationForm) {
@@ -102,7 +110,7 @@ public class AuthService {
     }
 
     public FormResponse processRegistrationForm(final RegistrationForm registrationForm) {
-        FormResponseBuilder formResponseBuilder = new FormResponseBuilder();
+        final FormResponseBuilder formResponseBuilder = new FormResponseBuilder();
 
         try {
             Optional<ChatbotRegistrationRequestVo> chatbotRegistrationRequestVo = getChatbotRegistrationRequest(registrationForm);
@@ -111,7 +119,9 @@ public class AuthService {
                 try {
                     final ComunytekSessionDto comunytekSessionDto = comunytekClient.login(registrationForm.getExternalId(), registrationForm.getExternalPassword());
 
-                    final WorkerVo workerVo = new WorkerVo(registrationForm.getInternalId(), registrationForm.getExternalPassword(), comunytekSessionDto.getFullname(), timehammerConfig.getProfile(registrationForm.getExternalId()));
+                    workerCredentialsService.updateWorkerCredentials(registrationForm.getInternalId(), registrationForm.getExternalPassword());
+
+                    final WorkerVo workerVo = new WorkerVo(registrationForm.getInternalId(), comunytekSessionDto.getFullname(), timehammerConfig.getProfile(registrationForm.getExternalId()));
 
                     // One timetable is required and first is the default one
                     final TimetableForm timetableForm = registrationForm.getTimetables().get(0);
@@ -133,14 +143,53 @@ public class AuthService {
                     notificationService.notify(chatbotRegistrationRequestVo.get().getChatId(), ChatbotMessages.SUCCESSFUL_REGISTRATION);
                 } catch (ComunytekAuthenticationException e) {
                     LOG.warn("Incorrect credentials submitted");
-                    formResponseBuilder.addFormError("Incorrect authentication credentials");
+                    formResponseBuilder.addFieldError(RegistrationFormFields.EXTERNAL_PASSWORD, GenericErrors.INCORRECT_CREDENTIALS);
                 } catch (Exception e) {
                     LOG.error("Unexpected error processing the submitted registration form", e);
-                    formResponseBuilder.addFormError(Constants.RegistrationErrorMessages.UNEXPEDTED_ERROR);
+                    formResponseBuilder.addFormError(GenericErrors.UNEXPEDTED_ERROR);
                 }
             } else {
                 LOG.warn("Registration '{}' has expired", registrationForm.getInternalId());
                 formResponseBuilder.addFormError(Constants.RegistrationErrorMessages.REGISTRATION_EXPIRED);
+            }
+        } catch (ConstraintViolationException e) {
+            e.getConstraintViolations().forEach(cv -> {
+                final String propertyPath = cv.getPropertyPath().toString();
+                final String fieldId = propertyPath.substring(propertyPath.lastIndexOf(".") + 1);
+
+                formResponseBuilder.addFormError(new FormError(fieldId, cv.getMessage()));
+            });
+        }
+
+        return formResponseBuilder.build();
+    }
+
+    private void validateUpdatePasswordForm(final UpdatePasswordForm updatePasswordForm) {
+        Set<ConstraintViolation<UpdatePasswordFormValidation>> violations = validator.validate(new UpdatePasswordFormValidationAdapter(updatePasswordForm));
+
+        if (violations.size() > 0) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
+    public FormResponse processUpdatePasswordForm(final UpdatePasswordForm updatePasswordForm) {
+        FormResponseBuilder formResponseBuilder = new FormResponseBuilder();
+
+        try {
+            validateUpdatePasswordForm(updatePasswordForm);
+
+            final WorkerPreferencesVo workerPreferences = workerService.getWorkerPreferencesByInternalId(updatePasswordForm.getInternalId());
+
+            try {
+                comunytekClient.login(workerPreferences.getWorkerExternalId(), updatePasswordForm.getExternalPassword());
+
+                workerCredentialsService.updateWorkerCredentials(updatePasswordForm.getInternalId(), updatePasswordForm.getExternalPassword());
+            } catch (ComunytekAuthenticationException e) {
+                LOG.warn("Incorrect credentials submitted");
+                formResponseBuilder.addFieldError(UpdatePasswordFormFields.EXTERNAL_PASSWORD, GenericErrors.INCORRECT_CREDENTIALS);
+            } catch (Exception e) {
+                LOG.error("Unexpected error processing the submitted registration form", e);
+                formResponseBuilder.addFormError(GenericErrors.UNEXPEDTED_ERROR);
             }
         } catch (ConstraintViolationException e) {
             e.getConstraintViolations().forEach(cv -> {

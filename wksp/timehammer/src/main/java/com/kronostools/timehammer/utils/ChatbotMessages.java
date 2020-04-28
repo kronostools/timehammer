@@ -45,9 +45,12 @@ public class ChatbotMessages {
     private static final String COMMAND_REGISTER_INIT = "Para continuar con el registro accede [aquí]({})";
     private static final String COMMAND_REGISTER_REGISTERED = "Ya se ha hecho un registro para el usuario {}. /unregister para cancelar el registro.";
     private static final String COMMAND_HELP = "Para conocer cómo funciona este chatbot accede al [FAQ]({}).";
+    private static final String COMMAND_UPDATE_PASSWORD = "Para establecer la contraseña accede a [Establecer contraseña]({}).";
     public static final String COMMAND_UNIMPLEMENTED = "Este chatbot todavía se encuentra en fase de desarrollo. Esta funcionalidad todavía no está disponible.";
 
     public static final String SUCCESSFUL_REGISTRATION = "¡Enhorabuena! El registro se ha realizado satisfactoriamente. Si en algún momento quieres cancelar el registro, envía /unregister. Para conocer cómo funciona esto, envía /help.";
+
+    public static final String MISSING_PASSWORD = "Necesitamos que vuelvas a establecer tu contraseña. Envía /updatePassword para establecerla. Lamentamos las molestias ocasionadas. Para más información sobre cómo se almacenan las contraseñas envía /help";
 
     public static String COMMAND_REGISTER_INIT(final String registrationUrl) {
         return Utils.stringFormat(COMMAND_REGISTER_INIT, registrationUrl);
@@ -59,5 +62,9 @@ public class ChatbotMessages {
 
     public static String COMMAND_HELP(final String helpUrl) {
         return Utils.stringFormat(COMMAND_HELP, helpUrl);
+    }
+
+    public static String COMMAND_UPDATE_PASSWORD(final String updatePasswordUrl) {
+        return Utils.stringFormat(COMMAND_UPDATE_PASSWORD, updatePasswordUrl);
     }
 }

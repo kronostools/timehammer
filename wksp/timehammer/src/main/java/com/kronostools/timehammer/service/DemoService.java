@@ -10,7 +10,6 @@ import com.kronostools.timehammer.dto.form.DemoTimestampFormValidation;
 import com.kronostools.timehammer.dto.form.DemoTimestampFormValidationAdapter;
 import com.kronostools.timehammer.dto.form.FormError;
 import com.kronostools.timehammer.enums.SupportedTimezone;
-import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.WorkerCurrentPreferencesVo;
 
@@ -31,15 +30,18 @@ public class DemoService {
     private final Validator validator;
     private final WorkerService workerService;
     private final ComunytekClient comunytekClient;
+    private final WorkerCredentialsService workerCredentialsService;
 
     public DemoService(final TimeMachineService timeMachineService,
                        final Validator validator,
                        final WorkerService workerService,
-                       final ComunytekClient comunytekClient) {
+                       final ComunytekClient comunytekClient,
+                       final WorkerCredentialsService workerCredentialsService) {
         this.timeMachineService = timeMachineService;
         this.validator = validator;
         this.workerService = workerService;
         this.comunytekClient = comunytekClient;
+        this.workerCredentialsService = workerCredentialsService;
     }
 
     public Set<String> getZones() {
@@ -56,7 +58,9 @@ public class DemoService {
     }
 
     public DemoWorkerStatusForm getWorkerStatus(final String workerInternalId, final SupportedTimezone timezone) {
-        final ComunytekStatusDto workerStatus = workerService.getWorkerStatus(workerInternalId, Constants.DEMO_PASSWORD, timeMachineService.getNow());
+        final String externalPassword = workerCredentialsService.getWorkerCredentials(workerInternalId);
+
+        final ComunytekStatusDto workerStatus = workerService.getWorkerStatus(workerInternalId, externalPassword, timeMachineService.getNow());
         final WorkerCurrentPreferencesVo currentPreferences = workerService.getWorkerCurrentPreferencesByInternalId(workerInternalId, timeMachineService.getNow());
         final Set<LocalDate> workerHolidays = workerService.getPendingWorkerHolidays(workerInternalId);
 
@@ -125,7 +129,7 @@ public class DemoService {
     }
 
     public void updateWorkersHolidays() {
-        workerService.updateWorkersHolidays();
+        workerService.updateWorkersHolidays(timeMachineService.getNow());
     }
 
     public void cleanPastWorkersHolidays() {

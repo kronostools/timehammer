@@ -3,7 +3,6 @@ package com.kronostools.timehammer.service;
 import com.kronostools.timehammer.comunytek.client.ComunytekClient;
 import com.kronostools.timehammer.comunytek.dto.ComunytekHolidaysDto;
 import com.kronostools.timehammer.comunytek.dto.ComunytekStatusDto;
-import com.kronostools.timehammer.comunytek.enums.ComunytekStatusValue;
 import com.kronostools.timehammer.config.TimehammerConfig;
 import com.kronostools.timehammer.enums.WorkerStatusEventType;
 import com.kronostools.timehammer.manager.WorkerChatManager;
@@ -41,6 +40,7 @@ public class WorkerService {
     private final WorkerPreferencesManager workerPreferencesManager;
     private final WorkerStatusService workerStatusService;
     private final ComunytekClient comunytekClient;
+    private final WorkerCredentialsService workerCredentialsService;
 
     private final AtomicLong workerStatusAvgProcessingTime = new AtomicLong(Constants.WORKER_STATUS_INITIAL_AVG_PROCESSING_TIME);
 
@@ -50,7 +50,8 @@ public class WorkerService {
                          final WorkerChatManager workerChatManager,
                          final WorkerPreferencesManager workerPreferencesManager,
                          final WorkerStatusService workerStatusService,
-                         final ComunytekClient comunytekClient) {
+                         final ComunytekClient comunytekClient,
+                         final WorkerCredentialsService workerCredentialsService) {
         this.timehammerConfig = timehammerConfig;
         this.workerManager = workerManager;
         this.workerHolidayManager = workerHolidayManager;
@@ -58,16 +59,17 @@ public class WorkerService {
         this.workerPreferencesManager = workerPreferencesManager;
         this.workerStatusService = workerStatusService;
         this.comunytekClient = comunytekClient;
+        this.workerCredentialsService = workerCredentialsService;
     }
 
     @Transactional
-    public Optional<WorkerVo> getWorkerByChatId(final String chatId) {
-        return workerManager.getWorkerByChatId(chatId);
+    public Optional<WorkerVo> findWorkerByChatId(final String chatId) {
+        return workerManager.findWorkerByChatId(chatId);
     }
 
     @Transactional
-    public void removeChat(final String chatId) {
-        getWorkerByChatId(chatId).ifPresent(workerVo -> workerChatManager.removeChat(workerVo.getInternalId(), chatId));
+    public void removeChat(final String internalId, final String chatId) {
+        workerChatManager.removeChat(internalId, chatId);
     }
 
     public WorkerPreferencesVo getWorkerPreferencesByInternalId(final String internalId) {
@@ -91,8 +93,8 @@ public class WorkerService {
         return workerManager.getAllWorkers();
     }
 
-    public void updateWorkersHolidays() {
-        workerPreferencesManager.getAllWorkersPreferences().forEach(worker -> {
+    public void updateWorkersHolidays(final LocalDateTime timestamp) {
+        workerPreferencesManager.getAllWorkersCurrentPreferences(timestamp).forEach(worker -> {
             try {
                 this.updateWorkerHolidays(worker);
                 LOG.info("Holidays of worker '{}' updated successfully", worker.getWorkerInternalId());
@@ -103,13 +105,18 @@ public class WorkerService {
     }
 
     @Transactional
-    public void updateWorkerHolidays(final WorkerPreferencesVo workerPreferences) {
-        LOG.debug("BEGIN updateWorkerHolidays: [{}]", workerPreferences);
+    public void updateWorkerHolidays(final WorkerCurrentPreferencesVo workerCurrentPreferences) {
+        LOG.debug("BEGIN updateWorkerHolidays: [{}]", workerCurrentPreferences);
 
-        final WorkerVo worker = workerManager.getWorkerByInternalId(workerPreferences.getWorkerInternalId());
-        final ComunytekHolidaysDto comunytekHolidaysDto = comunytekClient.getHolidays(workerPreferences.getWorkerExternalId(), worker.getExternalPassword());
+        final String externalPassword = workerCredentialsService.getWorkerCredentials(workerCurrentPreferences.getWorkerInternalId());
 
-        workerHolidayManager.updateWorkerHolidays(workerPreferences.getWorkerInternalId(), comunytekHolidaysDto);
+        if (externalPassword != null) {
+            final ComunytekHolidaysDto comunytekHolidaysDto = comunytekClient.getHolidays(workerCurrentPreferences.getWorkerExternalId(), externalPassword);
+
+            workerHolidayManager.updateWorkerHolidays(workerCurrentPreferences.getWorkerInternalId(), comunytekHolidaysDto);
+        } else {
+            throw new RuntimeException("Missing worker credentials");
+        }
 
         LOG.debug("END updateWorkerHolidays");
     }
@@ -160,24 +167,15 @@ public class WorkerService {
 
         final long start = System.currentTimeMillis();
 
-        final WorkerVo worker = workerManager.getWorkerByInternalId(workerCurrentPreferences.getWorkerInternalId());
-        final ComunytekStatusDto workerCurrentStatus = comunytekClient.getStatus(workerCurrentPreferences.getWorkerExternalId(), worker.getExternalPassword(), timestamp);
+        final String externalPassword = workerCredentialsService.getWorkerCredentials(workerCurrentPreferences.getWorkerInternalId());
 
-        if (workerCurrentStatus.getStatus() == ComunytekStatusValue.UNKNOWN) {
-            LOG.warn("Status of worker could not be updated because the status obtained is UNKNOWN");
-        } else {
-            if (workerCurrentStatus.getStatus() == ComunytekStatusValue.ENDED) {
-                LOG.info("Worker has already ended working, nothing to process");
-            } else {
-                // TODO: process ssid tracking events
-                //List<SsidTrackingEventVo> ssidTrackingEvents = ssidTrackingEventDao.getSsidTrackingEventsBetween(workerStatusLastReviewed, timestamp);
+        // TODO: process ssid tracking events
+        //List<SsidTrackingEventVo> ssidTrackingEvents = ssidTrackingEventDao.getSsidTrackingEventsBetween(workerStatusLastReviewed, timestamp);
 
-                // TODO: determine worker status event type taking into account the worker ssid tracking events
-                WorkerStatusEventType statusEvent = WorkerStatusEventType.TICK;
+        // TODO: determine worker status event type taking into account the worker ssid tracking events
+        WorkerStatusEventType statusEvent = WorkerStatusEventType.TICK;
 
-                workerStatusService.processStatusEvent(timestamp, statusEvent, workerCurrentStatus, workerCurrentPreferences);
-            }
-        }
+        workerStatusService.processStatusEvent(timestamp, statusEvent, workerCurrentPreferences, externalPassword);
 
         LOG.debug("END updateWorkerStatus");
 

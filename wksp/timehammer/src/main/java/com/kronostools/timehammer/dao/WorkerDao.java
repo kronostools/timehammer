@@ -17,7 +17,7 @@ public class WorkerDao extends GenericDao {
 
     public List<WorkerVo> fetchAllAsWorkerVo() {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.fullName, w.profile) " +
                         "FROM Worker w ", WorkerVo.class)
                 .setHint(QueryHints.READ_ONLY, true)
                 .getResultList();
@@ -25,7 +25,7 @@ public class WorkerDao extends GenericDao {
 
     public WorkerVo fetchByInternalIdAsWorkerVo(final String internalId) {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.fullName, w.profile) " +
                         "FROM Worker w " +
                         "WHERE internalId = :internalId", WorkerVo.class)
                 .setParameter("internalId", internalId)
@@ -33,9 +33,9 @@ public class WorkerDao extends GenericDao {
                 .getSingleResult();
     }
 
-    public Optional<WorkerVo> fetchByChatIdAsWorkerVo(final String chatId) {
+    public Optional<WorkerVo> findByChatIdAsWorkerVo(final String chatId) {
         return em.createQuery(
-                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.externalPassword, w.fullName, w.profile) " +
+                "SELECT new com.kronostools.timehammer.vo.WorkerVo(w.internalId, w.fullName, w.profile) " +
                         "FROM WorkerChat wc " +
                         "JOIN wc.worker w " +
                         "WHERE wc.id.chatId = :chatId", WorkerVo.class)
@@ -58,7 +58,6 @@ public class WorkerDao extends GenericDao {
     public void registerWorker(final WorkerVo workerVo) {
         Worker worker = new Worker();
         worker.setInternalId(workerVo.getInternalId());
-        worker.setExternalPassword(workerVo.getExternalPassword());
         worker.setFullName(workerVo.getFullName());
         worker.setProfile(workerVo.getProfile());
 

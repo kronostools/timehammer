@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.chatbot.utils.RoutesConstants;
 import com.kronostools.timehammer.enums.AnswerType;
 import com.kronostools.timehammer.enums.QuestionType;
+import com.kronostools.timehammer.utils.ChatbotMessages;
 import com.kronostools.timehammer.utils.Utils;
 import com.kronostools.timehammer.vo.QuestionId;
 import com.kronostools.timehammer.vo.QuestionVo;
@@ -16,7 +17,6 @@ import org.apache.camel.component.telegram.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,16 +31,19 @@ public class NotificationService {
 
     private final CamelContext camelContext;
 
-    private Cache<QuestionId, QuestionVo> questionCache;
+    private final Cache<QuestionId, QuestionVo> questionCache;
+
+    private final Cache<String, LocalDateTime> missingCredentialsCache;
 
     public NotificationService(final CamelContext camelContext) {
         this.camelContext = camelContext;
-    }
 
-    @PostConstruct
-    void init() {
-        questionCache = Caffeine.newBuilder()
+        this.questionCache = Caffeine.newBuilder()
                 .expireAfterWrite(24L, TimeUnit.HOURS)
+                .build();
+
+        this.missingCredentialsCache = Caffeine.newBuilder()
+                .expireAfterWrite(5L, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -179,5 +182,21 @@ public class NotificationService {
     private void removeInlineKeyboardFromMessage(final String chatId, final Long messageId) {
         final OutgoingMessage outgoingMessage = NotificationService.getOutgoingMessageToRemoveInlineKeyboard(chatId, messageId);
         notify(outgoingMessage);
+    }
+
+    public void missingCredentials(final Set<String> chatIds, final LocalDateTime timestamp) {
+        chatIds.forEach(chatId -> missingCredentials(chatId, timestamp));
+    }
+
+    public void missingCredentials(final String chatId, final LocalDateTime timestamp) {
+        final LocalDateTime missingCredencialsLastNotified = missingCredentialsCache.getIfPresent(chatId);
+
+        if (missingCredencialsLastNotified == null) {
+            final OutgoingMessage message = getOutgoingMessage(chatId, ChatbotMessages.MISSING_PASSWORD);
+
+            notify(message);
+
+            missingCredentialsCache.put(chatId, timestamp);
+        }
     }
 }

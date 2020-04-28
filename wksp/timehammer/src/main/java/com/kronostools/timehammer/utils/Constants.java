@@ -16,7 +16,6 @@ public class Constants {
         public static final String WORKER_BY_INTERNAL_ID_AS_WORKERVO = "worker-by-internalid-as-workervo-cache";
         public static final String WORKER_BY_CHATID_AS_WORKERVO = "worker-by-chatid-as-workervo-cache";
         public static final String ALL_WORKERS_CURRENT_PREFERENCES = "all-workers-current-preferences-cache";
-        public static final String ALL_WORKERS_PREFERENCES = "all-workers-preferences-cache";
         public static final String WORKER_PREFERENCES = "worker-preferences-cache";
         public static final String WORKER_CURRENT_PREFERENCES = "worker-current-preferences-cache";
         public static final String WORKER_HOLIDAYS = "worker-holidays-cache";
@@ -32,8 +31,20 @@ public class Constants {
         public static final String ADD_TRASH_MESSAGE = "addTrashMessage";
     }
 
+    public class GenericErrors {
+        public static final String INCORRECT_CREDENTIALS = "Contraseña no válida.";
+        public static final String UNEXPEDTED_ERROR = "Ha ocurrido un error inesperado mientras procesábamos su solicitud de registro, por favor, inténtelo de nuevo";
+    }
+
+    public class RegistrationFormFields {
+        public static final String EXTERNAL_PASSWORD = "externalPassword";
+    }
+
     public class RegistrationErrorMessages {
         public static final String REGISTRATION_EXPIRED = "La solicitud de registro ha expirado, por favor, vuelva a iniciar otra.";
-        public static final String UNEXPEDTED_ERROR = "Ha ocurrido un error inesperado mientras procesábamos su solicitud de registro, por favor, inténtelo de nuevo";
+    }
+
+    public class UpdatePasswordFormFields {
+        public static final String EXTERNAL_PASSWORD = "externalPassword";
     }
 }

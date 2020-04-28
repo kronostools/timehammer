@@ -4,6 +4,7 @@ import com.kronostools.timehammer.comunytek.enums.ComunytekAction;
 import com.kronostools.timehammer.comunytek.utils.ComunytekConstants;
 import com.kronostools.timehammer.enums.SupportedTimezone;
 import com.kronostools.timehammer.service.TimeMachineService;
+import com.kronostools.timehammer.utils.Constants;
 import com.kronostools.timehammer.utils.Utils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -32,7 +33,15 @@ public class ComunytekMockedClient implements ComunytekRestClient {
 
     @Override
     public String login(String sessionId, String par1, String par2, String par3, String par4) {
-        return Utils.stringFormat("{}\nN\n11111111\nNONE\nv4.2.2 build 20191211-18:26:16", par2);
+        String result;
+
+        if (par3 != null && par3.equals(Constants.DEMO_PASSWORD)) {
+            result = Utils.stringFormat("{}\nN\n11111111\nNONE\nv4.2.2 build 20191211-18:26:16", par2);
+        } else {
+            result = "ERROR contraseña inválida";
+        }
+
+        return result;
     }
 
     @Override

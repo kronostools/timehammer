@@ -42,8 +42,6 @@ quarkus:
         expire-after-write: 8h
       all-workers-current-preferences-cache:
         expire-after-write: 8h
-      all-workers-preferences-cache:
-        expire-after-write: 8h
       worker-current-preferences-cache:
         expire-after-write: 8h
       worker-preferences-cache:

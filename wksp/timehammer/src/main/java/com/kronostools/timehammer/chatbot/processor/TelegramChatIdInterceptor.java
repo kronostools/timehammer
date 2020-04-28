@@ -45,7 +45,7 @@ public class TelegramChatIdInterceptor implements Processor {
             exchange.getMessage().setHeader(Headers.TIMESTAMP, timestamp);
             exchange.getMessage().setHeader(Headers.LOGGED_IN, Boolean.FALSE);
 
-            final Optional<WorkerVo> worker = workerService.getWorkerByChatId(chatId);
+            final Optional<WorkerVo> worker = workerService.findWorkerByChatId(chatId);
 
             worker.ifPresent(w -> {
                 final WorkerCurrentPreferencesVo workerCurrentPreferences = workerService.getWorkerCurrentPreferencesByInternalId(w.getInternalId(), timestamp);

@@ -56,12 +56,12 @@ public class WorkerManager {
         return workerVo;
     }
 
-    public Optional<WorkerVo> getWorkerByChatId(final String chatId) {
-        LOG.debug("BEGIN getWorkerByChatId: [{}]", chatId);
+    public Optional<WorkerVo> findWorkerByChatId(final String chatId) {
+        LOG.debug("BEGIN findWorkerByChatId: [{}]", chatId);
 
-        Optional<WorkerVo> workerVo = workerDao.fetchByChatIdAsWorkerVo(chatId);
+        Optional<WorkerVo> workerVo = workerDao.findByChatIdAsWorkerVo(chatId);
 
-        LOG.debug("END getWorkerByChatId");
+        LOG.debug("END findWorkerByChatId");
 
         return workerVo;
     }

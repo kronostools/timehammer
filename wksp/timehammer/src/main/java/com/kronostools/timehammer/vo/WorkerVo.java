@@ -4,23 +4,17 @@ import com.kronostools.timehammer.enums.Profile;
 
 public class WorkerVo {
     private final String internalId;
-    private final String externalPassword;
     private final String fullName;
     private final Profile profile;
 
-    public WorkerVo(final String internalId, final String externalPassword, final String fullName, final Profile profile) {
+    public WorkerVo(final String internalId, final String fullName, final Profile profile) {
         this.internalId = internalId;
-        this.externalPassword = externalPassword;
         this.fullName = fullName;
         this.profile = profile;
     }
 
     public String getInternalId() {
         return internalId;
-    }
-
-    public String getExternalPassword() {
-        return externalPassword;
     }
 
     public String getFullName() {

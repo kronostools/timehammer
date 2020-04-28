@@ -8,7 +8,9 @@ public enum ChatbotCommand {
     HELP("/help", "Obtener ayuda", Boolean.TRUE, Boolean.FALSE),
     SETTINGS("/settings", "Cambiar la configuración", Boolean.TRUE, Boolean.TRUE),
     REGISTER("/register", "Registrarse", Boolean.TRUE, Boolean.FALSE),
-    UNREGISTER("/unregister", "Cancelar el registro", Boolean.TRUE, Boolean.TRUE);
+    UNREGISTER("/unregister", "Cancelar el registro", Boolean.TRUE, Boolean.TRUE),
+    UPDATE_PASSWORD("/updatePassword", "Actualizar la contraseña", Boolean.TRUE, Boolean.TRUE);
+
 
     private final String commandText;
     private final String commandDescription;

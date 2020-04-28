@@ -2,6 +2,7 @@ package com.kronostools.timehammer.config;
 
 import com.kronostools.timehammer.chatbot.enums.ChatbotCommand;
 import com.kronostools.timehammer.chatbot.restclient.TelegramRestClient;
+import com.kronostools.timehammer.service.WorkerCredentialsService;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.apache.camel.component.telegram.model.BotCommand;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,9 +22,14 @@ import java.util.stream.Stream;
 public class TimehammerLifecycle {
     private static final Logger LOG = LoggerFactory.getLogger(TimehammerLifecycle.class);
 
-    @Inject
-    @RestClient
-    TelegramRestClient telegramRestClient;
+    private final TelegramRestClient telegramRestClient;
+    final WorkerCredentialsService workerCredentialsService;
+
+    public TimehammerLifecycle(@RestClient final TelegramRestClient telegramRestClient,
+                               final WorkerCredentialsService workerCredentialsService) {
+        this.telegramRestClient = telegramRestClient;
+        this.workerCredentialsService = workerCredentialsService;
+    }
 
     void onStartup(@Observes StartupEvent event) {
         LOG.info("BEGIN onStartup");
@@ -46,7 +51,11 @@ public class TimehammerLifecycle {
             LOG.warn("Chatbot commands could not be configured because there was an unexpected error while configuring them");
         }
 
-        // TODO: read credencials from tmp dir and delete file
+        LOG.info("Dumping worker credentials to temp dump file ...");
+
+        workerCredentialsService.load();
+
+        LOG.info("Dumped worker credentials");
 
         LOG.info("END onStartup");
     }
@@ -57,7 +66,13 @@ public class TimehammerLifecycle {
 
     void onShutdown(@Observes ShutdownEvent event) {
         LOG.info("BEGIN onShutdown");
-        // TODO: write user credentials to tmp dir
+
+        LOG.debug("Loading worker credentials from temp dump file ...");
+
+        workerCredentialsService.load();
+
+        LOG.debug("Loaded worker credentials");
+
         LOG.info("END onShutdown");
     }
 }
