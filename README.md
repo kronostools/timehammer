@@ -1,5 +1,13 @@
 # TODO
 
+- Crear la siguiente estructura de maven
+    - timehammer [POM] (proyecto padre)
+        - timehammer-all [JAR] (el timehammer actual)
+        (para probar SmallRye Reactive Messaging)
+            - timehammer-core [JAR] (core)
+            - timehammer-bot [JAR] (chatbot)
+            - listar los casos de uso que se dan en la aplicación
+            - hacer ejemplo de cada caso de uso
 - Llevar servicio /auth/mock/chatbotRegistration a /demo
 - Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
     - Si el usuario no existe se establece la contraseña
