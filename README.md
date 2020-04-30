@@ -1,13 +1,13 @@
 # TODO
 
-- Crear la siguiente estructura de maven
-    - timehammer [POM] (proyecto padre)
-        - timehammer-all [JAR] (el timehammer actual)
-        (para probar SmallRye Reactive Messaging)
-            - timehammer-core [JAR] (core)
-            - timehammer-bot [JAR] (chatbot)
-            - listar los casos de uso que se dan en la aplicación
-            - hacer ejemplo de cada caso de uso
+- Listar casos de uso y cómo se harían con un desarrollo orientado a eventos
+- Modularización de la integración con empresas
+    - La lógica de integración con empresas estará en timehammer-integration
+    - La integración se hará con mensajes Kafka
+        - Hacer primera POC para enviar un mensaje de uno a otro y viceversa
+        - actualizar el docker-compose para añadir servicio de kafka
+- Hacer prueba en timehammer-core de usar PostgresQL Reactivo
+- Cambiar en el core Hibernate por PostgresQL Reactivo
 - Llevar servicio /auth/mock/chatbotRegistration a /demo
 - Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
     - Si el usuario no existe se establece la contraseña

@@ -37,38 +37,19 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-  timehammer:
+  timehammercore:
     image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer
+    container_name: timehammer-core
     env_file:
       - .env
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer
+    working_dir: /root/wksp/timehammer/timehammer-core
     command: mvn -Dquarkus.profile=remotedemo quarkus:dev
     networks:
       - timehammer
     restart: unless-stopped
-  timehammernativebuild:
-    image: quay.io/quarkus/centos-quarkus-maven:20.0.0-java8
-    container_name: timehammernativebuild
-    volumes:
-      - ./wksp/timehammer:/project/timehammer
-    working_dir: /project/timehammer
-    command: /bin/bash
-    stdin_open: true
-    tty: true
-    networks:
-      - timehammer
-  timehammernative:
-    build:
-      context: ./wksp/timehammer
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
-    image: timehammer-native:1.0.0
-    container_name: timehammernative
-    networks:
-      - timehammer
 
 volumes:
   dbdata:

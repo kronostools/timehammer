@@ -2,34 +2,18 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.kronostools</groupId>
-  <artifactId>timehammer</artifactId>
+  
+  <artifactId>timehammer-core</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <properties>
-    <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-plugin.version>1.3.2.Final</quarkus-plugin.version>
-    <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-    <quarkus.platform.version>1.3.2.Final</quarkus.platform.version>
-    <surefire-plugin.version>2.22.1</surefire-plugin.version>
-    <camel.version>3.1.0</camel.version>
-  </properties>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>${quarkus.platform.group-id}</groupId>
-        <artifactId>${quarkus.platform.artifact-id}</artifactId>
-        <version>${quarkus.platform.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <packaging>jar</packaging>
+
+  <parent>
+    <groupId>com.kronostools.timehammer</groupId>
+    <artifactId>timehammer-base</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../timehammer-base</relativePath>
+  </parent>
+
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -98,7 +82,7 @@
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
       <artifactId>camel-quarkus-support-ahc</artifactId>
-      <version>1.0.0-M5</version>
+      <version>1.0.0-M6</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel.quarkus</groupId>
@@ -109,7 +93,7 @@
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
       <artifactId>camel-quarkus-core</artifactId>
-      <version>1.0.0-M5</version>
+      <version>1.0.0-M6</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel</groupId>
@@ -140,7 +124,7 @@
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
       <artifactId>camel-quarkus-direct</artifactId>
-      <version>1.0.0-M5</version>
+      <version>1.0.0-M6</version>
       <exclusions>
         <exclusion>
           <groupId>org.apache.camel.quarkus</groupId>
@@ -282,6 +266,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
   <build>
     <plugins>
       <plugin>
@@ -296,10 +281,12 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${compiler-plugin.version}</version>
       </plugin>
+
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
@@ -309,20 +296,24 @@
           </systemProperties>
         </configuration>
       </plugin>
+
       <plugin>
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>${surefire-plugin.version}</version>
       </plugin>
     </plugins>
   </build>
+
   <profiles>
     <profile>
       <id>native</id>
+      
       <activation>
         <property>
           <name>native</name>
         </property>
       </activation>
+      
       <build>
         <plugins>
           <plugin>
@@ -344,6 +335,7 @@
           </plugin>
         </plugins>
       </build>
+
       <properties>
         <quarkus.package.type>native</quarkus.package.type>
         <quarkus.native.additional-build-args>-Dquarkus.native.container-runtime=docker</quarkus.native.additional-build-args>
