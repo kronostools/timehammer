@@ -40,7 +40,9 @@
   </dependencyManagement>
 
   <modules>
-    <module>../monolith</module>
+    <module>../common</module>
+    <module>../scheduler</module>
     <module>../integration</module>
+    <module>../monolith</module>
   </modules>
 </project>

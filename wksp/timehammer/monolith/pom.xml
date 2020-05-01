@@ -11,7 +11,7 @@
     <groupId>com.kronostools.timehammer</groupId>
     <artifactId>timehammer-base</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../timehammer-base</relativePath>
+    <relativePath>../base</relativePath>
   </parent>
 
   <dependencies>
