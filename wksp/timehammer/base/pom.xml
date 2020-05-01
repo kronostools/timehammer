@@ -40,7 +40,7 @@
   </dependencyManagement>
 
   <modules>
-    <module>../timehammer-core</module>
-    <module>../timehammer-integration</module>
+    <module>../monolith</module>
+    <module>../integration</module>
   </modules>
 </project>
