@@ -14,7 +14,11 @@ services:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 6010:5005
   core:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 6020:5005

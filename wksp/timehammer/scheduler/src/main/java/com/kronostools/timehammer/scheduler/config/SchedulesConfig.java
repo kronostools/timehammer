@@ -5,7 +5,7 @@ import io.quarkus.arc.config.ConfigProperties.NamingStrategy;
 
 import java.util.Objects;
 
-@ConfigProperties(prefix = "timehammer.schedules", namingStrategy= NamingStrategy.VERBATIM)
+@ConfigProperties(prefix = "timehammer.schedules", namingStrategy= NamingStrategy.KEBAB_CASE)
 public class SchedulesConfig {
     private ScheduledProcessConfig updateWorkersStatus;
     private ScheduledProcessConfig updateWorkersHolidays;

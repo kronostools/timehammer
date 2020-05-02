@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.scheduler.schedules;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.ScheduleTriggerMessage;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
 import com.kronostools.timehammer.scheduler.services.TimeMachineService;
@@ -24,7 +24,7 @@ public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessa
         this.scheduleChannel = scheduleChannel;
     }
 
-    @Scheduled(cron = "{timehammer.schedules.updateWorkersHolidays.cron}")
+    @Scheduled(cron = "{timehammer.schedules.update-workers-holidays.cron}")
     void updateWorkersHolidays() {
         run();
     }

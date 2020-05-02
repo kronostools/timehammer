@@ -17,34 +17,30 @@ kafka:
   bootstrap:
     servers: kafka:9092
 
-#kafka:
-#  bootstrap:
-#    servers: kafka:9092
-
 timehammer:
   schedules:
     # cron expressions (https://www.freeformatter.com/cron-expression-generator-quartz.html)
-    updateWorkersStatus:
+    update-workers-status:
       name: updateWorkersStatus
       enabled: true
       ## Update workers' status -> every 2 minutes starting at minute 0, every hour between 05am and 19pm, every day between Monday and Friday, every month
       cron: 0 0/2 5-19 ? * MON-FRI *
-    cleanPastWorkersHolidays:
+    clean-past-workers-holidays:
       name: cleanPastWorkersHolidays
       enabled: true
       ## Remove workers' past holidays -> At 03:00:00am UTC, on the 1st day, in January
       cron: 0 0 3 1 JAN ? *
-    updateWorkersHolidays:
+    update-workers-holidays:
       name: updateWorkersHolidays
       enabled: true
       ## Update workers' holidays -> At 03:10:00am UTC, every day between Monday and Friday, every month
       cron: 0 10 3 ? * MON-FRI *
-    cleanSsidTrackingEvents:
+    clean-ssid-tracking-events:
       name: cleanSsidTrackingEvents
       enabled: true
       ## Clean SSID tracking events -> At 03:20:00am UTC, every day between Monday and Friday, every month
       cron: 0 20 3 ? * MON-FRI *
-    cleanTrashMessages:
+    clean-trash-messages:
       name: cleanTrashMessages
       enabled: true
       ## Clean Trash Messages -> At 03:30:00am UTC, every day between Monday and Friday, every month
@@ -59,5 +55,5 @@ timehammer:
 
   timehammer:
     schedules:
-      updateWorkersHolidays:
+      update-workers-holidays:
         cron: 0/20 * * ? * * *

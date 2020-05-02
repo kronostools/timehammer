@@ -1,9 +1,13 @@
-package com.kronostools.timehammer.common.messages;
+package com.kronostools.timehammer.common.messages.schedules;
+
+import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDateTime;
 
 public class ScheduleTriggerMessage extends PlatformMessage {
-    private final String name;
+    private String name;
+
+    public ScheduleTriggerMessage() {}
 
     public ScheduleTriggerMessage(final LocalDateTime timestamp, final String name) {
         super(timestamp);
@@ -12,5 +16,9 @@ public class ScheduleTriggerMessage extends PlatformMessage {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,0 +1,43 @@
+quarkus:
+  log:
+    category:
+      com.kronostools.timehammer:
+        level: INFO
+
+  datasource:
+    db-kind: postgresql
+    username: timehammer
+    password: ${TIMEHAMMER_DB_PASSWORD}
+    jdbc:
+      url: jdbc:postgresql://db:5432/timehammer
+    reactive:
+      url: postgresql://db:5432/timehammer
+
+  flyway:
+    migrate-at-start: true
+
+mp:
+  messaging:
+    incoming:
+      holidays-update:
+        connector: smallrye-kafka
+        topic: holidays-update
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleTriggerMessageDeserializer
+    outgoing:
+      holidays-worker-auth:
+        connector: smallrye-kafka
+        topic: holidays-worker-auth
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+
+kafka:
+  bootstrap:
+    servers: kafka:9092
+
+"%localdemo":
+  quarkus:
+    log:
+      category:
+        com.kronostools.timehammer:
+          level: DEBUG
