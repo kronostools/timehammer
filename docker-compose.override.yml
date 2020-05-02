@@ -1,17 +1,8 @@
 version: '3'
 services:
-  global:
-    image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer-global
+  common:
     volumes:
-      - ./wksp/timehammer:/root/wksp/timehammer
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer
-    command: ["/bin/bash"]
-    stdin_open: true
-    tty: true
-    networks:
-      - timehammer
   monolith:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
@@ -19,28 +10,11 @@ services:
     ports:
       - 9000:8080
       - 6000:5005
-  monolithnativebuild:
-    image: quay.io/quarkus/centos-quarkus-maven:20.0.0-java8
-    container_name: timehammer-monolithnativebuild
-    volumes:
-      - ./wksp/timehammer:/project/timehammer
-    working_dir: /project/timehammer
-    command: ["/bin/bash"]
-    stdin_open: true
-    tty: true
-    networks:
-      - timehammer
-  monolithnative:
-    build:
-      context: ./wksp/timehammer
-      dockerfile: ./monolith/src/main/docker/Dockerfile.native.tiny
-    image: timehammer-native:1.0.0
-    container_name: timehammernative
-    ports:
-      - 9000:8080
-    networks:
-      - timehammer
   scheduler:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+  core:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]

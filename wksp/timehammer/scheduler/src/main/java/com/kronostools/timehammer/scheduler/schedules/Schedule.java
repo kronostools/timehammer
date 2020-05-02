@@ -31,7 +31,7 @@ public abstract class Schedule<T> {
         if (config.isEnabled()) {
             LOG.debug("[schedule] {} - emitting message to trigger schedule ...", config.getName());
 
-            getChannel().send(getTriggerMessage()).handle((Void, e) -> {
+            getChannel().send(getTriggerMessage(timestamp)).handle((Void, e) -> {
                 if (e != null) {
                     LOG.warn("[schedule] {} - error emitting trigger message", config.getName());
                 } else {
@@ -47,7 +47,7 @@ public abstract class Schedule<T> {
 
     protected abstract Emitter<T> getChannel();
 
-    protected abstract T getTriggerMessage();
+    protected abstract T getTriggerMessage(final LocalDateTime timestamp);
 
     protected abstract ScheduledProcessConfig getConfig();
 }

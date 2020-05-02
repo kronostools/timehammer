@@ -60,6 +60,14 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+  common:
+    image: maven:3.6.3-jdk-11-slim
+    container_name: timehammer-common
+    volumes:
+      - ./wksp/timehammer:/root/wksp/timehammer
+      - ${HOME}/.m2/repository:/root/.m2/repository
+    working_dir: /root/wksp/timehammer/base
+    command: ["mvn", "--projects", ".,:timehammer-common", "--also-make", "clean", "install"]
   monolith:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-monolith
@@ -80,6 +88,19 @@ services:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
     working_dir: /root/wksp/timehammer/scheduler
+    command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+  core:
+    image: maven:3.6.3-jdk-11-slim
+    container_name: timehammer-core
+    volumes:
+      - ./wksp/timehammer:/root/wksp/timehammer
+      - ${HOME}/.m2/repository:/root/.m2/repository
+    working_dir: /root/wksp/timehammer/core
     command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
     depends_on:
       - kafka

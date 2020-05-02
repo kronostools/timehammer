@@ -41,6 +41,7 @@
 
   <modules>
     <module>../common</module>
+    <module>../core</module>
     <module>../scheduler</module>
     <module>../integration</module>
     <module>../monolith</module>

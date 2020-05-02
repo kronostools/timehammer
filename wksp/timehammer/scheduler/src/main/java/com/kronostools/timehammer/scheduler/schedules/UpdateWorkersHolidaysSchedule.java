@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.scheduler.schedules;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.messages.ScheduleTriggerMessage;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
 import com.kronostools.timehammer.scheduler.services.TimeMachineService;
@@ -9,15 +10,16 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.LocalDateTime;
 
 @ApplicationScoped
-public class UpdateWorkersHolidaysSchedule extends Schedule<Integer> {
+public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessage> {
 
-    private final Emitter<Integer> scheduleChannel;
+    private final Emitter<ScheduleTriggerMessage> scheduleChannel;
 
     public UpdateWorkersHolidaysSchedule(final SchedulesConfig schedulesConfig,
                                          final TimeMachineService timeMachineService,
-                                         @Channel(Channels.HOLIDAYS_UPDATE) final Emitter<Integer> scheduleChannel) {
+                                         @Channel(Channels.HOLIDAYS_UPDATE) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
         super(schedulesConfig, timeMachineService);
         this.scheduleChannel = scheduleChannel;
     }
@@ -28,14 +30,13 @@ public class UpdateWorkersHolidaysSchedule extends Schedule<Integer> {
     }
 
     @Override
-    protected Emitter<Integer> getChannel() {
+    protected Emitter<ScheduleTriggerMessage> getChannel() {
         return scheduleChannel;
     }
 
     @Override
-    protected Integer getTriggerMessage() {
-        // TODO: return an object
-        return 3;
+    protected ScheduleTriggerMessage getTriggerMessage(final LocalDateTime timestamp) {
+        return new ScheduleTriggerMessage(timestamp, getConfig().getName());
     }
 
     @Override
