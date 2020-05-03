@@ -44,6 +44,7 @@ public class UpdateWorkersHolidaysScheduleProcessor {
                                     .name(triggerMessage.getName())
                                     .batchSize(wcpl.size())
                                     .workerInternalId(wcp.getWorkerInternalId())
+                                    .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
                                     .build()))
                             .collect(Collectors.toList());

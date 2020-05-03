@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
+import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDate;
@@ -13,9 +14,11 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
     private Integer batchSize;
 
     private String workerInternalId;
+    private Company company;
     private String workerExternalId;
     private String externalPassword;
     private List<LocalDate> holidays;
+    private Boolean updatedSuccessfully;
 
     public static class Builder {
         private LocalDateTime timestamp;
@@ -24,6 +27,7 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
         private Integer batchSize;
 
         private String workerInternalId;
+        private Company company;
         private String workerExternalId;
 
         Builder() {}
@@ -62,6 +66,11 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
             return this;
         }
 
+        public Builder company(final Company company) {
+            this.company = company;
+            return this;
+        }
+
         public UpdateWorkersHolidaysWorker build() {
             final UpdateWorkersHolidaysWorker result = new UpdateWorkersHolidaysWorker();
             result.setTimestamp(timestamp);
@@ -69,7 +78,9 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
             result.setName(name);
             result.setBatchSize(batchSize);
             result.setWorkerInternalId(workerInternalId);
+            result.setCompany(company);
             result.setWorkerExternalId(workerExternalId);
+            result.setUpdatedSuccessfully(Boolean.FALSE);
 
             return result;
         }
@@ -107,6 +118,14 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
         this.workerInternalId = workerInternalId;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
     public String getWorkerExternalId() {
         return workerExternalId;
     }
@@ -129,5 +148,13 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
 
     public void setHolidays(List<LocalDate> holidays) {
         this.holidays = holidays;
+    }
+
+    public Boolean getUpdatedSuccessfully() {
+        return updatedSuccessfully;
+    }
+
+    public void setUpdatedSuccessfully(Boolean updatedSuccessfully) {
+        this.updatedSuccessfully = updatedSuccessfully;
     }
 }
