@@ -97,7 +97,7 @@ ALTER TABLE IF EXISTS worker_preferences
     REFERENCES worker;
 
 INSERT INTO city(code, name, timezone)
-VALUES ('MAD', 'Madrid', 'EUROPE_MADRID');
+VALUES ('MAD', 'Madrid', 'Europe/Madrid');
 
 INSERT INTO city_holiday(city_code, day, description)
 VALUES ('MAD', '2020-01-01', 'año nuevo'),

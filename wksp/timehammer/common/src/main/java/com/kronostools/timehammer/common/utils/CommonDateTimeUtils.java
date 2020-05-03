@@ -5,17 +5,16 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
 public class CommonDateTimeUtils {
-    public static final String FORMAT_YYYYMMDD = "yyyyMMdd";
-    public static final String FORMAT_YYYYMMDDTHHMM = "yyyyMMdd'T'HH:mm";
-    public static final String FORMAT_YYYYMMDDTHHMMSSSSS = "yyyyMMdd'T'HH:mm:ss.SSS";
-    public static final String FORMAT_DDMMYYYY_DSEP_FWS = "dd/MM/yyyy";
-    public static final String FORMAT_HHMM_TSEP = "HH:mm";
-    public static final String FORMAT_HHMMSSSSS_TSEP = "HH:mm:ss.SSS";
+    private static final String FORMAT_YYYYMMDD = "yyyyMMdd";
+    private static final String FORMAT_YYYYMMDDTHHMM = "yyyyMMdd'T'HH:mm";
+    private static final String FORMAT_YYYYMMDDTHHMMSSSSS = "yyyyMMdd'T'HH:mm:ss.SSS";
+    private static final String FORMAT_DDMMYYYY_DSEP_FWS = "dd/MM/yyyy";
+    private static final String FORMAT_HHMM_TSEP = "HH:mm";
+    private static final String FORMAT_HHMMSSSSS_TSEP = "HH:mm:ss.SSS";
 
     public static final DateTimeFormatter FORMATTER_HHMM_TSEP = DateTimeFormatter.ofPattern(FORMAT_HHMM_TSEP);
 
@@ -39,11 +38,7 @@ public class CommonDateTimeUtils {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
     }
 
-    public static LocalTime parseTime(final String time, final String timeFormat) {
-        return LocalTime.parse(time, DateTimeFormatter.ofPattern(timeFormat));
-    }
-
-    public static LocalTime parseTimeSimple(final String time) {
+    public static LocalTime parseTimeFromConfig(final String time) {
         return parseTime(time, FORMAT_HHMM_TSEP);
     }
 
@@ -76,30 +71,12 @@ public class CommonDateTimeUtils {
         return instant.atOffset(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public static String formatDateTime(final LocalDateTime dateTime, final String format) {
-        return Optional.ofNullable(dateTime)
-                .map(dt -> dt.format(DateTimeFormatter.ofPattern(format)))
-                .orElse("");
-    }
-
-    public static String formatDateTimeFull(final LocalDateTime dateTime) {
+    public static String formatDateTimeToLog(final LocalDateTime dateTime) {
         return formatDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
     }
 
-    public static String formatDate(final LocalDate date, final String dateFormat) {
-        return Optional.ofNullable(date)
-                .map(d -> d.format(DateTimeFormatter.ofPattern(dateFormat)))
-                .orElse("");
-    }
-
-    public static String formatDate(final LocalDate date) {
+    public static String formatDateToLog(final LocalDate date) {
         return formatDate(date, FORMAT_YYYYMMDD);
-    }
-
-    public static String formatTime(final LocalTime time, final String timeFormat) {
-        return Optional.ofNullable(time)
-                .map(t -> t.format(DateTimeFormatter.ofPattern(timeFormat)))
-                .orElse("");
     }
 
     public static String formatTimeSimple(final LocalTime time) {
@@ -115,23 +92,33 @@ public class CommonDateTimeUtils {
         return !isWeekend(date);
     }
 
-    public static String getDayOfWeekFull(final LocalDateTime dateTime, final Locale locale) {
+    public static String getDayOfWeekLocalizedName(final LocalDateTime dateTime, final Locale locale) {
         return dateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, locale);
-    }
-
-    public static LocalDate toLocalDate(Date date) {
-        final LocalDate localDate;
-
-        if (date instanceof java.sql.Date) {
-            localDate = ((java.sql.Date) date).toLocalDate();
-        } else {
-            localDate = date.toInstant().atZone(SupportedTimezone.UTC.getZone()).toLocalDate();
-        }
-
-        return localDate;
     }
 
     public static LocalDateTime atMidday(final LocalDate date) {
         return date.atTime(12, 0);
+    }
+
+    private static String formatDateTime(final LocalDateTime dateTime, final String format) {
+        return Optional.ofNullable(dateTime)
+                .map(dt -> dt.format(DateTimeFormatter.ofPattern(format)))
+                .orElse("");
+    }
+
+    private static String formatDate(final LocalDate date, final String dateFormat) {
+        return Optional.ofNullable(date)
+                .map(d -> d.format(DateTimeFormatter.ofPattern(dateFormat)))
+                .orElse("");
+    }
+
+    private static String formatTime(final LocalTime time, final String timeFormat) {
+        return Optional.ofNullable(time)
+                .map(t -> t.format(DateTimeFormatter.ofPattern(timeFormat)))
+                .orElse("");
+    }
+
+    private static LocalTime parseTime(final String time, final String timeFormat) {
+        return LocalTime.parse(time, DateTimeFormatter.ofPattern(timeFormat));
     }
 }

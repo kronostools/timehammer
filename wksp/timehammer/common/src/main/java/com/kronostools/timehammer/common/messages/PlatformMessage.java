@@ -7,10 +7,6 @@ public abstract class PlatformMessage {
 
     protected PlatformMessage() {}
 
-    protected PlatformMessage(final LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public LocalDateTime getTimestamp() {
         return timestamp;
     }

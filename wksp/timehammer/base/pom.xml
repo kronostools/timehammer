@@ -40,10 +40,11 @@
   </dependencyManagement>
 
   <modules>
+    <module>../auth</module>
     <module>../common</module>
     <module>../core</module>
-    <module>../scheduler</module>
     <module>../integration</module>
     <module>../monolith</module>
+    <module>../scheduler</module>
   </modules>
 </project>

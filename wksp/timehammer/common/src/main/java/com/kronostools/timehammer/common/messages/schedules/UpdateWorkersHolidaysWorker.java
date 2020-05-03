@@ -1,21 +1,102 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.kronostools.timehammer.common.messages.PlatformMessage;
 
-public class UpdateWorkersHolidaysWorker {
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+public class UpdateWorkersHolidaysWorker extends PlatformMessage {
+    private UUID executionId;
+    private String name;
+    private Integer batchSize;
+
     private String workerInternalId;
     private String workerExternalId;
-    private Boolean canBeNotified;
     private String externalPassword;
     private List<LocalDate> holidays;
 
-    public UpdateWorkersHolidaysWorker() {}
+    public static class Builder {
+        private LocalDateTime timestamp;
+        private UUID executionId;
+        private String name;
+        private Integer batchSize;
 
-    public UpdateWorkersHolidaysWorker(final String workerInternalId, final String workerExternalId, final Boolean canBeNotified) {
-        this.workerInternalId = workerInternalId;
-        this.workerExternalId = workerExternalId;
-        this.canBeNotified = canBeNotified;
+        private String workerInternalId;
+        private String workerExternalId;
+
+        Builder() {}
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public Builder timestamp(final LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+            return this;
+        }
+
+        public Builder executionId(final UUID executionId) {
+            this.executionId = executionId;
+            return this;
+        }
+
+        public Builder name(final String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder batchSize(final Integer batchSize) {
+            this.batchSize = batchSize;
+            return this;
+        }
+
+        public Builder workerInternalId(final String workerInternalId) {
+            this.workerInternalId = workerInternalId;
+            return this;
+        }
+
+        public Builder workerExternalId(final String workerExternalId) {
+            this.workerExternalId = workerExternalId;
+            return this;
+        }
+
+        public UpdateWorkersHolidaysWorker build() {
+            final UpdateWorkersHolidaysWorker result = new UpdateWorkersHolidaysWorker();
+            result.setTimestamp(timestamp);
+            result.setExecutionId(executionId);
+            result.setName(name);
+            result.setBatchSize(batchSize);
+            result.setWorkerInternalId(workerInternalId);
+            result.setWorkerExternalId(workerExternalId);
+
+            return result;
+        }
+    }
+
+    public UUID getExecutionId() {
+        return executionId;
+    }
+
+    public void setExecutionId(UUID executionId) {
+        this.executionId = executionId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 
     public String getWorkerInternalId() {
@@ -32,14 +113,6 @@ public class UpdateWorkersHolidaysWorker {
 
     public void setWorkerExternalId(String workerExternalId) {
         this.workerExternalId = workerExternalId;
-    }
-
-    public Boolean getCanBeNotified() {
-        return canBeNotified;
-    }
-
-    public void setCanBeNotified(Boolean canBeNotified) {
-        this.canBeNotified = canBeNotified;
     }
 
     public String getExternalPassword() {

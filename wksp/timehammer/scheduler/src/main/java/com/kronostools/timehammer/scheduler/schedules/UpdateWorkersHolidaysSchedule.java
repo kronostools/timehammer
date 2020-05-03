@@ -36,7 +36,10 @@ public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessa
 
     @Override
     protected ScheduleTriggerMessage getTriggerMessage(final LocalDateTime timestamp) {
-        return new ScheduleTriggerMessage(timestamp, getConfig().getName());
+        return ScheduleTriggerMessage.Builder.builder()
+                .timestamp(timestamp)
+                .name(getConfig().getName())
+                .build();
     }
 
     @Override

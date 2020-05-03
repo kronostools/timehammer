@@ -8,6 +8,6 @@ import java.time.LocalTime;
 public class LocalTimeConfigConverter implements Converter<LocalTime> {
     @Override
     public LocalTime convert(String localTime) {
-        return CommonDateTimeUtils.parseTime(localTime, CommonDateTimeUtils.FORMAT_HHMM_TSEP);
+        return CommonDateTimeUtils.parseTimeFromConfig(localTime);
     }
 }

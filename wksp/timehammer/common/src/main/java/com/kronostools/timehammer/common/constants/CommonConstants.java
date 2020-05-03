@@ -6,5 +6,6 @@ public class CommonConstants {
     public static class Channels {
         public static final String HOLIDAYS_UPDATE = "holidays-update";
         public static final String HOLIDAYS_WORKER_AUTH = "holidays-worker-auth";
+        public static final String HOLIDAYS_WORKER_GET = "holidays-worker-get";
     }
 }

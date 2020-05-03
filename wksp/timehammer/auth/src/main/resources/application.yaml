@@ -1,0 +1,31 @@
+quarkus:
+  log:
+    category:
+      com.kronostools.timehammer:
+        level: INFO
+
+mp:
+  messaging:
+    incoming:
+      holidays-worker-auth:
+        connector: smallrye-kafka
+        topic: holidays-worker-auth
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
+    outgoing:
+      holidays-worker-get:
+        connector: smallrye-kafka
+        topic: holidays-worker-get
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+
+kafka:
+  bootstrap:
+    servers: kafka:9092
+
+"%localdemo":
+  quarkus:
+    log:
+      category:
+        com.kronostools.timehammer:
+          level: DEBUG

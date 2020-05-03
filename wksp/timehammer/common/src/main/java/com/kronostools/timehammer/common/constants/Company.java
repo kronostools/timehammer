@@ -18,7 +18,7 @@ public enum Company {
 
     public static Company fromCode(final String code) {
         return Stream.of(Company.values())
-                .filter(tz -> tz.getCode().equals(code))
+                .filter(c -> c.getCode().equals(code))
                 .findFirst()
                 .orElse(UNKNOWN);
     }

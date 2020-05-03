@@ -1,5 +1,6 @@
 # TODO
 
+- Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka
