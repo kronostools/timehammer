@@ -1,5 +1,7 @@
 # TODO
 
+- Ver si se puede tener una configuración común
+    - como meter en el jar el mp.messaging.outgoing del timemachine
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Dividir el common en 2 partes
         - common con utilidades

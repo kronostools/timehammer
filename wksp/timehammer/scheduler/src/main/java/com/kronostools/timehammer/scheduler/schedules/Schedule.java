@@ -1,8 +1,8 @@
 package com.kronostools.timehammer.scheduler.schedules;
 
+import com.kronostools.timehammer.common.services.impl.RealTimeMachineService;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
-import com.kronostools.timehammer.scheduler.services.TimeMachineService;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +13,12 @@ public abstract class Schedule<T> {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     protected SchedulesConfig schedulesConfig;
-    protected TimeMachineService timeMachineService;
+    protected RealTimeMachineService timeMachineService;
 
     public Schedule() {} // dummy constructor
 
     public Schedule(final SchedulesConfig schedulesConfig,
-                    final TimeMachineService timeMachineService) {
+                    final RealTimeMachineService timeMachineService) {
         this.schedulesConfig = schedulesConfig;
         this.timeMachineService = timeMachineService;
     }
