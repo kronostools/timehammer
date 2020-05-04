@@ -1,4 +1,6 @@
 quarkus:
+  banner:
+    enabled: false
   log:
     category:
       com.kronostools.timehammer:

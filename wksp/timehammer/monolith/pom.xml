@@ -9,16 +9,12 @@
 
   <parent>
     <groupId>com.kronostools.timehammer</groupId>
-    <artifactId>timehammer-base</artifactId>
+    <artifactId>timehammer-servicebase</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../base</relativePath>
+    <relativePath>../servicebase</relativePath>
   </parent>
 
   <dependencies>
-    <dependency>
-      <groupId>${quarkus.platform.group-id}</groupId>
-      <artifactId>quarkus-resteasy-jsonb</artifactId>
-    </dependency>
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-hibernate-orm</artifactId>
@@ -50,10 +46,6 @@
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${quarkus.platform.group-id}</groupId>
-      <artifactId>quarkus-config-yaml</artifactId>
     </dependency>
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>

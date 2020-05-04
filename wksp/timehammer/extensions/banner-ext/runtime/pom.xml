@@ -15,6 +15,14 @@
     <name>Timehammer Banner Extension - Runtime</name>
 
     <dependencies>
+        <dependency>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>quarkus-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${quarkus.platform.group-id}</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

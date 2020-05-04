@@ -40,13 +40,9 @@
   </dependencyManagement>
 
   <modules>
-    <module>../auth</module>
     <module>../common</module>
     <module>../extensions</module>
-    <module>../core</module>
-    <module>../integration</module>
-    <module>../monolith</module>
-    <module>../scheduler</module>
+    <module>../servicebase</module>
   </modules>
 
   <build>

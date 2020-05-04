@@ -9,9 +9,9 @@
 
   <parent>
     <groupId>com.kronostools.timehammer</groupId>
-    <artifactId>timehammer-base</artifactId>
+    <artifactId>timehammer-servicebase</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <relativePath>../base</relativePath>
+    <relativePath>../servicebase</relativePath>
   </parent>
 
   <dependencies>
