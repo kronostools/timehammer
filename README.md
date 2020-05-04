@@ -1,6 +1,9 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Dividir el common en 2 partes
+        - common con utilidades
+        - shared con lo relativo a mensajes
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka
@@ -151,11 +154,26 @@ https://docs.docker.com/compose/extends
 # Creación de un proyecto quarkus.io
 
 ```
-$ mvn io.quarkus:quarkus-maven-plugin:1.2.1.Final:create \
-    -DprojectGroupId=com.diegocastroviadero.timehammer \
+$ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
+$ mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create \
+    -DprojectGroupId=com.kronostools.timehammer \
     -DprojectArtifactId=ssidtracking \
     -DclassName="com.diegocastroviadero.timehammer.ssidtracking.SSIDTrackingResource" \
     -Dpath="/trackSSID"
+```
+
+# Creación de una extensión quarkus.io
+
+```
+$ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
+$ mkdir -p /root/wksp/timehammer/extensions
+$ cd /root/wksp/timehammer/extensions
+$ mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create-extension -N \
+      -DgroupId=com.kronostools.timehammer \
+      -Dversion=1.0.0-SNAPSHOT \
+      -Dquarkus.artifactIdBase=banner-ext \
+      -Dquarkus.artifactIdPrefix=timehammer- \
+      -Dquarkus.nameBase="Banner extension"
 ```
 
 Para arrancar el proyecto quarkus.io:

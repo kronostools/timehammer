@@ -22,32 +22,32 @@
     </dependency>
 
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-config-yaml</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-resteasy-jsonb</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-flyway</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-reactive-pg-client</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>io.quarkus</groupId>
+      <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
@@ -61,7 +61,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>io.quarkus</groupId>
+        <groupId>${quarkus.platform.group-id}</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
         <version>${quarkus-plugin.version}</version>
         <executions>

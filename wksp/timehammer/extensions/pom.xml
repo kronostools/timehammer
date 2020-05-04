@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>timehammer-extensions</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Timehammer Extensions - Parent</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.kronostools.timehammer</groupId>
+        <artifactId>timehammer-base</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../base</relativePath>
+    </parent>
+
+    <properties>
+        <quarkus.deployment.artifact-id>quarkus-bom-deployment</quarkus.deployment.artifact-id>
+    </properties>
+
+    <modules>
+        <module>banner-ext</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.deployment.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
