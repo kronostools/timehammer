@@ -1,0 +1,18 @@
+quarkus:
+  banner:
+    enabled: false
+  log:
+    category:
+      com.kronostools.timehammer:
+        level: INFO
+
+kafka:
+  bootstrap:
+    servers: kafka:9092
+
+"%localdemo":
+  quarkus:
+    log:
+      category:
+        com.kronostools.timehammer:
+          level: DEBUG

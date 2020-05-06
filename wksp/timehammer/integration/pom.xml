@@ -17,7 +17,7 @@
   <dependencies>
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
-      <artifactId>quarkus-resteasy</artifactId>
+      <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
     </dependency>
 
     <dependency>

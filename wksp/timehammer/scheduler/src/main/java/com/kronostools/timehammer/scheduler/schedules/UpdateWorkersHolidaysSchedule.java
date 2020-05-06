@@ -2,7 +2,7 @@ package com.kronostools.timehammer.scheduler.schedules;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
-import com.kronostools.timehammer.common.services.impl.RealTimeMachineService;
+import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
 import io.quarkus.scheduler.Scheduled;
@@ -18,7 +18,7 @@ public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessa
     private final Emitter<ScheduleTriggerMessage> scheduleChannel;
 
     public UpdateWorkersHolidaysSchedule(final SchedulesConfig schedulesConfig,
-                                         final RealTimeMachineService timeMachineService,
+                                         final TimeMachineService timeMachineService,
                                          @Channel(Channels.HOLIDAYS_UPDATE) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
         super(schedulesConfig, timeMachineService);
         this.scheduleChannel = scheduleChannel;

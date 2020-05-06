@@ -1,0 +1,8 @@
+mp:
+  messaging:
+    incoming:
+      timemachine:
+        connector: smallrye-kafka
+        topic: timemachine
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventDeserializer
