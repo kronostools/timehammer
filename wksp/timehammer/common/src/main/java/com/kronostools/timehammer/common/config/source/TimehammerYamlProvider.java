@@ -12,13 +12,15 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 
-public class TimehammerYamlProvider implements ConfigSourceProvider {
-    public static final String TIMEHAMMER_YAML = "timehammer.yaml";
-    private static final int TIMEHAMMER_YAML_IN_JAR_ORDINAL = 252;
+public abstract class TimehammerYamlProvider implements ConfigSourceProvider {
+
+    abstract String yamlPath();
+
+    abstract int yamlInJarOrdinal();
 
     @Override
     public Iterable<ConfigSource> getConfigSources(final ClassLoader forClassLoader) {
-        return getConfigSourcesForFileName(TIMEHAMMER_YAML, TIMEHAMMER_YAML_IN_JAR_ORDINAL, forClassLoader);
+        return getConfigSourcesForFileName(yamlPath(), yamlInJarOrdinal(), forClassLoader);
     }
 
     private List<ConfigSource> getConfigSourcesForFileName(final String fileName, final int inJarOrdinal, final ClassLoader forClassLoader) {

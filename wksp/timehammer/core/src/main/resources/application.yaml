@@ -1,11 +1,4 @@
 quarkus:
-  banner:
-    enabled: false
-  log:
-    category:
-      com.kronostools.timehammer:
-        level: INFO
-
   datasource:
     db-kind: postgresql
     username: timehammer
@@ -32,14 +25,3 @@ mp:
         topic: holidays-worker-auth
         value:
           serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
-
-kafka:
-  bootstrap:
-    servers: kafka:9092
-
-"%localdemo":
-  quarkus:
-    log:
-      category:
-        com.kronostools.timehammer:
-          level: DEBUG

@@ -1,14 +1,15 @@
 package com.kronostools.timehammer.common.utils;
 
 import com.kronostools.timehammer.common.constants.CommonConstants;
-import io.quarkus.runtime.configuration.ProfileManager;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-public class CommonUtils {
+public final class CommonUtils {
+
+    private CommonUtils() {}
 
     public static int getRandomNumberInRange(final int minInclusive, final int maxExclusive) {
         final Random r = new Random();
@@ -45,9 +46,5 @@ public class CommonUtils {
         }
 
         return result;
-    }
-
-    public static boolean isDemoMode() {
-        return ProfileManager.getActiveProfile().contains("demo");
     }
 }

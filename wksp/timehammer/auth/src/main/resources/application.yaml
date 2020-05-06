@@ -1,11 +1,3 @@
-quarkus:
-  banner:
-    enabled: false
-  log:
-    category:
-      com.kronostools.timehammer:
-        level: INFO
-
 mp:
   messaging:
     incoming:
@@ -20,14 +12,3 @@ mp:
         topic: holidays-worker-get
         value:
           serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
-
-kafka:
-  bootstrap:
-    servers: kafka:9092
-
-"%localdemo":
-  quarkus:
-    log:
-      category:
-        com.kronostools.timehammer:
-          level: DEBUG

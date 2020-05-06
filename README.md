@@ -1,13 +1,8 @@
 # TODO
 
-- Separar el common en 2
-    - 1 para timemachine que tire del timemachine.yaml
-    - 1 para clases de mensajes y que tire de common.yaml (config del banner)
-        - si funciona esto del banner, borrar la extensión timehammer-banner-ext
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Dividir el common en 2 partes
-        - common con utilidades
-        - shared con lo relativo a mensajes
+    - Escribir respuesta en Stackoverflow.com con solución encontrada
+    - Continuar con flujo de updateholidays: integration, comunytek, core, scheduler
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka

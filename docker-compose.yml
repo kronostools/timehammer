@@ -68,14 +68,6 @@ services:
       - ${HOME}/.m2/repository:/root/.m2/repository
     working_dir: /root/wksp/timehammer/common
     command: ["mvn", "clean", "install"]
-  extensions:
-    image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer-extensions
-    volumes:
-      - ./wksp/timehammer:/root/wksp/timehammer
-      - ${HOME}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer/extensions
-    command: ["mvn", "clean", "install"]
   monolith:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-monolith

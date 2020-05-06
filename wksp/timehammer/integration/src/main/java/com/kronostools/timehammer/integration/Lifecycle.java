@@ -27,7 +27,7 @@ public class Lifecycle {
 
         final List<String> properties = new ArrayList<>();
 
-        LOG.info("Timestamp: {}", CommonDateTimeUtils.formatDateTimeToLog(timeMachineService.getNow()));
+        LOG.info("Timestamp (mocked -> {}): {}", timeMachineService.isMocked(), CommonDateTimeUtils.formatDateTimeToLog(timeMachineService.getNow()));
 
         ConfigProvider.getConfig()
                 .getConfigSources()

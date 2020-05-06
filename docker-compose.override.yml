@@ -3,9 +3,6 @@ services:
   common:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
-  extensions:
-    volumes:
-      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
   monolith:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository

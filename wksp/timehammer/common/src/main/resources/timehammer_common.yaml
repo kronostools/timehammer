@@ -1,4 +1,7 @@
 quarkus:
+  banner:
+    path: timehammer_banner.txt
+
   log:
     category:
       com.kronostools.timehammer:

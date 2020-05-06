@@ -15,23 +15,18 @@
   </parent>
 
   <dependencies>
-    <!-- To be able to use MessageFormatter to format String the same way as logs -->
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- To be able to use ProfileManager to get current profile -->
-    <dependency>
-      <groupId>${quarkus.platform.group-id}</groupId>
-      <artifactId>quarkus-core</artifactId>
-      <scope>provided</scope>
+      <groupId>io.smallrye.config</groupId>
+      <artifactId>smallrye-config-source-yaml</artifactId>
     </dependency>
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-smallrye-reactive-messaging-kafka</artifactId>
-      <scope>provided</scope>
+    </dependency>
+    <!-- To be able to use MessageFormatter to format String the same way as logs -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <dependency>
@@ -44,10 +39,6 @@
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>io.smallrye.config</groupId>
-          <artifactId>smallrye-config-source-yaml</artifactId>
-      </dependency>
   </dependencies>
 
   <build>

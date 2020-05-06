@@ -8,4 +8,6 @@ public interface TimeMachineService {
     LocalDateTime getNow();
 
     void timeTravelToDateTimeWithZone(final LocalDateTime newTimestamp, final SupportedTimezone zone);
+
+    boolean isMocked();
 }

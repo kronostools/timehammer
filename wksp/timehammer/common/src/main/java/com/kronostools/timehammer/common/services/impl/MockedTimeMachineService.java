@@ -12,11 +12,18 @@ public class MockedTimeMachineService extends AbstractTimeMachineService {
         this.now = now();
     }
 
+    @Override
     public LocalDateTime getNow() {
         return now;
     }
 
+    @Override
     public void timeTravelToDateTimeWithZone(final LocalDateTime newTimestamp, final SupportedTimezone zone) {
         now = newTimestamp.atOffset(zone.getOffset(newTimestamp)).withOffsetSameInstant(ZoneOffset.UTC).toLocalDateTime();
+    }
+
+    @Override
+    public boolean isMocked() {
+        return true;
     }
 }

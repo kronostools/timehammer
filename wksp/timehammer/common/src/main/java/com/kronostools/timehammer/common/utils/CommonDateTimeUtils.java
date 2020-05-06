@@ -8,7 +8,7 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Optional;
 
-public class CommonDateTimeUtils {
+public final class CommonDateTimeUtils {
     private static final String FORMAT_YYYYMMDD = "yyyyMMdd";
     private static final String FORMAT_YYYYMMDDTHHMM = "yyyyMMdd'T'HH:mm";
     private static final String FORMAT_YYYYMMDDTHHMMSSSSS = "yyyyMMdd'T'HH:mm:ss.SSS";
@@ -19,6 +19,8 @@ public class CommonDateTimeUtils {
     public static final DateTimeFormatter FORMATTER_HHMM_TSEP = DateTimeFormatter.ofPattern(FORMAT_HHMM_TSEP);
 
     public static final Locale LOCALE_ES_ES = Locale.forLanguageTag("es-ES");
+
+    private CommonDateTimeUtils() {}
 
     public static LocalDateTime parseDateTimeWithZone(final String[] dateTimeParts, final String[] dateTimeFormat, final SupportedTimezone zone) {
         final LocalDate dateAtTimezone = LocalDate.parse(dateTimeParts[0], DateTimeFormatter.ofPattern(dateTimeFormat[0]));

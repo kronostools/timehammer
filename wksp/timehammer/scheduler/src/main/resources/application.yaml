@@ -1,11 +1,3 @@
-quarkus:
-  banner:
-    enabled: false
-  log:
-    category:
-      com.kronostools.timehammer:
-        level: INFO
-
 mp:
   messaging:
     outgoing:
@@ -14,10 +6,6 @@ mp:
         topic: holidays-update
         value:
           serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
-
-kafka:
-  bootstrap:
-    servers: kafka:9092
 
 timehammer:
   schedules:
@@ -49,12 +37,6 @@ timehammer:
       cron: 0 30 3 ? * MON-FRI *
 
 "%localdemo":
-  quarkus:
-    log:
-      category:
-        com.kronostools.timehammer:
-          level: DEBUG
-
   timehammer:
     schedules:
       update-workers-holidays:

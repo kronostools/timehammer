@@ -1,1 +1,2 @@
-com.kronostools.timehammer.common.config.source.TimehammerYamlProvider
+com.kronostools.timehammer.common.config.source.TimehammerCommonYamlProvider
+com.kronostools.timehammer.common.config.source.TimehammerTimemachineYamlProvider
