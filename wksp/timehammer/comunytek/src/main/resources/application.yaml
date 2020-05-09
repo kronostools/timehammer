@@ -1,0 +1,14 @@
+mp:
+  messaging:
+    incoming:
+      comunytek-worker-holidays:
+        connector: smallrye-kafka
+        topic: comunytek-worker-holidays
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
+    outgoing:
+      holidays-worker-update:
+        connector: smallrye-kafka
+        topic: holidays-worker-update
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer

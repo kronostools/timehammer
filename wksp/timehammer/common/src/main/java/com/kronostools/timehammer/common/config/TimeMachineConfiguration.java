@@ -2,8 +2,8 @@ package com.kronostools.timehammer.common.config;
 
 import com.kronostools.timehammer.common.processors.TimeMachineProcessor;
 import com.kronostools.timehammer.common.services.TimeMachineService;
-import com.kronostools.timehammer.common.services.impl.MockedTimeMachineService;
-import com.kronostools.timehammer.common.services.impl.RealTimeMachineService;
+import com.kronostools.timehammer.common.services.impl.TimeMachineMockedService;
+import com.kronostools.timehammer.common.services.impl.TimeMachineRealService;
 import io.quarkus.arc.DefaultBean;
 import io.quarkus.arc.profile.UnlessBuildProfile;
 
@@ -15,13 +15,13 @@ public class TimeMachineConfiguration {
     @Produces
     @DefaultBean
     public TimeMachineService realTimeMachineService() {
-        return new RealTimeMachineService();
+        return new TimeMachineRealService();
     }
 
     @Produces
     @UnlessBuildProfile("prod")
     public TimeMachineService mockedTimeMachineService() {
-        return new MockedTimeMachineService();
+        return new TimeMachineMockedService();
     }
 
     @Produces

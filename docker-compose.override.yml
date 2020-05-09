@@ -8,7 +8,7 @@ services:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
-      - 9000:8080
+      - 9010:8080
       - 6000:5005
   scheduler:
     volumes:
@@ -34,3 +34,16 @@ services:
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6040:5005
+  comunytek:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 6050:5005
+  web:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 9000:8080
+      - 6060:5005

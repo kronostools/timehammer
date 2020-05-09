@@ -1,9 +1,10 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Ver si se puede centralizar en un único yaml (en el common) todos los channel (incoming y outgoing) y si después en cada servicio solo se tienen en cuenta los @Channel
-    - Continuar con flujo de updateholidays: comunytek, core, scheduler
     - Preparar pieza web con página demo para lanzar a mano los batches y visualizar el resumen de la ejecución
+        - Implementar el cambio de hora
+        - Implementar el envío de un mensaje al canal comunytek-worker-holiday para poder probar sin tener todo levantado
+    - Continuar con flujo de updateholidays: comunytek, core, scheduler
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka

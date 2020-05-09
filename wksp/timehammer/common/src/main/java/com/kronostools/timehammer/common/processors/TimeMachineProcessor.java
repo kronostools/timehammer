@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.common.processors;
 
-import com.kronostools.timehammer.common.constants.CommonConstants;
+import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessage;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -15,7 +15,7 @@ public class TimeMachineProcessor {
         this.timeMachineService = timeMachineService;
     }
 
-    @Incoming(CommonConstants.Channels.TIMEMACHINE)
+    @Incoming(Channels.TIMEMACHINE_IN)
     public CompletionStage<Void> process(final Message<TimeMachineEventMessage> message) {
         final TimeMachineEventMessage timeMachineEvent = message.getPayload();
 

@@ -77,6 +77,10 @@ public final class CommonDateTimeUtils {
         return formatDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
     }
 
+    public static String formatDateTimeToJson(final LocalDateTime dateTime) {
+        return formatDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
+    }
+
     public static String formatDateToLog(final LocalDate date) {
         return formatDate(date, FORMAT_YYYYMMDD);
     }

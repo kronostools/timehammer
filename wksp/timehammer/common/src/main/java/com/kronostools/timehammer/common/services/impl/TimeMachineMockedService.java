@@ -5,10 +5,10 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class MockedTimeMachineService extends AbstractTimeMachineService {
+public class TimeMachineMockedService extends TimeMachineAbstractService {
     private LocalDateTime now;
 
-    public MockedTimeMachineService() {
+    public TimeMachineMockedService() {
         this.now = now();
     }
 

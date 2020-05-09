@@ -5,8 +5,13 @@ import com.kronostools.timehammer.common.services.TimeMachineService;
 
 import java.time.LocalDateTime;
 
-public abstract class AbstractTimeMachineService implements TimeMachineService {
+public abstract class TimeMachineAbstractService implements TimeMachineService {
     LocalDateTime now() {
         return LocalDateTime.now(SupportedTimezone.UTC.getZone());
+    }
+
+    @Override
+    public SupportedTimezone getTimezone() {
+        return SupportedTimezone.UTC;
     }
 }

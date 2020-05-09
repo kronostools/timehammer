@@ -34,8 +34,10 @@
   <modules>
     <module>../auth</module>
     <module>../core</module>
+    <module>../comunytek</module>
     <module>../integration</module>
     <module>../monolith</module>
     <module>../scheduler</module>
+    <module>../web</module>
   </modules>
 </project>

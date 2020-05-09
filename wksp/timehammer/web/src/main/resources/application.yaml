@@ -1,0 +1,13 @@
+mp:
+  messaging:
+    outgoing:
+      timemachine-out:
+        connector: smallrye-kafka
+        topic: timemachine
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+      comunytek-worker-holidays:
+        connector: smallrye-kafka
+        topic: comunytek-worker-holidays
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer

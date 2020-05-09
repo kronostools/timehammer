@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>timehammer-integration</artifactId>
+  <artifactId>timehammer-web</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
@@ -15,6 +15,15 @@
   </parent>
 
   <dependencies>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-resteasy-mutiny</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-vertx-web</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-junit5</artifactId>

@@ -4,7 +4,7 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 
 import java.time.LocalDateTime;
 
-public class RealTimeMachineService extends AbstractTimeMachineService {
+public class TimeMachineRealService extends TimeMachineAbstractService {
 
     @Override
     public LocalDateTime getNow() {

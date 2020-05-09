@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 public interface TimeMachineService {
     LocalDateTime getNow();
 
+    SupportedTimezone getTimezone();
+
     void timeTravelToDateTimeWithZone(final LocalDateTime newTimestamp, final SupportedTimezone zone);
 
     boolean isMocked();

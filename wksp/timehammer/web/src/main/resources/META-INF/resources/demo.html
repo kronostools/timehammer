@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://kit.fontawesome.com/ebff2e60d9.js" crossorigin="anonymous"></script>
+
+    <title>Timehammer: Demo</title>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="py-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-10">
+                    <h1 class="mb-3">Demo</h1>
+                    <form id="timestampForm" class="needs-validation" novalidate="novalidate" action="/demo/timemachine/now" method="POST">
+                        <input type="hidden" id="timestamp" name="timestamp" value="" />
+
+                        <div class="form-group form-row">
+                            <div class="col-md-4 offset-md-4">
+                                <select class="form-control custom-select custom-select-sm d-block w-100" id="timezone" name="timezone" data-toggle="tooltip" title="Zona Horaria">
+                                </select>
+                                <div id="timezoneInvalidFeedback" class="invalid-feedback"></div>
+                            </div>
+                        </div>
+
+                        <hr class="d-md-none" />
+
+                        <div class="form-group form-row">
+                            <div class="col-md-2">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="d"><i class="fas fa-caret-up"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="day" name="day" value="" data-toggle="tooltip" title="Día">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="d"><i class="fas fa-caret-down"></i></button>
+                            </div>
+
+                            <hr class="col d-md-none" />
+
+                            <div class="col-md-2">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="M"><i class="fas fa-caret-up"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="month" name="month" value="" data-toggle="tooltip" title="Mes">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="M"><i class="fas fa-caret-down"></i></button>
+                            </div>
+
+                            <hr class="col d-md-none" />
+
+                            <div class="col-md-4">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="y"><i class="fas fa-caret-up"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="year" name="year" value="" data-toggle="tooltip" title="Año">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="y"><i class="fas fa-caret-down"></i></button>
+                            </div>
+
+                            <hr class="col d-md-none" />
+
+                            <div class="col-md-2">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="h"><i class="fas fa-caret-up"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="hours" name="hours" value="" data-toggle="tooltip" title="Horas">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="h"><i class="fas fa-caret-down"></i></button>
+                            </div>
+
+                            <hr class="col d-md-none" />
+
+                            <div class="col-md-2">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="m"><i class="fas fa-caret-up"></i></button>
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="minutes" name="minutes" value="" data-toggle="tooltip" title="Minutos">
+                                <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="m"><i class="fas fa-caret-down"></i></button>
+                            </div>
+                        </div>
+
+                        <hr class="d-md-none" />
+
+                        <div class="form-group form-row">
+                            <div class="my-1 col-md-2 offset-md-4">
+                                <button id="reset" type="button" class="btn btn-sm btn-block btn-danger">Resetear</button>
+                            </div>
+                            <div class="my-1 col-md-2">
+                                <button id="submit" type="submit" class="btn btn-sm btn-block btn-primary">Actualizar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row mt-2 justify-content-center">
+                <div class="col-md-10">
+                    <h4 class="mb-3">Trabajador</h4>
+                    <form id="workersForm" class="form-inline" novalidate="novalidate" action="/demo/workers" method="GET">
+                        <select class="custom-select custom-select-sm d-block w-100 col-md-3 offset-md-4 mr-2" id="workerInternalId" name="workerInternalId">
+                        </select>
+
+                        <button id="refreshWorkerInfo" type="submit" class="btn btn-sm col-md-1"><i class="fas fa-sync"></i></button>
+                    </form>
+
+                    <form id="workerStatusForm" class="mt-2" action="#">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="statusDayOfWeek" class="text-muted">Dia</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="statusDayOfWeek" name="statusDayOfWeek" disabled="disabled">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="work" class="text-muted">Trabajo</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="work" name="work" disabled="disabled">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="lunch" class="text-muted">Comida</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="lunch" name="lunch" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="statusTimestamp" class="text-muted">Útimo fichaje</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="statusTimestamp" name="statusTimestamp" disabled="disabled">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="status" class="text-muted">Estado</label>
+                                <input type="text" class="form-control form-control-sm text-center" id="status" name="status" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="holidays">Vacaciones</label>
+                                <textarea class="form-control form-control.sm" id="holidays" name="holidays" rows="3" disabled="disabled"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row mt-2 justify-content-center">
+                <div class="col-md-10">
+                    <h4 class="mb-3">Procesos</h4>
+                    <form id="schedulesForm" novalidate="novalidate" action="/demo/schedules" method="POST">
+                        <div class="form-row align-items-center">
+                            <span class="lead text-left col-md-7">Actualizar estado trabajadores</span>
+                            <button id="updateWorkersStatus" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <small class="text-left col-md-4 pl-2 schedule-duration"></small>
+                        </div>
+                        <div class="form-row mt-2 align-items-center">
+                            <span class="lead text-left col-md-7">Actualizar vacaciones trabajadores</span>
+                            <button id="updateWorkersHolidays" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <small class="text-left col-md-4 pl-2 schedule-duration"></small>
+                        </div>
+                        <div class="form-row mt-2 align-items-center">
+                            <span class="lead text-left col-md-7">Limpiar vacaciones pasadas de trabajadores</span>
+                            <button id="cleanPastWorkersHolidays" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <small class="text-left col-md-4 pl-2 schedule-duration"></small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="my-1">© 2019-2020 Timehammer</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+    <script src="js/demo.js"></script>
+</body>
+</html>

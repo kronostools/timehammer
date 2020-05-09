@@ -1,7 +1,7 @@
 mp:
   messaging:
     incoming:
-      timemachine:
+      timemachine-in:
         connector: smallrye-kafka
         topic: timemachine
         value:
