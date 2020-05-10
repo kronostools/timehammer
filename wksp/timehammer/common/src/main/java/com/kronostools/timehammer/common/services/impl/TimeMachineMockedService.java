@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.common.services.impl;
 
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -14,12 +15,15 @@ public class TimeMachineMockedService extends TimeMachineAbstractService {
 
     @Override
     public LocalDateTime getNow() {
+        LOG.trace("Getting current timestamp ({}) from timemachine", CommonDateTimeUtils.formatDateTimeToLog(now));
         return now;
     }
 
     @Override
     public void timeTravelToDateTimeWithZone(final LocalDateTime newTimestamp, final SupportedTimezone zone) {
+        LOG.trace("Travelling in time to {} at {}", CommonDateTimeUtils.formatDateTimeToLog(newTimestamp), CommonDateTimeUtils.formatTimezoneToLog(zone));
         now = newTimestamp.atOffset(zone.getOffset(newTimestamp)).withOffsetSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        LOG.info("Traveled in time to {} at UTC", CommonDateTimeUtils.formatDateTimeToLog(now));
     }
 
     @Override

@@ -1,12 +1,63 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", function(event) {
+    const source = new EventSource("/timemachine/stream");
 
-    var source = new EventSource("/timemachine/stream");
+    source.addEventListener('open', (event) => {
+        console.info('Connected to timemachine stream!')
+    })
 
-    source.onmessage = function (event) {
-        //document.getElementById("content").innerHTML = event.data;
-        console.log(event.data)
-    };
+    source.addEventListener('error', (event) => {
+        console.error('Error connecting to timemachine stream, closing it ...')
+        source.close()
+        console.info('Closed timemachine stream')
+    })
 
+    const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm:ss.SSS'
+    const TIMESTAMP_HTML_FORMAT = 'DD/MM/YYYY HH:mm:ss.SSS'
+
+    source.addEventListener('message', (event) => {
+        const timemachineEvent = JSON.parse(event.data)
+        const currentTimestamp = moment(timemachineEvent.timestamp, TIMESTAMP_JSON_FORMAT)
+
+        console.debug(`Received timemachine event: ${event.data}`)
+
+        document.getElementById('currentTimestamp').textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
+    })
+
+    window.addEventListener('beforeunload', (event) => {
+        event.preventDefault()
+        delete event['returnValue']
+
+        console.debug('Page unload, closing timemachine stream ...')
+        source.close()
+        console.info('Page unload, closed timemachine stream')
+    })
+
+    const timestampSubmitButton = document.getElementById('timestampSubmit')
+
+    const flatMap = rxjs.operators.flatMap
+    const fromEvent = rxjs.fromEvent
+
+    const timestampSubmitButtonClick$ = fromEvent(timestampSubmitButton, 'click')
+
+    timestampSubmitButtonClick$
+        .pipe(flatMap(sendTimestampEvent))
+        .subscribe(
+            // success
+            () => {
+                console.log('Timestamp event sent successfully!')
+            },
+            // error
+            (e) => {
+                console.error('Error while sending timestamp event')
+            }
+        )
+
+    function sendTimestampEvent() {
+        return rxjs.ajax.ajax('/demo/timeTravel')
+    }
+})
+
+/*
     // ---------------- OLD CODE ----------------
 
     $('[data-toggle="tooltip"]').tooltip()
@@ -310,3 +361,4 @@ $(document).ready(function() {
         })
     })
 })
+*/

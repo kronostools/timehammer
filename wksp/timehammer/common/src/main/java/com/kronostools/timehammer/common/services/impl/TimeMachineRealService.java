@@ -13,7 +13,7 @@ public class TimeMachineRealService extends TimeMachineAbstractService {
 
     @Override
     public void timeTravelToDateTimeWithZone(final LocalDateTime newTimestamp, final SupportedTimezone zone) {
-        // do nothing
+        LOG.info("Ignored time travel because time machine service is not mocked");
     }
 
     @Override

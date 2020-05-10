@@ -105,6 +105,7 @@ services:
     working_dir: /root/wksp/timehammer/core
     command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
     depends_on:
+      - db
       - kafka
     networks:
       - timehammer

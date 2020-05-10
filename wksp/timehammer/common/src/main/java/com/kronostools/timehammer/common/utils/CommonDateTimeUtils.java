@@ -81,6 +81,14 @@ public final class CommonDateTimeUtils {
         return formatDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
     }
 
+    public static String formatTimezoneToLog(final SupportedTimezone zone) {
+        return zone.getTimezoneName();
+    }
+
+    public static String formatTimezoneToJson(final SupportedTimezone zone) {
+        return zone.getTimezoneName();
+    }
+
     public static String formatDateToLog(final LocalDate date) {
         return formatDate(date, FORMAT_YYYYMMDD);
     }

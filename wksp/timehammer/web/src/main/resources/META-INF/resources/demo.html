@@ -16,6 +16,8 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <h1 class="mb-3">Demo</h1>
+                    <p class="lead">Hora actual: <span id="currentTimestamp"></span></p>
+
                     <form id="timestampForm" class="needs-validation" novalidate="novalidate" action="/demo/timemachine/now" method="POST">
                         <input type="hidden" id="timestamp" name="timestamp" value="" />
 
@@ -76,7 +78,7 @@
                                 <button id="reset" type="button" class="btn btn-sm btn-block btn-danger">Resetear</button>
                             </div>
                             <div class="my-1 col-md-2">
-                                <button id="submit" type="submit" class="btn btn-sm btn-block btn-primary">Actualizar</button>
+                                <button id="timestampSubmit" type="button" class="btn btn-sm btn-block btn-primary">Actualizar</button>
                             </div>
                         </div>
                     </form>
@@ -163,10 +165,10 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@reactivex/rxjs@6.5.5/dist/global/rxjs.umd.js" crossorigin="anonymous"></script>
     <script src="js/demo.js"></script>
 </body>
 </html>
