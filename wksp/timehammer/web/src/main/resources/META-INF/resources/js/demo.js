@@ -32,12 +32,16 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.info('Page unload, closed timemachine stream')
     })
 
-    const timestampSubmitButton = document.getElementById('timestampSubmit')
 
     const flatMap = rxjs.operators.flatMap
     const fromEvent = rxjs.fromEvent
 
+    const timestampSubmitButton = document.getElementById('timestampSubmit')
     const timestampSubmitButtonClick$ = fromEvent(timestampSubmitButton, 'click')
+
+    const sendTimestampEvent = () => {
+        return rxjs.ajax.ajax('/demo/timeTravel')
+    }
 
     timestampSubmitButtonClick$
         .pipe(flatMap(sendTimestampEvent))
@@ -52,9 +56,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
             }
         )
 
-    function sendTimestampEvent() {
-        return rxjs.ajax.ajax('/demo/timeTravel')
+    const updateWorkersHolidaysButton = document.getElementById('updateWorkersHolidaysTest')
+    const updateWorkersHolidaysButtonClick$ = fromEvent(updateWorkersHolidaysButton, 'click')
+
+    const sendUpdateWorkersHolidays = () => {
+        return rxjs.ajax.ajax('/test/sendToComunytekWorkerHoliday')
     }
+
+    updateWorkersHolidaysButtonClick$
+        .pipe(flatMap(sendUpdateWorkersHolidays))
+        .subscribe(
+            // success
+            () => {
+                console.log('Update workers holidays event sent successfully!')
+            },
+            // error
+            (e) => {
+                console.error('Error while sending update workers holidays event')
+            }
+        )
 })
 
 /*

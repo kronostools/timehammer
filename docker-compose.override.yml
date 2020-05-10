@@ -37,7 +37,7 @@ services:
   comunytek:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
-    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    command: ["mvn", "-Dquarkus.profile=prod", "quarkus:dev"]
     ports:
       - 6050:5005
   web:

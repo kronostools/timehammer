@@ -25,7 +25,15 @@ public class UpdateWorkersHolidaysWorkerAuthenticator {
     public UpdateWorkersHolidaysWorker process(final UpdateWorkersHolidaysWorker worker) {
         LOG.debug("Updating credentials of worker '{}' ...", worker.getWorkerInternalId());
 
-        worker.setExternalPassword(workerCredentialsService.getWorkerCredentials(worker.getWorkerInternalId()));
+        final String credentials = workerCredentialsService.getWorkerCredentials(worker.getWorkerInternalId());
+
+        if (credentials == null) {
+            LOG.warn("Missing credentials of worker '{}'", worker.getWorkerInternalId());
+
+            worker.setUpdatedSuccessfully(false);
+        } else {
+            worker.setExternalPassword(credentials);
+        }
 
         LOG.info("Updated credentials of worker");
 

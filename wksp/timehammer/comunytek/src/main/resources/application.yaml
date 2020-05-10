@@ -12,3 +12,17 @@ mp:
         topic: holidays-worker-update
         value:
           serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+
+timehammer:
+  comunytek:
+    login-cache:
+      expiration:
+        qty: 9
+        unit: MINUTES
+
+"%prod":
+  quarkus:
+    log:
+      category:
+        com.kronostools.timehammer:
+          level: DEBUG

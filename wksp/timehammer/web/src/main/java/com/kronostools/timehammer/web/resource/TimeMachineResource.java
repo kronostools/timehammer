@@ -33,16 +33,14 @@ public class TimeMachineResource {
                 .onItem().apply(n -> TimestampDto.Builder.builder()
                         .timestamp(CommonDateTimeUtils.formatDateTimeToJson(timeMachineService.getNow()))
                         .timezone(CommonDateTimeUtils.formatTimezoneToJson(timeMachineService.getTimezone()))
-                        .build());
-    }
-
-    @GET
-    @Path("/current")
-    @Produces(MediaType.APPLICATION_JSON)
-    public TimestampDto getCurrentTimestamp() {
-        return TimestampDto.Builder.builder()
-                .timestamp(CommonDateTimeUtils.formatDateTimeToJson(timeMachineService.getNow()))
-                .timezone(CommonDateTimeUtils.formatTimezoneToJson(timeMachineService.getTimezone()))
-                .build();
+                        .build())
+                .on()
+                    .termination((ex, isCancelled) -> {
+                        if (isCancelled) {
+                            LOG.debug("Cancelled subscription to timemachine stream");
+                        } else if (ex != null) {
+                            LOG.error("Subscription to timemachine stream terminated because of an exception", ex);
+                        }
+                    });
     }
 }

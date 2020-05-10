@@ -5,6 +5,7 @@ import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,10 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
     private String externalPassword;
     private List<LocalDate> holidays;
     private Boolean updatedSuccessfully;
+
+    public UpdateWorkersHolidaysWorker() {
+        this.holidays = new ArrayList<>();
+    }
 
     public static class Builder {
         private LocalDateTime timestamp;
@@ -148,6 +153,10 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
 
     public void setHolidays(List<LocalDate> holidays) {
         this.holidays = holidays;
+    }
+
+    public void addHoliday(final LocalDate holiday) {
+        this.holidays.add(holiday);
     }
 
     public Boolean getUpdatedSuccessfully() {

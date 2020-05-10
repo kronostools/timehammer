@@ -32,8 +32,8 @@ public final class CommonDateTimeUtils {
                 .toLocalDateTime();
     }
 
-    public static LocalDate parseDate(final String date, String dateFormat) {
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern(dateFormat));
+    public static LocalDate parseDateFromComunytek(final String date) {
+        return parseDate(date, FORMAT_DDMMYYYY_DSEP_FWS);
     }
 
     public static LocalDateTime parseDateTime(final String dateTime, final String dateTimeFormat) {
@@ -134,5 +134,9 @@ public final class CommonDateTimeUtils {
 
     private static LocalTime parseTime(final String time, final String timeFormat) {
         return LocalTime.parse(time, DateTimeFormatter.ofPattern(timeFormat));
+    }
+
+    private static LocalDate parseDate(final String date, String dateFormat) {
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern(dateFormat));
     }
 }

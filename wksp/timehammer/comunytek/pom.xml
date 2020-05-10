@@ -19,6 +19,10 @@
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-cache</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>

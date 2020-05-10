@@ -7,18 +7,21 @@ import io.quarkus.arc.DefaultBean;
 import io.quarkus.arc.profile.UnlessBuildProfile;
 import io.vertx.mutiny.core.Vertx;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Produces;
 
 @Dependent
 public class ComunytekClientConfig {
     @Produces
+    @ApplicationScoped
     @DefaultBean
-    public ComunytekClient realComunytekClient(final Vertx vertx) {
-        return new ComunytekReactiveRealClient(vertx);
+    public ComunytekClient realComunytekClient(final Vertx vertx, final LoginCacheConfig loginCacheConfig) {
+        return new ComunytekReactiveRealClient(vertx, loginCacheConfig);
     }
 
     @Produces
+    @ApplicationScoped
     @UnlessBuildProfile("prod")
     public ComunytekClient mockedComunytekClient() {
         return new ComunytekReactiveMockedClient();
