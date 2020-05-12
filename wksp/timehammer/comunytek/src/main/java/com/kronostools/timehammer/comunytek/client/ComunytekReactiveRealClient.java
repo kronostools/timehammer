@@ -3,7 +3,13 @@ package com.kronostools.timehammer.comunytek.client;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
+import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.config.LoginCacheConfig;
+import com.kronostools.timehammer.comunytek.exception.ComunytekException;
+import com.kronostools.timehammer.comunytek.exception.ComunytekExpiredSessionException;
+import com.kronostools.timehammer.comunytek.exception.ComunytekIncorrectLoginException;
+import com.kronostools.timehammer.comunytek.exception.ComunytekUnexpectedException;
+import com.kronostools.timehammer.comunytek.model.ComunytekLoginForm;
 import com.kronostools.timehammer.comunytek.model.ComunytekLoginResponse;
 import com.kronostools.timehammer.comunytek.model.HolidayResponse;
 import io.smallrye.mutiny.Uni;
@@ -20,14 +26,16 @@ import java.util.stream.Stream;
 public class ComunytekReactiveRealClient implements ComunytekClient {
     private static final Logger LOG = LoggerFactory.getLogger(ComunytekReactiveRealClient.class);
 
-    private static final String FAKE_SESSIONID = "11111111";
-    private static final String S = "S";
+    private static final String BASE_URL = "/SWHandler";
+
+    private static final long UNEXPECTED_ERROR_MAX_RETRIES = 2L;
+    private static final long EXPIRED_SESSION_MAX_RETRIES = 1L;
+
     private static final String N = "N";
     private static final String OK = "OK";
     private static final String LINE_BREAK = "\n";
     private static final String TAB = "\t";
 
-    private static final String ACTION_LOGIN = "LOGIN";
     private static final String ACTION_HOLIDAYS = "LISTVAC";
     private static final String ACTION_HOURS_REPORTED = "LISTRH";
     private static final String ACTION_REPORT_HOURS = "ADDRH";
@@ -40,7 +48,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
     public ComunytekReactiveRealClient(final Vertx vertx, final LoginCacheConfig loginCacheConfig) {
         this.client = WebClient.create(vertx, new WebClientOptions()
-                .setDefaultHost("empleados.comunytek.com/SWHandler")
+                .setDefaultHost("empleados.comunytek.com")
                 .setDefaultPort(443)
                 .setSsl(true)
                 .setTrustAll(true));
@@ -62,43 +70,48 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
         } else {
             LOG.debug("Calling comunytek to login ...");
 
-            return client.post("/selfweb")
-                    .sendForm(MultiMap.caseInsensitiveMultiMap()
-                            .add("sessionId", FAKE_SESSIONID)
-                            .add("par_1", ACTION_LOGIN)
-                            .add("par_2", username)
-                            .add("par_3", password)
-                            .add("par_4", S))
+            return client.post(getUrl("/selfweb"))
+                    .sendBuffer(ComunytekLoginForm.Builder.builder()
+                            .username(username)
+                            .password(password)
+                            .build()
+                            .toBuffer())
                     .map(response -> {
                         LOG.debug("Processing login response from comunytek - status: {}", response.statusCode());
 
-                        final ComunytekLoginResponse result = new ComunytekLoginResponse();
+                        final ComunytekLoginResponse result;
 
                         if (response.statusCode() == 200) {
                             if (response.bodyAsString().startsWith("ERROR")) {
-                                LOG.warn("There was an error while login, incorrect username ({}) or password (*****)", username);
+                                final String message = CommonUtils.stringFormat("There was an error while login, incorrect username ({}) or password (*****)", username);
+                                LOG.warn(message);
 
-                                result.setSuccessful(false);
+                                throw new ComunytekIncorrectLoginException(message);
                             } else {
                                 LOG.debug("User '{}' was logged in successfully", username);
 
                                 final String[] responseParts = response.bodyAsString().split(LINE_BREAK);
 
-                                result.setSuccessful(true);
-                                result.setFullname(responseParts[0]);
-                                result.setSessionId(responseParts[2]);
-                                result.setUsername(username);
+                                result = ComunytekLoginResponse.Builder.builder()
+                                        .fullname(responseParts[0])
+                                        .sessionId(responseParts[2])
+                                        .username(username)
+                                        .build();
 
                                 cache.put(username, result);
                             }
                         } else {
-                            LOG.error("There was an unexpected error trying to login user '{}'", username);
+                            final String message = CommonUtils.stringFormat("There was an unexpected error trying to login user '{}'", username);
+                            LOG.error(message);
 
-                            result.setSuccessful(false);
+                            throw new ComunytekUnexpectedException(message);
                         }
 
                         return result;
-                    });
+                    })
+                    .onFailure(ComunytekUnexpectedException.class)
+                        .retry()
+                        .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
         }
     }
 
@@ -107,15 +120,17 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
         LOG.debug("Checking if '{}' is holiday for user '{}' ...", CommonDateTimeUtils.formatDateToLog(date), username);
 
         return login(username, password)
+                .onFailure(ComunytekException.class)
+                    .recoverWithItem(ComunytekLoginResponse.Builder.buildUnsuccessful())
                 .onItem()
-                .produceUni(clr -> {
-                    if (clr.isSuccessful()) {
+                .produceUni(loginResponse -> {
+                    if (loginResponse.isSuccessful()) {
                         LOG.debug("Calling comunytek to get holidays ...");
 
                         return client
-                                .post("/regvac")
+                                .post(getUrl("/regvac"))
                                 .sendForm(MultiMap.caseInsensitiveMultiMap()
-                                        .add("sessionId", clr.getSessionId())
+                                        .add("sessionId", loginResponse.getSessionId())
                                         .add("par_1", ACTION_HOLIDAYS)
                                         .add("par_2", username)
                                         .add("par_3", username)
@@ -123,45 +138,56 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                 .map(response -> {
                                     LOG.debug("Processing holidays response from comunytek - status: {}", response.statusCode());
 
-                                    final HolidayResponse result = new HolidayResponse();
+                                    final HolidayResponse result;
 
                                     if (response.statusCode() == 200) {
                                         if (ERROR_EXPIRED_SESSION.equals(response.bodyAsString())) {
-                                            LOG.warn("Session of user '{}' has expired and its holidays couldn't be retrieve", username);
+                                            cache.invalidate(username);
 
-                                            result.setSuccessful(false);
+                                            final String message = CommonUtils.stringFormat("Session of user '{}' has expired and its holidays couldn't be retrieve", username);
+                                            LOG.warn(message);
+
+                                            throw new ComunytekExpiredSessionException(message);
                                         } else {
                                             LOG.debug("Holidays of user '{}' were retrieved successfully", username);
 
-                                            result.setSuccessful(true);
-                                            result.setHoliday(Stream.of(response.bodyAsString().split(LINE_BREAK))
-                                                    .map(rawHoliday -> rawHoliday.split(TAB))
-                                                    .map(holidayParts -> CommonDateTimeUtils.parseDateFromComunytek(holidayParts[0]))
-                                                    .anyMatch(d -> d.equals(date)));
+                                            result = HolidayResponse.Builder.builder()
+                                                    .date(date)
+                                                    .holiday(Stream.of(response.bodyAsString().split(LINE_BREAK))
+                                                        .map(rawHoliday -> rawHoliday.split(TAB))
+                                                        .map(holidayParts -> CommonDateTimeUtils.parseDateFromComunytek(holidayParts[0]))
+                                                        .anyMatch(d -> d.equals(date)))
+                                                    .build();
 
                                             LOG.debug("User '{}' {} '{}' as holiday", username, result.isHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(date));
                                         }
                                     } else {
-                                        LOG.error("There was an unexpected error trying to login user '{}'", username);
+                                        final String message = CommonUtils.stringFormat("There was an unexpected error trying to get holidays of user '{}'", username);
+                                        LOG.error(message);
 
-                                        result.setSuccessful(false);
+                                        throw new ComunytekUnexpectedException(message);
                                     }
 
                                     return result;
-                                });
+                                })
+                                .onFailure(ComunytekUnexpectedException.class)
+                                    .retry()
+                                    .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
                     } else {
-                        return Uni.createFrom().item(() -> {
-                            final HolidayResponse result = new HolidayResponse();
-                            result.setSuccessful(false);
-
-                            return result;
-                        });
+                        return Uni.createFrom().item(HolidayResponse.Builder.buildUnsuccessful());
                     }
-                });
+                })
+                .onFailure(ComunytekExpiredSessionException.class)
+                    .retry()
+                    .atMost(EXPIRED_SESSION_MAX_RETRIES);
     }
 
     @Override
     public boolean isMocked() {
         return false;
+    }
+
+    private String getUrl(final String urlPart) {
+        return CommonUtils.stringFormat("{}/{}", BASE_URL, urlPart);
     }
 }
