@@ -19,10 +19,3 @@ timehammer:
       expiration:
         qty: 9
         unit: MINUTES
-
-"%prod":
-  quarkus:
-    log:
-      category:
-        com.kronostools.timehammer:
-          level: DEBUG

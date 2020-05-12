@@ -5,8 +5,6 @@ import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class UpdateWorkersHolidaysWorker extends PlatformMessage {
@@ -17,13 +15,10 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
-    private String externalPassword;
-    private List<LocalDate> holidays;
-    private Boolean updatedSuccessfully;
-
-    public UpdateWorkersHolidaysWorker() {
-        this.holidays = new ArrayList<>();
-    }
+    private CredentialResult credentialResult;
+    private LocalDate holidayCandidate;
+    private HolidayResult holidayResult;
+    private boolean updatedSuccessfully;
 
     public static class Builder {
         private LocalDateTime timestamp;
@@ -34,6 +29,8 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
         private String workerInternalId;
         private Company company;
         private String workerExternalId;
+
+        private LocalDate holidayCandidate;
 
         Builder() {}
 
@@ -66,13 +63,18 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
             return this;
         }
 
+        public Builder company(final Company company) {
+            this.company = company;
+            return this;
+        }
+
         public Builder workerExternalId(final String workerExternalId) {
             this.workerExternalId = workerExternalId;
             return this;
         }
 
-        public Builder company(final Company company) {
-            this.company = company;
+        public Builder holidayCandidate(final LocalDate holidayCandidate) {
+            this.holidayCandidate = holidayCandidate;
             return this;
         }
 
@@ -85,7 +87,7 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
             result.setWorkerInternalId(workerInternalId);
             result.setCompany(company);
             result.setWorkerExternalId(workerExternalId);
-            result.setUpdatedSuccessfully(Boolean.FALSE);
+            result.setHolidayCandidate(holidayCandidate);
 
             return result;
         }
@@ -139,31 +141,35 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
         this.workerExternalId = workerExternalId;
     }
 
-    public String getExternalPassword() {
-        return externalPassword;
+    public CredentialResult getCredentialResult() {
+        return credentialResult;
     }
 
-    public void setExternalPassword(String externalPassword) {
-        this.externalPassword = externalPassword;
+    public void setCredentialResult(CredentialResult credentialResult) {
+        this.credentialResult = credentialResult;
     }
 
-    public List<LocalDate> getHolidays() {
-        return holidays;
+    public LocalDate getHolidayCandidate() {
+        return holidayCandidate;
     }
 
-    public void setHolidays(List<LocalDate> holidays) {
-        this.holidays = holidays;
+    public void setHolidayCandidate(LocalDate holidayCandidate) {
+        this.holidayCandidate = holidayCandidate;
     }
 
-    public void addHoliday(final LocalDate holiday) {
-        this.holidays.add(holiday);
+    public HolidayResult getHolidayResult() {
+        return holidayResult;
     }
 
-    public Boolean getUpdatedSuccessfully() {
+    public void setHolidayResult(HolidayResult holidayResult) {
+        this.holidayResult = holidayResult;
+    }
+
+    public boolean isUpdatedSuccessfully() {
         return updatedSuccessfully;
     }
 
-    public void setUpdatedSuccessfully(Boolean updatedSuccessfully) {
+    public void setUpdatedSuccessfully(boolean updatedSuccessfully) {
         this.updatedSuccessfully = updatedSuccessfully;
     }
 }

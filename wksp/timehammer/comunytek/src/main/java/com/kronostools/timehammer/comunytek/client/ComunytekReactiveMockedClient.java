@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.comunytek.client;
 
-import com.kronostools.timehammer.comunytek.model.HolidayResponse;
+import com.kronostools.timehammer.comunytek.model.ComunytekHolidayResponse;
 import io.smallrye.mutiny.Uni;
 
 import java.time.LocalDate;
@@ -44,14 +44,10 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
     }
     
     @Override
-    public Uni<HolidayResponse> isHoliday(final String username, final String password, final LocalDate date) {
-        return Uni.createFrom().item(() -> {
-            final HolidayResponse result = new HolidayResponse();
-            result.setSuccessful(true);
-            result.setHoliday(mockedHolidays.contains(date));
-
-            return result;
-        });
+    public Uni<ComunytekHolidayResponse> isHoliday(final String username, final String password, final LocalDate holidayCandidate) {
+        return Uni.createFrom().item(ComunytekHolidayResponse.Builder.builder()
+                .holiday(mockedHolidays.contains(holidayCandidate))
+                .build());
     }
 
     @Override

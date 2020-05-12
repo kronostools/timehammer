@@ -46,6 +46,7 @@ public class UpdateWorkersHolidaysScheduleProcessor {
                                     .workerInternalId(wcp.getWorkerInternalId())
                                     .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
+                                    .holidayCandidate(triggerMessage.getTimestamp().toLocalDate())
                                     .build()))
                             .collect(Collectors.toList());
                 })

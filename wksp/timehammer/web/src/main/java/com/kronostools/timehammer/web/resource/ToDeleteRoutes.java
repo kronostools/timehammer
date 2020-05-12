@@ -2,6 +2,7 @@ package com.kronostools.timehammer.web.resource;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.schedules.CredentialResult;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import io.quarkus.vertx.web.Route;
@@ -39,7 +40,9 @@ public class ToDeleteRoutes {
                 .batchSize(1)
                 .build();
 
-        worker.setExternalPassword("blablabla");
+        worker.setCredentialResult(CredentialResult.Builder.builder()
+                .externalPassword("blablabla")
+                .build());
 
         final HttpServerRequest request = rc.request();
 

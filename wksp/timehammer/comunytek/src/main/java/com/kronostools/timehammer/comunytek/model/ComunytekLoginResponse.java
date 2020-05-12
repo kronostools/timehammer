@@ -1,26 +1,25 @@
 package com.kronostools.timehammer.comunytek.model;
 
-public class ComunytekLoginResponse {
-    private final boolean successful;
+public class ComunytekLoginResponse extends ComunytekResponse {
     private final String sessionId;
     private final String username;
     private final String fullname;
 
-    private ComunytekLoginResponse(final boolean successful) {
-        this.successful = successful;
+    ComunytekLoginResponse(final String errorMessage) {
+        super(false, errorMessage);
         this.sessionId = null;
         this.username = null;
         this.fullname = null;
     }
 
-    private ComunytekLoginResponse(final boolean successful, final String sessionId, final String username, final String fullname) {
-        this.successful = successful;
+    ComunytekLoginResponse(final String sessionId, final String username, final String fullname) {
+        super(true, null);
         this.sessionId = sessionId;
         this.username = username;
         this.fullname = fullname;
     }
 
-    public static class Builder {
+    public static class Builder implements ComunytekResponseBuilder<ComunytekLoginResponse> {
         private String sessionId;
         private String username;
         private String fullname;
@@ -29,10 +28,6 @@ public class ComunytekLoginResponse {
 
         public static Builder builder() {
             return new Builder();
-        }
-
-        public static ComunytekLoginResponse buildUnsuccessful() {
-            return new ComunytekLoginResponse(false);
         }
 
         public Builder sessionId(final String sessionId) {
@@ -50,13 +45,15 @@ public class ComunytekLoginResponse {
             return this;
         }
 
+        @Override
         public ComunytekLoginResponse build() {
-            return new ComunytekLoginResponse(true, sessionId, username, fullname);
+            return new ComunytekLoginResponse(sessionId, username, fullname);
         }
-    }
 
-    public boolean isSuccessful() {
-        return successful;
+        @Override
+        public ComunytekLoginResponse buildUnsuccessful(final String errorMessage) {
+            return new ComunytekLoginResponse(errorMessage);
+        }
     }
 
     public String getSessionId() {

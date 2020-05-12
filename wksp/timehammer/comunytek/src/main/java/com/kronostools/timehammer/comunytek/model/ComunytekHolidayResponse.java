@@ -2,24 +2,23 @@ package com.kronostools.timehammer.comunytek.model;
 
 import java.time.LocalDate;
 
-public class HolidayResponse {
-    private final boolean successful;
+public class ComunytekHolidayResponse extends ComunytekResponse {
     private final Boolean holiday;
     private final LocalDate date;
 
-    private HolidayResponse(final boolean successful) {
-        this.successful = successful;
+    ComunytekHolidayResponse(final String errorMessage) {
+        super(false, errorMessage);
         this.holiday = null;
         this.date = null;
     }
 
-    private HolidayResponse(final boolean successful, final boolean holiday, final LocalDate date) {
-        this.successful = successful;
+    ComunytekHolidayResponse(final boolean holiday, final LocalDate date) {
+        super(true, null);
         this.holiday = holiday;
         this.date = date;
     }
 
-    public static class Builder {
+    public static class Builder implements ComunytekResponseBuilder<ComunytekHolidayResponse> {
         private Boolean holiday;
         private LocalDate date;
 
@@ -27,10 +26,6 @@ public class HolidayResponse {
 
         public static Builder builder() {
             return new Builder();
-        }
-
-        public static HolidayResponse buildUnsuccessful() {
-            return new HolidayResponse(false);
         }
 
         public Builder holiday(final boolean holiday) {
@@ -43,13 +38,14 @@ public class HolidayResponse {
             return this;
         }
 
-        public HolidayResponse build() {
-            return new HolidayResponse(true, holiday, date);
+        public ComunytekHolidayResponse build() {
+            return new ComunytekHolidayResponse(holiday, date);
         }
-    }
 
-    public boolean isSuccessful() {
-        return successful;
+        public ComunytekHolidayResponse buildUnsuccessful(final String errorMessage) {
+            return new ComunytekHolidayResponse(errorMessage);
+        }
+
     }
 
     public Boolean isHoliday() {
