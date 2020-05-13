@@ -2,6 +2,7 @@ package com.kronostools.timehammer.web.resource;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.schedules.CheckHolidayResult;
 import com.kronostools.timehammer.common.messages.schedules.CredentialResult;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
 import com.kronostools.timehammer.common.services.TimeMachineService;
@@ -19,12 +20,12 @@ import java.util.UUID;
 @RouteBase(path = "/test")
 public class ToDeleteRoutes {
     private final TimeMachineService timeMachineService;
-    private final Emitter<UpdateWorkersHolidaysWorker> updateWorkersHolidaysWorkerEmitter;
+    private final Emitter<UpdateWorkersHolidaysWorker> testEmitter;
 
     public ToDeleteRoutes(final TimeMachineService timeMachineService,
-                          @Channel(Channels.COMUNYTEK_WORKER_HOLIDAYS) final Emitter<UpdateWorkersHolidaysWorker> updateWorkersHolidaysWorkerEmitter) {
+                          @Channel(Channels.HOLIDAYS_WORKER_UPDATE) final Emitter<UpdateWorkersHolidaysWorker> testEmitter) {
         this.timeMachineService = timeMachineService;
-        this.updateWorkersHolidaysWorkerEmitter = updateWorkersHolidaysWorkerEmitter;
+        this.testEmitter = testEmitter;
     }
 
     // TODO: delete this test method
@@ -44,11 +45,15 @@ public class ToDeleteRoutes {
                 .externalPassword("blablabla")
                 .build());
 
+        worker.setCheckHolidayResult(CheckHolidayResult.Builder.builder()
+                .holiday(Boolean.TRUE)
+                .build());
+
         final HttpServerRequest request = rc.request();
 
         request.pause();
 
-        updateWorkersHolidaysWorkerEmitter.send(worker).handleAsync((Void, e) -> {
+        testEmitter.send(worker).handleAsync((Void, e) -> {
             request.resume();
 
             final JsonObject result = new JsonObject();

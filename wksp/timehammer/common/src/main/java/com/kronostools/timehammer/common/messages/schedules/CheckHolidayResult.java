@@ -1,9 +1,9 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
-public class HolidayResult extends Result {
+public class CheckHolidayResult extends Result {
     private Boolean holiday;
 
-    public static class Builder implements ResultBuilder<HolidayResult> {
+    public static class Builder implements ResultBuilder<CheckHolidayResult> {
         private Boolean holiday;
 
         Builder() {}
@@ -17,8 +17,8 @@ public class HolidayResult extends Result {
             return this;
         }
 
-        public HolidayResult build() {
-            final HolidayResult result = new HolidayResult();
+        public CheckHolidayResult build() {
+            final CheckHolidayResult result = new CheckHolidayResult();
             result.setSuccessful(true);
             result.setHoliday(holiday);
 
@@ -26,8 +26,8 @@ public class HolidayResult extends Result {
         }
 
         @Override
-        public HolidayResult buildUnsuccessful(String errorMessage) {
-            final HolidayResult result = new HolidayResult();
+        public CheckHolidayResult buildUnsuccessful(String errorMessage) {
+            final CheckHolidayResult result = new CheckHolidayResult();
             result.setSuccessful(false);
             result.setErrorMessage(errorMessage);
 

@@ -11,5 +11,6 @@ public class CommonConstants {
         public static final String HOLIDAYS_WORKER_GET = "holidays-worker-get";
         public static final String COMUNYTEK_WORKER_HOLIDAYS = "comunytek-worker-holidays";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
+        public static final String HOLIDAYS_WORKER_SUMMARY = "holidays-worker-summary";
     }
 }

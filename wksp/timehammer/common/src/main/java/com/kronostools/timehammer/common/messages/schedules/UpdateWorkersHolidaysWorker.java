@@ -17,8 +17,8 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
     private String workerExternalId;
     private CredentialResult credentialResult;
     private LocalDate holidayCandidate;
-    private HolidayResult holidayResult;
-    private boolean updatedSuccessfully;
+    private CheckHolidayResult checkHolidayResult;
+    private SaveHolidayResult saveHolidayResult;
 
     public static class Builder {
         private LocalDateTime timestamp;
@@ -157,19 +157,19 @@ public class UpdateWorkersHolidaysWorker extends PlatformMessage {
         this.holidayCandidate = holidayCandidate;
     }
 
-    public HolidayResult getHolidayResult() {
-        return holidayResult;
+    public CheckHolidayResult getCheckHolidayResult() {
+        return checkHolidayResult;
     }
 
-    public void setHolidayResult(HolidayResult holidayResult) {
-        this.holidayResult = holidayResult;
+    public void setCheckHolidayResult(CheckHolidayResult checkHolidayResult) {
+        this.checkHolidayResult = checkHolidayResult;
     }
 
-    public boolean isUpdatedSuccessfully() {
-        return updatedSuccessfully;
+    public SaveHolidayResult getSaveHolidayResult() {
+        return saveHolidayResult;
     }
 
-    public void setUpdatedSuccessfully(boolean updatedSuccessfully) {
-        this.updatedSuccessfully = updatedSuccessfully;
+    public void setSaveHolidayResult(SaveHolidayResult saveHolidayResult) {
+        this.saveHolidayResult = saveHolidayResult;
     }
 }

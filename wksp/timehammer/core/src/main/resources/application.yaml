@@ -19,9 +19,19 @@ mp:
         topic: holidays-update
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleTriggerMessageDeserializer
+      holidays-worker-update:
+        connector: smallrye-kafka
+        topic: holidays-worker-update
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
     outgoing:
       holidays-worker-auth:
         connector: smallrye-kafka
         topic: holidays-worker-auth
+        value:
+          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+      holidays-worker-summary:
+        connector: smallrye-kafka
+        topic: holidays-worker-summary
         value:
           serializer: io.quarkus.kafka.client.serialization.JsonbSerializer

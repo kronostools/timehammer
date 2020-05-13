@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.comunytek;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.schedules.HolidayResult;
+import com.kronostools.timehammer.common.messages.schedules.CheckHolidayResult;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.comunytek.client.ComunytekClient;
@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.time.LocalDate;
 
 @ApplicationScoped
 public class HolidaysWorkerRetriever {
@@ -33,27 +32,30 @@ public class HolidaysWorkerRetriever {
         final UpdateWorkersHolidaysWorker worker = message.getPayload();
 
         if (worker.getCredentialResult().isNotSuccessful()) {
+            LOG.warn("Worker's holidays cannot be checked because worker's credentials are missing. Reason: {}", worker.getCredentialResult().getErrorMessage());
+
+            worker.setCheckHolidayResult(CheckHolidayResult.Builder.builder()
+                    .buildUnsuccessful(worker.getCredentialResult().getErrorMessage()));
+
             return Uni.createFrom().item(Message.of(worker, message::ack));
         } else {
-            final LocalDate holidayCandidate = worker.getTimestamp().toLocalDate();
-
-            LOG.info("Checking if worker '{}' working at '{}' picked '{}' as holiday ...", worker.getWorkerInternalId(), worker.getCompany().getCode(), CommonDateTimeUtils.formatDateToLog(holidayCandidate));
+            LOG.info("Checking if worker '{}' working at '{}' picked '{}' as holiday ...", worker.getWorkerInternalId(), worker.getCompany().getCode(), CommonDateTimeUtils.formatDateToLog(worker.getHolidayCandidate()));
 
             return comunytekClient
-                    .isHoliday(worker.getWorkerExternalId(), worker.getCredentialResult().getExternalPassword(), holidayCandidate)
+                    .isHoliday(worker.getWorkerExternalId(), worker.getCredentialResult().getExternalPassword(), worker.getHolidayCandidate())
                     .onFailure(ComunytekUnexpectedException.class)
                         .recoverWithItem((e) -> ComunytekHolidayResponse.Builder.builder().buildUnsuccessful(e.getMessage()))
                     .map((holidayResponse) -> {
                         if (holidayResponse.isSuccessful()) {
-                            LOG.info("Worker '{}' working at '{}' {} '{}' as holiday", worker.getWorkerInternalId(), worker.getCompany().getCode(), holidayResponse.isHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(holidayCandidate));
+                            LOG.info("Worker '{}' working at '{}' {} '{}' as holiday", worker.getWorkerInternalId(), worker.getCompany().getCode(), holidayResponse.isHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(worker.getHolidayCandidate()));
 
-                            worker.setHolidayResult(HolidayResult.Builder.builder()
+                            worker.setCheckHolidayResult(CheckHolidayResult.Builder.builder()
                                     .holiday(holidayResponse.isHoliday())
                                     .build());
                         } else {
                             LOG.warn("Holidays of worker '{}' couldn't be retrieved", worker.getWorkerInternalId());
 
-                            worker.setHolidayResult(HolidayResult.Builder.builder()
+                            worker.setCheckHolidayResult(CheckHolidayResult.Builder.builder()
                                     .buildUnsuccessful(holidayResponse.getErrorMessage()));
                         }
 
