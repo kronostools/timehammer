@@ -5,7 +5,7 @@ mp:
         connector: smallrye-kafka
         topic: holidays-update
         value:
-          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
 timehammer:
   schedules:

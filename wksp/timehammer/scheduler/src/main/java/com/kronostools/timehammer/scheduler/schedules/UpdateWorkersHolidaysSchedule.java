@@ -2,6 +2,7 @@ package com.kronostools.timehammer.scheduler.schedules;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessageBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
@@ -36,7 +37,7 @@ public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessa
 
     @Override
     protected ScheduleTriggerMessage getTriggerMessage(final LocalDateTime timestamp) {
-        return ScheduleTriggerMessage.Builder.builder()
+        return new ScheduleTriggerMessageBuilder()
                 .timestamp(timestamp)
                 .name(getConfig().getName())
                 .build();

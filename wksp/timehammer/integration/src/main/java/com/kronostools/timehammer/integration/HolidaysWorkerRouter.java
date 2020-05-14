@@ -2,7 +2,8 @@ package com.kronostools.timehammer.integration;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -20,15 +21,15 @@ import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 public class HolidaysWorkerRouter {
     private static final Logger LOG = LoggerFactory.getLogger(HolidaysWorkerRouter.class);
 
-    private final Emitter<UpdateWorkersHolidaysWorker> comunytekWorkerHolidays;
+    private final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidays;
 
-    public HolidaysWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_HOLIDAYS) final Emitter<UpdateWorkersHolidaysWorker> comunytekWorkerHolidays) {
+    public HolidaysWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_HOLIDAYS) final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidays) {
         this.comunytekWorkerHolidays = comunytekWorkerHolidays;
     }
 
     @Incoming(Channels.HOLIDAYS_WORKER_GET)
-    public CompletionStage<Void> routeHolidays(final Message<UpdateWorkersHolidaysWorker> message) {
-        final UpdateWorkersHolidaysWorker worker = message.getPayload();
+    public CompletionStage<Void> routeHolidays(final Message<UpdateWorkersHolidayWorker> message) {
+        final UpdateWorkersHolidayWorker worker = UpdateWorkersHolidayWorkerBuilder.copy(message.getPayload()).build();
 
         LOG.info("Routing message of worker '{}' to company '{}'", worker.getWorkerInternalId(), worker.getCompany().getCode());
 
@@ -40,7 +41,7 @@ public class HolidaysWorkerRouter {
         }
     }
 
-    private <U> BiFunction<? super Void, Throwable, ? extends U> getMessageHandler(final Message<U> message, final Company company) {
+    private BiFunction<? super Void, Throwable, Void> getMessageHandler(final Message<?> message, final Company company) {
         return (Void, e) -> {
             if (e != null) {
                 LOG.error(stringFormat("Exception while routing message to '{}' channel", company.getCode()), e);

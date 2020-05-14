@@ -5,4 +5,4 @@ mp:
         connector: smallrye-kafka
         topic: timemachine
         value:
-          deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventJacksonDeserializer

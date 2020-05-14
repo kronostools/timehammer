@@ -11,7 +11,7 @@ mp:
         connector: smallrye-kafka
         topic: holidays-worker-update
         value:
-          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
 timehammer:
   comunytek:

@@ -2,9 +2,10 @@ package com.kronostools.timehammer.web.resource;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.schedules.CheckHolidayResult;
-import com.kronostools.timehammer.common.messages.schedules.CredentialResult;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
+import com.kronostools.timehammer.common.messages.schedules.CheckHolidayPhaseBuilder;
+import com.kronostools.timehammer.common.messages.schedules.CredentialPhaseBuilder;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
@@ -20,10 +21,10 @@ import java.util.UUID;
 @RouteBase(path = "/test")
 public class ToDeleteRoutes {
     private final TimeMachineService timeMachineService;
-    private final Emitter<UpdateWorkersHolidaysWorker> testEmitter;
+    private final Emitter<UpdateWorkersHolidayWorker> testEmitter;
 
     public ToDeleteRoutes(final TimeMachineService timeMachineService,
-                          @Channel(Channels.HOLIDAYS_WORKER_UPDATE) final Emitter<UpdateWorkersHolidaysWorker> testEmitter) {
+                          @Channel(Channels.HOLIDAYS_WORKER_UPDATE) final Emitter<UpdateWorkersHolidayWorker> testEmitter) {
         this.timeMachineService = timeMachineService;
         this.testEmitter = testEmitter;
     }
@@ -31,7 +32,7 @@ public class ToDeleteRoutes {
     // TODO: delete this test method
     @Route(path = "/sendToComunytekWorkerHoliday", methods = HttpMethod.GET)
     void timestamp(RoutingContext rc) {
-        final UpdateWorkersHolidaysWorker worker = UpdateWorkersHolidaysWorker.Builder.builder()
+        final UpdateWorkersHolidayWorker worker = new UpdateWorkersHolidayWorkerBuilder()
                 .timestamp(timeMachineService.getNow())
                 .company(Company.COMUNYTEK)
                 .name("updateWorkersHolidays")
@@ -39,15 +40,13 @@ public class ToDeleteRoutes {
                 .workerInternalId("1111-1111-1111-1111")
                 .workerExternalId("DCV")
                 .batchSize(1)
+                .credentialPhase(new CredentialPhaseBuilder()
+                        .externalPassword("blablabla")
+                        .build())
+                .checkHolidayPhase(new CheckHolidayPhaseBuilder()
+                        .holiday(Boolean.TRUE)
+                        .build())
                 .build();
-
-        worker.setCredentialResult(CredentialResult.Builder.builder()
-                .externalPassword("blablabla")
-                .build());
-
-        worker.setCheckHolidayResult(CheckHolidayResult.Builder.builder()
-                .holiday(Boolean.TRUE)
-                .build());
 
         final HttpServerRequest request = rc.request();
 

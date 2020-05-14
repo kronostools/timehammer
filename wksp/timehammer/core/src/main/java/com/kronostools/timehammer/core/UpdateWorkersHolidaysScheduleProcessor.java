@@ -2,7 +2,8 @@ package com.kronostools.timehammer.core;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
 import io.smallrye.mutiny.Multi;
@@ -28,17 +29,17 @@ public class UpdateWorkersHolidaysScheduleProcessor {
 
     @Incoming(Channels.HOLIDAYS_UPDATE)
     @Outgoing(Channels.HOLIDAYS_WORKER_AUTH)
-    public Multi<Message<UpdateWorkersHolidaysWorker>> process(final Message<ScheduleTriggerMessage> message) {
+    public Multi<Message<UpdateWorkersHolidayWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getTimestamp()));
 
-        final List<Message<UpdateWorkersHolidaysWorker>> workers = workerCurrentPreferencesDao.findAll(triggerMessage.getTimestamp())
+        final List<Message<UpdateWorkersHolidayWorker>> workers = workerCurrentPreferencesDao.findAll(triggerMessage.getTimestamp())
                 .map(wcpl -> {
                     LOG.debug("Transforming result from db to list of workers ...");
 
                     return wcpl.stream()
-                            .map(wcp -> Message.of(UpdateWorkersHolidaysWorker.Builder.builder()
+                            .map(wcp -> Message.of(new UpdateWorkersHolidayWorkerBuilder()
                                     .timestamp(triggerMessage.getTimestamp())
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())

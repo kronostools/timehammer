@@ -11,4 +11,4 @@ mp:
         connector: smallrye-kafka
         topic: comunytek-worker-holidays
         value:
-          serializer: io.quarkus.kafka.client.serialization.JsonbSerializer
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

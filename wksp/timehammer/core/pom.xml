@@ -27,6 +27,10 @@
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-reactive-pg-client</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>

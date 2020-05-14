@@ -3,6 +3,7 @@ package com.kronostools.timehammer.web.resource;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessage;
+import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessageBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
@@ -28,10 +29,10 @@ public class DemoRoutes {
 
     @Route(path = "/timeTravel", methods = HttpMethod.GET)
     void timestamp(RoutingContext rc) {
-        final TimeMachineEventMessage timeMachineEvent = TimeMachineEventMessage.Builder.builder()
-                .generated(timeMachineService.getNow())
-                .withNewTimestamp(LocalDateTime.now().withHour(17).withMinute(0).withSecond(0).withNano(0))
-                .atTimezone(SupportedTimezone.EUROPE_MADRID)
+        final TimeMachineEventMessage timeMachineEvent = new TimeMachineEventMessageBuilder()
+                .timestamp(timeMachineService.getNow())
+                .newTimestamp(LocalDateTime.now().withHour(17).withMinute(0).withSecond(0).withNano(0))
+                .timezone(SupportedTimezone.EUROPE_MADRID)
                 .build();
 
         final HttpServerRequest request = rc.request();

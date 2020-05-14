@@ -27,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>
-      <artifactId>quarkus-resteasy-jsonb</artifactId>
+      <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
   </dependencies>
 

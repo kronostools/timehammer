@@ -1,8 +1,10 @@
 package com.kronostools.timehammer.core;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.schedules.SaveHolidayResult;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidaysWorker;
+import com.kronostools.timehammer.common.messages.schedules.SaveHolidayPhase;
+import com.kronostools.timehammer.common.messages.schedules.SaveHolidayPhaseBuilder;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import com.kronostools.timehammer.core.dao.WorkerHolidaysDao;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -25,38 +27,43 @@ public class UpdateWorkersHolidaysWorkerProcessor {
 
     @Incoming(Channels.HOLIDAYS_WORKER_UPDATE)
     @Outgoing(Channels.HOLIDAYS_WORKER_SUMMARY)
-    public Uni<Message<UpdateWorkersHolidaysWorker>> process(final Message<UpdateWorkersHolidaysWorker> message) {
-        final UpdateWorkersHolidaysWorker worker = message.getPayload();
+    public Uni<Message<UpdateWorkersHolidayWorker>> process(final Message<UpdateWorkersHolidayWorker> message) {
+        final UpdateWorkersHolidayWorker worker = UpdateWorkersHolidayWorkerBuilder.copy(message.getPayload()).build();
 
-        if (worker.getCheckHolidayResult().isNotSuccessful()) {
-            LOG.warn("Worker's holidays cannot be updated because it could not have been checked. Reason: {}", worker.getCheckHolidayResult().getErrorMessage());
+        if (worker.getCheckHolidayPhase().isNotSuccessful()) {
+            LOG.warn("Worker's holidays cannot be updated because it could not have been checked. Reason: {}", worker.getCheckHolidayPhase().getErrorMessage());
 
-            worker.setSaveHolidayResult(SaveHolidayResult.Builder.builder()
-                    .buildUnsuccessful(worker.getCheckHolidayResult().getErrorMessage()));
+            worker.setSaveHolidayPhase(new SaveHolidayPhaseBuilder()
+                    .errorMessage(worker.getCheckHolidayPhase().getErrorMessage())
+                    .build());
+
+            return Uni.createFrom().item(Message.of(worker, message::ack));
         } else {
-            if (worker.getCheckHolidayResult().getHoliday()) {
-                workerHolidaysDao
+            if (worker.getCheckHolidayPhase().isHoliday()) {
+                return workerHolidaysDao
                         .upsert(worker.getWorkerInternalId(), worker.getHolidayCandidate())
                         .onItem()
-                        .invoke((upsertResult) -> {
-                            final SaveHolidayResult result;
+                        .produceUni((upsertResult) -> {
+                            final SaveHolidayPhase saveHolidayPhase;
 
                             if (upsertResult.isSuccessful()) {
-                                result = SaveHolidayResult.Builder.builder()
+                                saveHolidayPhase = new SaveHolidayPhaseBuilder()
                                         .build();
                             } else {
-                                result = SaveHolidayResult.Builder.builder()
-                                        .buildUnsuccessful(upsertResult.getErrorMessage());
+                                saveHolidayPhase = new SaveHolidayPhaseBuilder()
+                                        .errorMessage(upsertResult.getErrorMessage())
+                                        .build();
                             }
 
-                            worker.setSaveHolidayResult(result);
+                            worker.setSaveHolidayPhase(saveHolidayPhase);
+
+                            return Uni.createFrom().item(Message.of(worker, message::ack));
                         });
             } else {
-                worker.setSaveHolidayResult(SaveHolidayResult.Builder.builder().build());
+                worker.setSaveHolidayPhase(new SaveHolidayPhaseBuilder().build());
+
+                return Uni.createFrom().item(Message.of(worker, message::ack));
             }
         }
-
-        // TODO: revisar flujo, tal cual está no funcionaría sin esperar a que se ejecute la inserción en base de datos o sin cambiar el flujo
-        return Uni.createFrom().item(Message.of(worker, message::ack));
     }
 }

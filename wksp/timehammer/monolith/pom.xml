@@ -51,6 +51,10 @@
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-smallrye-health</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-resteasy-jsonb</artifactId>
+    </dependency>
     <!-- BEGIN Camel -->
     <dependency>
       <groupId>org.apache.camel.quarkus</groupId>
