@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.comunytek;
+package com.kronostools.timehammer.comunytek.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.CheckHolidayPhase;

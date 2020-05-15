@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.integration;
+package com.kronostools.timehammer.integration.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;

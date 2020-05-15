@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.core;
+package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
@@ -18,16 +18,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class UpdateWorkersHolidaysScheduleProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(UpdateWorkersHolidaysScheduleProcessor.class);
+public class UpdateWorkersHolidayScheduleProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(UpdateWorkersHolidayScheduleProcessor.class);
 
     private final WorkerCurrentPreferencesDao workerCurrentPreferencesDao;
 
-    public UpdateWorkersHolidaysScheduleProcessor(final WorkerCurrentPreferencesDao workerCurrentPreferencesDao) {
+    public UpdateWorkersHolidayScheduleProcessor(final WorkerCurrentPreferencesDao workerCurrentPreferencesDao) {
         this.workerCurrentPreferencesDao = workerCurrentPreferencesDao;
     }
 
-    @Incoming(Channels.HOLIDAYS_UPDATE)
+    @Incoming(Channels.SCHEDULE_UPDATE_HOLIDAYS)
     @Outgoing(Channels.HOLIDAYS_WORKER_AUTH)
     public Multi<Message<UpdateWorkersHolidayWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();

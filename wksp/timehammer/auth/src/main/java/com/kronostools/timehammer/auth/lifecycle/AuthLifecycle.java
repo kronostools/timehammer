@@ -1,6 +1,5 @@
 package com.kronostools.timehammer.auth.lifecycle;
 
-
 import com.kronostools.timehammer.auth.service.WorkerCredentialsService;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
@@ -23,7 +22,7 @@ public class AuthLifecycle {
     void onStartup(@Observes StartupEvent event) {
         LOG.info("BEGIN onStartup");
 
-        LOG.info("Loaded worker credentials from temp dump file ...");
+        LOG.info("Loading worker credentials from temp dump file ...");
 
         workerCredentialsService.load();
 

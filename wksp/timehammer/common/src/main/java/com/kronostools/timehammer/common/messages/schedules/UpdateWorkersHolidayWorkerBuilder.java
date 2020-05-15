@@ -2,18 +2,12 @@ package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.PlatformMessageBuilder;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class UpdateWorkersHolidayWorkerBuilder extends PlatformMessageBuilder<UpdateWorkersHolidayWorkerBuilder> {
-    private UUID executionId;
-    private String name;
-    private Integer batchSize;
-
+public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleMessageBuilder<UpdateWorkersHolidayWorkerBuilder> {
     private LocalDate holidayCandidate;
     private String workerInternalId;
     private Company company;
@@ -43,21 +37,6 @@ public class UpdateWorkersHolidayWorkerBuilder extends PlatformMessageBuilder<Up
                     .checkHolidayPhase(CheckHolidayPhaseBuilder.copyAndBuild(w.getCheckHolidayPhase()))
                     .saveHolidayPhase(SaveHolidayPhaseBuilder.copyAndBuild(w.getSaveHolidayPhase())))
                 .orElse(null);
-    }
-
-    public UpdateWorkersHolidayWorkerBuilder executionId(final UUID executionId) {
-        this.executionId = executionId;
-        return this;
-    }
-
-    public UpdateWorkersHolidayWorkerBuilder name(final String name) {
-        this.name = name;
-        return this;
-    }
-
-    public UpdateWorkersHolidayWorkerBuilder batchSize(final Integer batchSize) {
-        this.batchSize = batchSize;
-        return this;
     }
 
     public UpdateWorkersHolidayWorkerBuilder holidayCandidate(final LocalDate holidayCandidate) {
@@ -96,10 +75,7 @@ public class UpdateWorkersHolidayWorkerBuilder extends PlatformMessageBuilder<Up
     }
 
     public UpdateWorkersHolidayWorker build() {
-        final UpdateWorkersHolidayWorker result = new UpdateWorkersHolidayWorker(timestamp);
-        result.setExecutionId(executionId);
-        result.setName(name);
-        result.setBatchSize(batchSize);
+        final UpdateWorkersHolidayWorker result = new UpdateWorkersHolidayWorker(timestamp, name, executionId, batchSize);
         result.setHolidayCandidate(holidayCandidate);
         result.setWorkerInternalId(workerInternalId);
         result.setCompany(company);

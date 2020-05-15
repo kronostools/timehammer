@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.auth;
+package com.kronostools.timehammer.auth.processors;
 
 import com.kronostools.timehammer.auth.service.WorkerCredentialsService;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;

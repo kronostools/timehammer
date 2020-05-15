@@ -14,16 +14,15 @@ quarkus:
 mp:
   messaging:
     incoming:
-      holidays-update:
+      schedule-update-holidays:
         connector: smallrye-kafka
-        topic: holidays-update
+        topic: schedule-update-holidays
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleTriggerMessageJacksonDeserializer
       holidays-worker-update:
         connector: smallrye-kafka
         topic: holidays-worker-update
         value:
-          #deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidayWorkerJacksonDeserializer
     outgoing:
       holidays-worker-auth:

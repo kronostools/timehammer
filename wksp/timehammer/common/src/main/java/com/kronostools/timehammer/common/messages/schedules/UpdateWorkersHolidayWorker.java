@@ -2,18 +2,14 @@ package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @JsonDeserialize(builder = UpdateWorkersHolidayWorkerBuilder.class)
-public class UpdateWorkersHolidayWorker extends PlatformMessage {
-    private UUID executionId;
-    private String name;
-    private Integer batchSize;
-
+public class UpdateWorkersHolidayWorker extends ProcessableBatchScheduleMessage {
     private LocalDate holidayCandidate;
     private String workerInternalId;
     private Company company;
@@ -22,32 +18,14 @@ public class UpdateWorkersHolidayWorker extends PlatformMessage {
     private CheckHolidayPhase checkHolidayPhase;
     private SaveHolidayPhase saveHolidayPhase;
 
-    UpdateWorkersHolidayWorker(final LocalDateTime timestamp) {
-        super(timestamp);
+    UpdateWorkersHolidayWorker(final LocalDateTime timestamp, final String name, final UUID executionId, final Integer batchSize) {
+        super(timestamp, name, executionId, batchSize);
     }
 
-    public UUID getExecutionId() {
-        return executionId;
-    }
-
-    public void setExecutionId(UUID executionId) {
-        this.executionId = executionId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getBatchSize() {
-        return batchSize;
-    }
-
-    public void setBatchSize(Integer batchSize) {
-        this.batchSize = batchSize;
+    public boolean processedSuccessfully() {
+        return Optional.ofNullable(saveHolidayPhase)
+                .map(SaveHolidayPhase::isSuccessful)
+                .orElse(false);
     }
 
     public LocalDate getHolidayCandidate() {

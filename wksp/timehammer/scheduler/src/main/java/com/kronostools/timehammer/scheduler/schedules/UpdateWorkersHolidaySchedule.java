@@ -14,13 +14,13 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 
 @ApplicationScoped
-public class UpdateWorkersHolidaysSchedule extends Schedule<ScheduleTriggerMessage> {
+public class UpdateWorkersHolidaySchedule extends Schedule<ScheduleTriggerMessage> {
 
     private final Emitter<ScheduleTriggerMessage> scheduleChannel;
 
-    public UpdateWorkersHolidaysSchedule(final SchedulesConfig schedulesConfig,
-                                         final TimeMachineService timeMachineService,
-                                         @Channel(Channels.HOLIDAYS_UPDATE) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
+    public UpdateWorkersHolidaySchedule(final SchedulesConfig schedulesConfig,
+                                        final TimeMachineService timeMachineService,
+                                        @Channel(Channels.SCHEDULE_UPDATE_HOLIDAYS) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
         super(schedulesConfig, timeMachineService);
         this.scheduleChannel = scheduleChannel;
     }

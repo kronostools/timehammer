@@ -1,37 +1,8 @@
 package com.kronostools.timehammer.web.dto;
 
-public class TimestampDto {
+public class TimestampDto extends Dto {
     private String timestamp;
     private String timezone;
-
-    public static class Builder {
-        private String timestamp;
-        private String timezone;
-
-        Builder() {}
-
-        public static Builder builder() {
-            return new Builder();
-        }
-
-        public Builder timestamp(String timestamp) {
-            this.timestamp = timestamp;
-            return this;
-        }
-
-        public Builder timezone(String timezone) {
-            this.timezone = timezone;
-            return this;
-        }
-
-        public TimestampDto build() {
-            TimestampDto result = new TimestampDto();
-            result.setTimestamp(timestamp);
-            result.setTimezone(timezone);
-
-            return result;
-        }
-    }
 
     public String getTimestamp() {
         return timestamp;

@@ -1,20 +1,23 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    const source = new EventSource("/timemachine/stream");
-
-    source.addEventListener('open', (event) => {
-        console.info('Connected to timemachine stream!')
-    })
-
-    source.addEventListener('error', (event) => {
-        console.error('Error connecting to timemachine stream, closing it ...')
-        source.close()
-        console.info('Closed timemachine stream')
-    })
-
     const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm:ss.SSS'
     const TIMESTAMP_HTML_FORMAT = 'DD/MM/YYYY HH:mm:ss.SSS'
 
-    source.addEventListener('message', (event) => {
+    const subscriberId = uuid.v4()
+
+    // BEGIN TIME MACHINE STREAM
+    const timeMachineEventSource = new EventSource(`/timemachine/stream/${subscriberId}`);
+
+    timeMachineEventSource.addEventListener('open', (event) => {
+        console.info('Connected to timemachine stream!')
+    })
+
+    timeMachineEventSource.addEventListener('error', (event) => {
+        console.error('Error connecting to timemachine stream, closing it ...')
+        timeMachineEventSource.close()
+        console.info('Closed timemachine stream')
+    })
+
+    timeMachineEventSource.addEventListener('message', (event) => {
         const timemachineEvent = JSON.parse(event.data)
         const currentTimestamp = moment(timemachineEvent.timestamp, TIMESTAMP_JSON_FORMAT)
 
@@ -22,16 +25,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         document.getElementById('currentTimestamp').textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
     })
+    // END TIME MACHINE STREAM
 
+    // BEGIN SCHEDULES SUMMARY STREAM
+    const schedulesSummaryEventSource = new EventSource(`/schedulesSummary/stream/${subscriberId}`);
+
+    schedulesSummaryEventSource.addEventListener('open', (event) => {
+        console.info('Connected to schedules summary stream!')
+    })
+
+    schedulesSummaryEventSource.addEventListener('error', (event) => {
+        console.error('Error connecting to schedules summary stream, closing it ...')
+        schedulesSummaryEventSource.close()
+        console.info('Closed schedules summary stream')
+    })
+
+    schedulesSummaryEventSource.addEventListener('message', (event) => {
+        console.debug(`Received schedule summary: ${event.data}`)
+    })
+    // END SCHEDULES SUMMARY STREAM
+
+    // BEGIN COMMON EVENT SOURCES
     window.addEventListener('beforeunload', (event) => {
         event.preventDefault()
         delete event['returnValue']
 
         console.debug('Page unload, closing timemachine stream ...')
-        source.close()
+        timeMachineEventSource.close()
         console.info('Page unload, closed timemachine stream')
-    })
 
+        console.debug('Page unload, closing schedules summary stream ...')
+        schedulesSummaryEventSource.close()
+        console.info('Page unload, closed schedules summary stream')
+    })
+    // END COMMON EVENT SOURCES
 
     const flatMap = rxjs.operators.flatMap
     const fromEvent = rxjs.fromEvent

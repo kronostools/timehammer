@@ -27,6 +27,14 @@
       <groupId>${quarkus.platform.group-id}</groupId>
       <artifactId>quarkus-resteasy-jackson</artifactId>
     </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-cache</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-scheduler</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>

@@ -1,9 +1,20 @@
 mp:
   messaging:
-    outgoing:
-      holidays-update:
+    incoming:
+      holidays-worker-summary:
         connector: smallrye-kafka
-        topic: holidays-update
+        topic: holidays-worker-summary
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidayWorkerJacksonDeserializer
+    outgoing:
+      schedule-update-holidays:
+        connector: smallrye-kafka
+        topic: schedule-update-holidays
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-summary:
+        connector: smallrye-kafka
+        topic: schedule-summary
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
@@ -40,4 +51,4 @@ timehammer:
   timehammer:
     schedules:
       update-workers-holidays:
-        cron: 0/20 * * ? * * *
+        enabled: false
