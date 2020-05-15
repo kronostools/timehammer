@@ -2,6 +2,7 @@ package com.kronostools.timehammer.core.dao;
 
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.core.model.UpsertResult;
+import com.kronostools.timehammer.core.model.UpsertResultBuilder;
 import io.smallrye.mutiny.Uni;
 import io.vertx.mutiny.pgclient.PgPool;
 import io.vertx.mutiny.sqlclient.Tuple;
@@ -27,17 +28,18 @@ public class WorkerHolidaysDao {
                         "INSERT INTO worker_holiday (worker_internal_id, day) " +
                             "VALUES ($1, $2) " +
                             "ON CONFLICT DO NOTHING", Tuple.of(workerInternalId, holidayCandidate))
-                .map((pgRowSet) -> UpsertResult.Builder.builder()
-                        .inserted(pgRowSet.iterator().next().getLong(2))
-                        .build())
+                .map((pgRowSet) -> new UpsertResultBuilder()
+                            .inserted(pgRowSet.rowCount())
+                            .build())
                 .onFailure()
                     .recoverWithItem((e) -> {
-                        final String message = CommonUtils.stringFormat("There was an unexpected error inserting holidays of worker '{}'. Reason: {}", workerInternalId);
+                        final String message = CommonUtils.stringFormat("There was an unexpected error inserting holidays of worker '{}'", workerInternalId);
 
                         LOG.error("{}. Reason: {}", message, e.getMessage());
 
-                        return UpsertResult.Builder.builder()
-                                .buildUnsuccessful(message);
+                        return new UpsertResultBuilder()
+                                .errorMessage(message)
+                                .build();
                     });
     }
 }

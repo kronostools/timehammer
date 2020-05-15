@@ -1,6 +1,10 @@
 package com.kronostools.timehammer.core.model;
 
-public interface DbResultBuilder<T> {
-    T build();
-    T buildUnsuccessful(final String errorMessage);
+public abstract class DbResultBuilder<B> {
+    protected String errorMessage;
+
+    public B errorMessage(final String errorMessage) {
+        this.errorMessage = errorMessage;
+        return (B) this;
+    }
 }

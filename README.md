@@ -3,7 +3,7 @@
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Preparar pieza web con página demo para lanzar a mano los batches y visualizar el resumen de la ejecución
         - Implementar el cambio de hora
-    - Continuar con flujo de updateholidays: core, scheduler
+    - Continuar con flujo de updateholidays: scheduler, web
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka

@@ -5,6 +5,7 @@ import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.PlatformMessageBuilder;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @JsonPOJOBuilder(withPrefix = "")
@@ -13,27 +14,35 @@ public class UpdateWorkersHolidayWorkerBuilder extends PlatformMessageBuilder<Up
     private String name;
     private Integer batchSize;
 
+    private LocalDate holidayCandidate;
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
     private CredentialPhase credentialPhase;
-    private LocalDate holidayCandidate;
     private CheckHolidayPhase checkHolidayPhase;
     private SaveHolidayPhase saveHolidayPhase;
 
+    public static UpdateWorkersHolidayWorker copyAndBuild(final UpdateWorkersHolidayWorker worker) {
+        return Optional.ofNullable(worker)
+                .map(w -> UpdateWorkersHolidayWorkerBuilder.copy(w).build())
+                .orElse(null);
+    }
+
     public static UpdateWorkersHolidayWorkerBuilder copy(final UpdateWorkersHolidayWorker worker) {
-        return new UpdateWorkersHolidayWorkerBuilder()
-                .timestamp(worker.getTimestamp())
-                .executionId(worker.getExecutionId())
-                .name(worker.getName())
-                .batchSize(worker.getBatchSize())
-                .holidayCandidate(worker.getHolidayCandidate())
-                .workerInternalId(worker.getWorkerInternalId())
-                .company(worker.getCompany())
-                .workerExternalId(worker.getWorkerExternalId())
-                .credentialPhase(CredentialPhaseBuilder.copy(worker.getCredentialPhase()).build())
-                .checkHolidayPhase(CheckHolidayPhaseBuilder.copy(worker.getCheckHolidayPhase()).build())
-                .saveHolidayPhase(SaveHolidayPhaseBuilder.copy(worker.getSaveHolidayPhase()).build());
+        return Optional.ofNullable(worker)
+                .map(w -> new UpdateWorkersHolidayWorkerBuilder()
+                    .timestamp(w.getTimestamp())
+                    .executionId(w.getExecutionId())
+                    .name(w.getName())
+                    .batchSize(w.getBatchSize())
+                    .holidayCandidate(w.getHolidayCandidate())
+                    .workerInternalId(w.getWorkerInternalId())
+                    .company(w.getCompany())
+                    .workerExternalId(w.getWorkerExternalId())
+                    .credentialPhase(CredentialPhaseBuilder.copyAndBuild(w.getCredentialPhase()))
+                    .checkHolidayPhase(CheckHolidayPhaseBuilder.copyAndBuild(w.getCheckHolidayPhase()))
+                    .saveHolidayPhase(SaveHolidayPhaseBuilder.copyAndBuild(w.getSaveHolidayPhase())))
+                .orElse(null);
     }
 
     public UpdateWorkersHolidayWorkerBuilder executionId(final UUID executionId) {

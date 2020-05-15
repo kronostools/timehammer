@@ -2,14 +2,24 @@ package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.util.Optional;
+
 @JsonPOJOBuilder(withPrefix = "")
 public class CredentialPhaseBuilder extends PhaseBuilder<CredentialPhaseBuilder> {
     private String externalPassword;
 
-    public static CredentialPhaseBuilder copy(final CredentialPhase credentialResult) {
-        return new CredentialPhaseBuilder()
-                .errorMessage(credentialResult.getErrorMessage())
-                .externalPassword(credentialResult.getExternalPassword());
+    public static CredentialPhase copyAndBuild(final CredentialPhase credentialPhase) {
+        return Optional.ofNullable(credentialPhase)
+                .map(cp -> CredentialPhaseBuilder.copy(cp).build())
+                .orElse(null);
+    }
+
+    public static CredentialPhaseBuilder copy(final CredentialPhase credentialPhase) {
+        return Optional.ofNullable(credentialPhase)
+                .map(cp -> new CredentialPhaseBuilder()
+                        .errorMessage(cp.getErrorMessage())
+                        .externalPassword(cp.getExternalPassword()))
+                .orElse(null);
     }
 
     public CredentialPhaseBuilder externalPassword(final String externalPassword) {

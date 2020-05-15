@@ -4,6 +4,11 @@ public abstract class DbResult {
     protected boolean successful;
     protected String errorMessage;
 
+    DbResult(final String errorMessage) {
+        this.successful = errorMessage == null;
+        this.errorMessage = errorMessage;
+    }
+
     public boolean isSuccessful() {
         return successful;
     }
