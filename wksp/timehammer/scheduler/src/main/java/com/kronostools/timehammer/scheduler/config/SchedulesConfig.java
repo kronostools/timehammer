@@ -8,7 +8,7 @@ import java.util.Objects;
 @ConfigProperties(prefix = "timehammer.schedules", namingStrategy= NamingStrategy.KEBAB_CASE)
 public class SchedulesConfig {
     private ScheduledProcessConfig updateWorkersStatus;
-    private ScheduledProcessConfig updateWorkersHolidays;
+    private ScheduledProcessConfig updateWorkersHoliday;
     private ScheduledProcessConfig cleanSsidTrackingEvents;
     private ScheduledProcessConfig cleanPastWorkersHolidays;
     private ScheduledProcessConfig cleanTrashMessages;
@@ -64,12 +64,12 @@ public class SchedulesConfig {
         this.updateWorkersStatus = updateWorkersStatus;
     }
 
-    public ScheduledProcessConfig getUpdateWorkersHolidays() {
-        return updateWorkersHolidays;
+    public ScheduledProcessConfig getUpdateWorkersHoliday() {
+        return updateWorkersHoliday;
     }
 
-    public void setUpdateWorkersHolidays(ScheduledProcessConfig updateWorkersHolidays) {
-        this.updateWorkersHolidays = updateWorkersHolidays;
+    public void setUpdateWorkersHoliday(ScheduledProcessConfig updateWorkersHoliday) {
+        this.updateWorkersHoliday = updateWorkersHoliday;
     }
 
     public ScheduledProcessConfig getCleanSsidTrackingEvents() {

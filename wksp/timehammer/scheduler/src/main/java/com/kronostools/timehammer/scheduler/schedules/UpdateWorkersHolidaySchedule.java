@@ -25,7 +25,7 @@ public class UpdateWorkersHolidaySchedule extends Schedule<ScheduleTriggerMessag
         this.scheduleChannel = scheduleChannel;
     }
 
-    @Scheduled(cron = "{timehammer.schedules.update-workers-holidays.cron}")
+    @Scheduled(cron = "{timehammer.schedules.update-workers-holiday.cron}")
     void updateWorkersHolidays() {
         run();
     }
@@ -45,6 +45,6 @@ public class UpdateWorkersHolidaySchedule extends Schedule<ScheduleTriggerMessag
 
     @Override
     protected ScheduledProcessConfig getConfig() {
-        return schedulesConfig.getUpdateWorkersHolidays();
+        return schedulesConfig.getUpdateWorkersHoliday();
     }
 }

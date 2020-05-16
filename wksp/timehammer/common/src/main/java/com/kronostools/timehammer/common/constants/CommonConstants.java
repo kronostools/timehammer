@@ -6,6 +6,7 @@ public class CommonConstants {
     public static class Channels {
         public static final String TIMEMACHINE_IN = "timemachine-in";
         public static final String TIMEMACHINE_OUT = "timemachine-out";
+        public static final String TIMEMACHINE_STREAM = "timemachine-stream";
         public static final String SCHEDULE_UPDATE_HOLIDAYS = "schedule-update-holidays";
         public static final String HOLIDAYS_WORKER_AUTH = "holidays-worker-auth";
         public static final String HOLIDAYS_WORKER_GET = "holidays-worker-get";

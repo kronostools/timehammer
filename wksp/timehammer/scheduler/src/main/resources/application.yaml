@@ -31,10 +31,10 @@ timehammer:
       enabled: true
       ## Remove workers' past holidays -> At 03:00:00am UTC, on the 1st day, in January
       cron: 0 0 3 1 JAN ? *
-    update-workers-holidays:
-      name: updateWorkersHolidays
+    update-workers-holiday:
+      name: updateWorkersHoliday
       enabled: true
-      ## Update workers' holidays -> At 03:10:00am UTC, every day between Monday and Friday, every month
+      ## Update workers' holiday -> At 03:10:00am UTC, every day between Monday and Friday, every month
       cron: 0 10 3 ? * MON-FRI *
     clean-ssid-tracking-events:
       name: cleanSsidTrackingEvents

@@ -37,7 +37,7 @@ public class SchedulesSummaryResource {
     }
 
     @Incoming(Channels.SCHEDULE_SUMMARY)
-    public void processSummary(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
+    public void processStreamEvent(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
         final ScheduleSummaryDto scheduleSummaryDto = new ScheduleSummaryDtoBuilder()
                 .name(batchScheduleSummaryMessage.getName())
                 .startTimestamp(CommonDateTimeUtils.formatDateTimeToJson(batchScheduleSummaryMessage.getTimestamp()))
@@ -47,7 +47,11 @@ public class SchedulesSummaryResource {
                 .itemsProcessedKo(batchScheduleSummaryMessage.getProcessedKo())
                 .build();
 
-        cache.asMap().values().forEach(sb -> sb.getEmitter().emit(scheduleSummaryDto));
+        cache.asMap().values().forEach(sb -> {
+            LOG.debug("Emitting schedule summary event to subscriber '{}'", sb.getSubscriberId());
+
+            sb.getEmitter().emit(scheduleSummaryDto);
+        });
     }
 
     @GET
@@ -62,11 +66,11 @@ public class SchedulesSummaryResource {
                     streamSubscriber.setEmitter(e);
 
                     e.onTermination(() -> {
-                       LOG.info("Removing schedule summary subscriber '{}'", subscriberId);
+                        LOG.info("Removing schedule summary subscriber '{}'", subscriberId);
 
-                       e.complete();
+                        e.complete();
 
-                       cache.invalidate(subscriberId);
+                        cache.invalidate(subscriberId);
                     });
                 }, BackPressureStrategy.BUFFER);
     }

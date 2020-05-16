@@ -16,18 +16,10 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <h1 class="mb-3">Demo</h1>
-                    <p class="lead">Hora actual: <span id="currentTimestamp"></span></p>
+                    <p class="lead">Hora actual: <span id="visibleTimestamp"></span></p>
 
                     <form id="timestampForm" class="needs-validation" novalidate="novalidate" action="/demo/timemachine/now" method="POST">
                         <input type="hidden" id="timestamp" name="timestamp" value="" />
-
-                        <div class="form-group form-row">
-                            <div class="col-md-4 offset-md-4">
-                                <select class="form-control custom-select custom-select-sm d-block w-100" id="timezone" name="timezone" data-toggle="tooltip" title="Zona Horaria">
-                                </select>
-                                <div id="timezoneInvalidFeedback" class="invalid-feedback"></div>
-                            </div>
-                        </div>
 
                         <hr class="d-md-none" />
 
@@ -141,7 +133,7 @@
                         </div>
                         <div class="form-row mt-2 align-items-center">
                             <span class="lead text-left col-md-7">Actualizar vacaciones trabajadores</span>
-                            <button id="updateWorkersHolidays" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <button id="updateWorkersHoliday" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
                         <div class="form-row mt-2 align-items-center">
@@ -154,7 +146,7 @@
 
                         <div class="form-row mt-2 align-items-center">
                             <span class="lead text-left col-md-7">Update workers holidays test</span>
-                            <button id="updateWorkersHolidaysTest" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <button id="updateWorkersHolidaysTest" type="button" class="btn btn-sm btn-success col-md-1 schedule-button" data-schedule="updateWorkersHoliday"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
                     </form>

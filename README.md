@@ -1,9 +1,14 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Preparar pieza web con página demo para lanzar a mano los batches y visualizar el resumen de la ejecución
-        - Implementar el cambio de hora
-    - Continuar con flujo de updateholidays: scheduler, web
+    - Web - página demo
+        - revisar el resumen de los schedule, prepararlo para que funcione con los que no son batch
+            - los que no son batch solo tendrán inicio y fin
+            - los que son batch, tendrán también el número de elementos
+            - mostrar el resumen en función de si es batch o no (solo con duración o con duración y número de items)
+        - implementar el cambio de hora
+            - implementar lógica de los botones ^ y v, el boton reset y deshabilitar el botón submit mientras se envía
+    - Implementar schedule para limpieza de vacaciones pasadas
 - Modularización de la integración con empresas
     - La lógica de integración con empresas estará en timehammer-integration
     - La integración se hará con mensajes Kafka

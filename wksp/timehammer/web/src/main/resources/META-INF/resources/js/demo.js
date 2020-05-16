@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm:ss.SSS'
-    const TIMESTAMP_HTML_FORMAT = 'DD/MM/YYYY HH:mm:ss.SSS'
+    const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm'
+    const TIMESTAMP_HTML_FORMAT = 'DD/MM/YYYY HH:mm'
 
     const subscriberId = uuid.v4()
 
@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const timeMachineEventSource = new EventSource(`/timemachine/stream/${subscriberId}`);
 
     timeMachineEventSource.addEventListener('open', (event) => {
-        console.info('Connected to timemachine stream!')
+        console.info(`Connected to timemachine stream! (subscriber id: ${subscriberId})`)
     })
 
     timeMachineEventSource.addEventListener('error', (event) => {
@@ -19,11 +19,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     timeMachineEventSource.addEventListener('message', (event) => {
         const timemachineEvent = JSON.parse(event.data)
-        const currentTimestamp = moment(timemachineEvent.timestamp, TIMESTAMP_JSON_FORMAT)
 
         console.debug(`Received timemachine event: ${event.data}`)
 
-        document.getElementById('currentTimestamp').textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
+        updateTimestamp(timemachineEvent.timestamp)
     })
     // END TIME MACHINE STREAM
 
@@ -31,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const schedulesSummaryEventSource = new EventSource(`/schedulesSummary/stream/${subscriberId}`);
 
     schedulesSummaryEventSource.addEventListener('open', (event) => {
-        console.info('Connected to schedules summary stream!')
+        console.info(`Connected to schedules summary stream! (subscriber id: ${subscriberId})`)
     })
 
     schedulesSummaryEventSource.addEventListener('error', (event) => {
@@ -41,7 +40,26 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
 
     schedulesSummaryEventSource.addEventListener('message', (event) => {
-        console.debug(`Received schedule summary: ${event.data}`)
+        const scheduleSummaryEvent = JSON.parse(event.data)
+        const scheduleStartTimestamp = moment(scheduleSummaryEvent.startTimestamp, TIMESTAMP_JSON_FORMAT)
+        const scheduleEndTimestamp = moment(scheduleSummaryEvent.endTimestamp, TIMESTAMP_JSON_FORMAT)
+        const scheduleDuration = moment.duration(scheduleEndTimestamp.diff(scheduleStartTimestamp)).humanize()
+
+        console.debug(`Received schedule summary event: ${event.data}`)
+
+        const targetButton = document.getElementById(scheduleSummaryEvent.name)
+
+        Array.from(targetButton.parentNode.getElementsByClassName('schedule-duration'))
+            .map(e => e.textContent = scheduleDuration)
+
+        Array.from(targetButton.getElementsByTagName('i'))
+            .map(e => {
+                e.classList.remove('fa-sync')
+                e.classList.remove('fa-spin')
+                e.classList.add('fa-play')
+            })
+
+        targetButton.removeAttribute('disabled', 'disabled')
     })
     // END SCHEDULES SUMMARY STREAM
 
@@ -63,11 +81,60 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const flatMap = rxjs.operators.flatMap
     const fromEvent = rxjs.fromEvent
 
+    // BEGIN TIMEMACHINE
+    const timestamp = document.getElementById('timestamp')
+    const visibleTimestamp = document.getElementById('visibleTimestamp')
+    const dayField = document.getElementById('day')
+    const monthField = document.getElementById('month')
+    const yearField = document.getElementById('year')
+    const hoursField = document.getElementById('hours')
+    const minutesField = document.getElementById('minutes')
+
+    const updateTimestamp = (rawTimestamp) => {
+        timestamp.value = rawTimestamp
+
+        const currentTimestamp = moment(rawTimestamp, TIMESTAMP_JSON_FORMAT)
+
+        dayField.value = currentTimestamp.date()
+        monthField.value = currentTimestamp.month() + 1
+        yearField.value = currentTimestamp.year()
+        hoursField.value = currentTimestamp.hours()
+        minutesField.value = currentTimestamp.minutes()
+
+        visibleTimestamp.textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
+    }
+
+    // Initialize options of timezone select
+    rxjs.ajax.ajax('/demo/currentTimestamp')
+        .subscribe(
+            // ok
+            (r) => updateTimestamp(r.response.timestamp),
+            //ko
+            (e) => console.error(`Unexpected error while getting current timestamp. Error: ${e.message}`)
+        )
+
     const timestampSubmitButton = document.getElementById('timestampSubmit')
     const timestampSubmitButtonClick$ = fromEvent(timestampSubmitButton, 'click')
 
+    const lpad = (value, length) => {
+            return ("0000" + value).slice(-length)
+        }
+
+    const getSelectedTimestamp = () => {
+        return `${lpad(yearField.value, 4)}${lpad(monthField.value, 2)}${lpad(dayField.value, 2)}T${lpad(hoursField.value, 2)}:${lpad(minutesField.value, 2)}:${lpad(0, 2)}.${lpad(0, 3)}`
+    }
+
     const sendTimestampEvent = () => {
-        return rxjs.ajax.ajax('/demo/timeTravel')
+        return rxjs.ajax.ajax({
+            url: '/demo/timeTravel',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: {
+                timestamp: getSelectedTimestamp()
+            }
+        })
     }
 
     timestampSubmitButtonClick$
@@ -78,15 +145,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 console.log('Timestamp event sent successfully!')
             },
             // error
-            (e) => {
-                console.error('Error while sending timestamp event')
-            }
+            (e) => console.error(`Unexpeced error while sending timestamp event. Error: ${e.message}`)
         )
+    // END TIMEMACHINE
 
+    // BEGIN SCHEDULES
     const updateWorkersHolidaysButton = document.getElementById('updateWorkersHolidaysTest')
     const updateWorkersHolidaysButtonClick$ = fromEvent(updateWorkersHolidaysButton, 'click')
 
-    const sendUpdateWorkersHolidays = () => {
+    const sendUpdateWorkersHolidays = (e) => {
+        const clickedButton = e.currentTarget
+        const scheduleName = clickedButton.getAttribute('data-schedule')
+
+        const targetButton = document.getElementById(scheduleName)
+        targetButton.setAttribute('disabled', 'disabled')
+        Array.from(targetButton.getElementsByTagName('i'))
+            .map(e => {
+                e.classList.remove('fa-play')
+                e.classList.add('fa-sync')
+                e.classList.add('fa-spin')
+            })
+
+        console.debug(`Triggering schedule '${scheduleName}'`)
+
+        // TODO: infer url based on scheduleName
         return rxjs.ajax.ajax('/test/sendToComunytekWorkerHoliday')
     }
 
@@ -94,14 +176,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
         .pipe(flatMap(sendUpdateWorkersHolidays))
         .subscribe(
             // success
-            () => {
-                console.log('Update workers holidays event sent successfully!')
+            (r) => {
+                if (r.response.result) {
+                    console.info(`Schedule '${r.response.name}' was triggered successfully!`)
+                } else {
+                    console.error(`Error while triggering schedule '${r.response.name}'`)
+                }
             },
             // error
-            (e) => {
-                console.error('Error while sending update workers holidays event')
-            }
+            (e) => console.error(`Unexpected error while triggering schedule. Error: ${e.message}`)
         )
+    // END SCHEDULES
 })
 
 /*

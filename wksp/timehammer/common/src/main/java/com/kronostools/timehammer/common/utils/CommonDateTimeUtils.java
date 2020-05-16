@@ -36,8 +36,8 @@ public final class CommonDateTimeUtils {
         return parseDate(date, FORMAT_DDMMYYYY_DSEP_FWS);
     }
 
-    public static LocalDateTime parseDateTime(final String dateTime, final String dateTimeFormat) {
-        return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
+    public static LocalDateTime parseDateTimeFromJson(final String dateTime) {
+        return parseDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
     }
 
     public static LocalTime parseTimeFromConfig(final String time) {
@@ -52,10 +52,18 @@ public final class CommonDateTimeUtils {
                 .orElse(null);
     }
 
+    public static LocalDateTime getDateTimeWithZone(final LocalDateTime dateTime, final SupportedTimezone zone) {
+        return Optional.ofNullable(dateTime)
+                .map(dt -> dt.atOffset(zone.getOffset(dt))
+                        .withOffsetSameInstant(ZoneOffset.UTC)
+                        .toLocalDateTime())
+                .orElse(null);
+    }
+
     public static LocalDateTime getDateTimeAtZone(final LocalDateTime dateTime, final SupportedTimezone zone) {
         return Optional.ofNullable(dateTime)
-                .map(dt -> dateTime.atOffset(ZoneOffset.UTC)
-                            .withOffsetSameInstant(zone.getOffset(dateTime))
+                .map(dt -> dt.atOffset(ZoneOffset.UTC)
+                            .withOffsetSameInstant(zone.getOffset(dt))
                             .toLocalDateTime())
                 .orElse(null);
     }
@@ -138,5 +146,9 @@ public final class CommonDateTimeUtils {
 
     private static LocalDate parseDate(final String date, String dateFormat) {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(dateFormat));
+    }
+
+    private static LocalDateTime parseDateTime(final String dateTime, final String dateTimeFormat) {
+        return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
     }
 }

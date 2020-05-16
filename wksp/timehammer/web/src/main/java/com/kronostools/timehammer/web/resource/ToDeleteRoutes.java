@@ -32,10 +32,12 @@ public class ToDeleteRoutes {
     // TODO: delete this test method
     @Route(path = "/sendToComunytekWorkerHoliday", methods = HttpMethod.GET)
     void timestamp(RoutingContext rc) {
+        final String scheduleName = "updateWorkersHoliday";
+
         final UpdateWorkersHolidayWorker worker = new UpdateWorkersHolidayWorkerBuilder()
                 .timestamp(timeMachineService.getNow())
                 .executionId(UUID.randomUUID())
-                .name("updateWorkersHolidays")
+                .name(scheduleName)
                 .batchSize(1)
                 .holidayCandidate(timeMachineService.getNow().toLocalDate())
                 .workerInternalId("1111-1111-1111-1111")
@@ -57,7 +59,12 @@ public class ToDeleteRoutes {
             request.resume();
 
             final JsonObject result = new JsonObject();
-            result.put("result", e != null);
+            result.put("name", scheduleName);
+            result.put("result", e == null);
+
+            if (e != null) {
+                result.put("errorMessage", e.getMessage());
+            }
 
             rc.response().end(result.toBuffer());
 

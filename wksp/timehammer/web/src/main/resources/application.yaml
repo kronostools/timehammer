@@ -6,6 +6,11 @@ mp:
         topic: schedule-summary
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.BatchScheduleSummaryMessageJacksonDeserializer
+      timemachine-stream:
+        connector: smallrye-kafka
+        topic: timemachine
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventJacksonDeserializer
     outgoing:
       timemachine-out:
         connector: smallrye-kafka

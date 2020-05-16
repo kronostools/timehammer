@@ -5,6 +5,7 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessage;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessageBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import io.quarkus.vertx.web.Route;
 import io.quarkus.vertx.web.RouteBase;
 import io.vertx.core.http.HttpMethod;
@@ -13,8 +14,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
-
-import java.time.LocalDateTime;
 
 @RouteBase(path = "/demo")
 public class DemoRoutes {
@@ -27,11 +26,21 @@ public class DemoRoutes {
         this.timeMachineChannel = timeMachineChannel;
     }
 
-    @Route(path = "/timeTravel", methods = HttpMethod.GET)
-    void timestamp(RoutingContext rc) {
+    @Route(path = "/currentTimestamp", methods = HttpMethod.GET)
+    void currentTimestamp(RoutingContext rc) {
+        final JsonObject result = new JsonObject();
+        result.put("timestamp", CommonDateTimeUtils.formatDateTimeToJson(CommonDateTimeUtils.getDateTimeAtZone(timeMachineService.getNow(), SupportedTimezone.EUROPE_MADRID)));
+
+        rc.response().end(result.toBuffer());
+    }
+
+    @Route(path = "/timeTravel", methods = HttpMethod.POST)
+    void timeTravel(RoutingContext rc) {
+        final String newTimestampRaw = rc.getBodyAsJson().getString("timestamp");
+
         final TimeMachineEventMessage timeMachineEvent = new TimeMachineEventMessageBuilder()
                 .timestamp(timeMachineService.getNow())
-                .newTimestamp(LocalDateTime.now().withHour(17).withMinute(0).withSecond(0).withNano(0))
+                .newTimestamp(CommonDateTimeUtils.parseDateTimeFromJson(newTimestampRaw))
                 .timezone(SupportedTimezone.EUROPE_MADRID)
                 .build();
 
@@ -43,15 +52,13 @@ public class DemoRoutes {
             request.resume();
 
             final JsonObject result = new JsonObject();
-            result.put("result", e != null);
+            result.put("result", e == null);
 
             rc.response().end(result.toBuffer());
 
             return null;
         });
     }
-
-    // TODO: endpoint para recuperar las zonas horarias soportadas
 
     // TODO: endpoint para recuperar la lista de trabajadores
 }
