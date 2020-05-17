@@ -16,7 +16,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-10">
                     <h1 class="mb-3">Demo</h1>
-                    <p class="lead">Hora actual: <span id="visibleTimestamp"></span></p>
+                    <p class="lead">Hora establecida: <span id="visibleTimestamp"></span></p>
 
                     <form id="timestampForm" class="needs-validation" novalidate="novalidate" action="/demo/timemachine/now" method="POST">
                         <input type="hidden" id="timestamp" name="timestamp" value="" />
@@ -67,7 +67,7 @@
 
                         <div class="form-group form-row">
                             <div class="my-1 col-md-2 offset-md-4">
-                                <button id="reset" type="button" class="btn btn-sm btn-block btn-danger">Resetear</button>
+                                <button id="timestampReset" type="button" class="btn btn-sm btn-block btn-danger">Resetear</button>
                             </div>
                             <div class="my-1 col-md-2">
                                 <button id="timestampSubmit" type="button" class="btn btn-sm btn-block btn-primary">Actualizar</button>

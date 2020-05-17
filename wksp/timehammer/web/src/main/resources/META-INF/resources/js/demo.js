@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm'
+    const TIMESTAMP_JSON_FORMAT = 'YYYYMMDDTHH:mm:ss.SSS'
+    const TIMEMACHINE_TIMESTAMP_FORMAT = 'YYYYMMDDTHH:mm'
     const TIMESTAMP_HTML_FORMAT = 'DD/MM/YYYY HH:mm'
 
     const subscriberId = uuid.v4()
@@ -79,6 +80,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // END COMMON EVENT SOURCES
 
     const flatMap = rxjs.operators.flatMap
+    const map = rxjs.operators.map
+    const bufferTime = rxjs.operators.bufferTime
     const fromEvent = rxjs.fromEvent
 
     // BEGIN TIMEMACHINE
@@ -91,17 +94,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const minutesField = document.getElementById('minutes')
 
     const updateTimestamp = (rawTimestamp) => {
-        timestamp.value = rawTimestamp
-
         const currentTimestamp = moment(rawTimestamp, TIMESTAMP_JSON_FORMAT)
+        timestamp.value = currentTimestamp.format(TIMEMACHINE_TIMESTAMP_FORMAT)
+        visibleTimestamp.textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
 
+        updateTimestampForm(currentTimestamp)
+    }
+
+    const updateTimestampForm = (currentTimestamp) => {
         dayField.value = currentTimestamp.date()
         monthField.value = currentTimestamp.month() + 1
         yearField.value = currentTimestamp.year()
         hoursField.value = currentTimestamp.hours()
         minutesField.value = currentTimestamp.minutes()
 
-        visibleTimestamp.textContent = currentTimestamp.format(TIMESTAMP_HTML_FORMAT)
+        if (currentTimestamp.format(TIMEMACHINE_TIMESTAMP_FORMAT) === timestamp.value) {
+            timestampSubmitButton.setAttribute('disabled', 'disabled')
+            timestampResetButton.setAttribute('disabled', 'disabled')
+        } else {
+            timestampSubmitButton.removeAttribute('disabled', 'disabled')
+            timestampResetButton.removeAttribute('disabled', 'disabled')
+        }
     }
 
     // Initialize options of timezone select
@@ -114,11 +127,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
         )
 
     const timestampSubmitButton = document.getElementById('timestampSubmit')
+    const timestampResetButton = document.getElementById('timestampReset')
     const timestampSubmitButtonClick$ = fromEvent(timestampSubmitButton, 'click')
 
     const lpad = (value, length) => {
-            return ("0000" + value).slice(-length)
-        }
+        return ("0000" + value).slice(-length)
+    }
 
     const getSelectedTimestamp = () => {
         return `${lpad(yearField.value, 4)}${lpad(monthField.value, 2)}${lpad(dayField.value, 2)}T${lpad(hoursField.value, 2)}:${lpad(minutesField.value, 2)}:${lpad(0, 2)}.${lpad(0, 3)}`
@@ -146,6 +160,61 @@ document.addEventListener("DOMContentLoaded", function(event) {
             },
             // error
             (e) => console.error(`Unexpeced error while sending timestamp event. Error: ${e.message}`)
+        )
+
+    const timestampActionButtons = document.getElementsByClassName('timestamp-action')
+    const timestampActionButtonClick$ = fromEvent(timestampActionButtons, 'click')
+
+    timestampActionButtonClick$
+        .pipe(
+            map(e => {
+                const action = {
+                    quantity: e.currentTarget.getAttribute('data-action') === 'plus' ? +1 : -1,
+                    unit: e.currentTarget.getAttribute('data-unit')
+                }
+
+                console.log(`clicked action button: ${JSON.stringify(action)}`)
+
+                return action
+            }),
+            map(action => {
+                return moment(getSelectedTimestamp(), TIMESTAMP_JSON_FORMAT).add(action.quantity, action.unit)
+            }))
+        .subscribe(
+            // ok
+            (newTimestamp) => updateTimestampForm(newTimestamp),
+            // error
+            e => console.error(`Unexpected error while processing action button. Error: ${e.message}`)
+        )
+
+    const timestampElements = document.getElementsByClassName('timestamp-element')
+    const timestampElementChange$ = fromEvent(timestampElements, 'change')
+
+    timestampElementChange$
+        .pipe(
+            bufferTime(400),
+            map(action => {
+                return moment(getSelectedTimestamp(), TIMESTAMP_JSON_FORMAT).add(action.quantity, action.unit)
+            }))
+        .subscribe(
+            // ok
+            (newTimestamp) => updateTimestampForm(newTimestamp),
+            // error
+            e => console.error(`Unexpected error while processing action button. Error: ${e.message}`)
+        )
+
+    const timestampResetButtonClick$ = fromEvent(timestampResetButton, 'click')
+
+    timestampResetButtonClick$
+        .pipe(
+            map(() => {
+                return moment(timestamp.value, TIMESTAMP_JSON_FORMAT)
+            }))
+        .subscribe(
+            // ok
+            (newTimestamp) => updateTimestampForm(newTimestamp),
+            // error
+            e => console.error(`Unexpected error while processing click of reset button. Error: ${e.message}`)
         )
     // END TIMEMACHINE
 

@@ -6,15 +6,10 @@
             - los que no son batch solo tendrán inicio y fin
             - los que son batch, tendrán también el número de elementos
             - mostrar el resumen en función de si es batch o no (solo con duración o con duración y número de items)
-        - implementar el cambio de hora
-            - implementar lógica de los botones ^ y v, el boton reset y deshabilitar el botón submit mientras se envía
     - Implementar schedule para limpieza de vacaciones pasadas
-- Modularización de la integración con empresas
-    - La lógica de integración con empresas estará en timehammer-integration
-    - La integración se hará con mensajes Kafka
-        - Hacer primera POC para enviar un mensaje de uno a otro y viceversa
-        - actualizar el docker-compose para añadir servicio de kafka
-- Cambiar en el core Hibernate por PostgresQL Reactivo
+    - Configurar el liveness y readyness (ver cómo funciona con kafka)
+        - Revisar el workshop de quarkus que creo que hay un ejemplo
+    - Monitorización de componentes con Graphana y Prometheus
 - Llevar servicio /auth/mock/chatbotRegistration a /demo
 - Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
     - Si el usuario no existe se establece la contraseña
