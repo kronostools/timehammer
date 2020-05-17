@@ -4,6 +4,8 @@ public class ScheduleSummaryDtoBuilder {
     private String name;
     private String startTimestamp;
     private String endTimestamp;
+    private boolean processedSuccessfully;
+    private boolean batched;
     private int totalItemsProcessed;
     private int itemsProcessedOk;
     private int itemsProcessedKo;
@@ -20,6 +22,16 @@ public class ScheduleSummaryDtoBuilder {
 
     public ScheduleSummaryDtoBuilder endTimestamp(final String endTimestamp) {
         this.endTimestamp = endTimestamp;
+        return this;
+    }
+
+    public ScheduleSummaryDtoBuilder processedSuccessfully(final boolean processedSuccessfully) {
+        this.processedSuccessfully = processedSuccessfully;
+        return this;
+    }
+
+    public ScheduleSummaryDtoBuilder batched(final boolean batched) {
+        this.batched = batched;
         return this;
     }
 
@@ -43,6 +55,8 @@ public class ScheduleSummaryDtoBuilder {
         result.setName(name);
         result.setStartTimestamp(startTimestamp);
         result.setEndTimestamp(endTimestamp);
+        result.setProcessedSuccessfully(processedSuccessfully);
+        result.setBatched(batched);
         result.setTotalItemsProcessed(totalItemsProcessed);
         result.setItemsProcessedOk(itemsProcessedOk);
         result.setItemsProcessedKo(itemsProcessedKo);

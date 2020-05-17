@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.BatchScheduleSummaryMessage;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleSummaryMessage;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.web.dto.Dto;
 import com.kronostools.timehammer.web.dto.ScheduleSummaryDto;
@@ -36,17 +37,36 @@ public class SchedulesSummaryResource {
                 .build();
     }
 
-    @Incoming(Channels.SCHEDULE_SUMMARY)
-    public void processStreamEvent(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
+    @Incoming(Channels.BATCH_SCHEDULE_SUMMARY)
+    public void processBatchScheduleEvent(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
         final ScheduleSummaryDto scheduleSummaryDto = new ScheduleSummaryDtoBuilder()
                 .name(batchScheduleSummaryMessage.getName())
-                .startTimestamp(CommonDateTimeUtils.formatDateTimeToJson(batchScheduleSummaryMessage.getTimestamp()))
+                .startTimestamp(CommonDateTimeUtils.formatDateTimeToJson(batchScheduleSummaryMessage.getGenerated()))
                 .endTimestamp(CommonDateTimeUtils.formatDateTimeToJson(batchScheduleSummaryMessage.getEndTimestamp()))
+                .processedSuccessfully(batchScheduleSummaryMessage.isProcessedSuccessfully())
+                .batched(true)
                 .totalItemsProcessed(batchScheduleSummaryMessage.getBatchSize())
                 .itemsProcessedOk(batchScheduleSummaryMessage.getProcessedOk())
                 .itemsProcessedKo(batchScheduleSummaryMessage.getProcessedKo())
                 .build();
 
+        publishScheduleEvent(scheduleSummaryDto);
+    }
+
+    @Incoming(Channels.SCHEDULE_SUMMARY)
+    public void processScheduleEvent(final ScheduleSummaryMessage scheduleSummaryMessage) {
+        final ScheduleSummaryDto scheduleSummaryDto = new ScheduleSummaryDtoBuilder()
+                .name(scheduleSummaryMessage.getName())
+                .startTimestamp(CommonDateTimeUtils.formatDateTimeToJson(scheduleSummaryMessage.getGenerated()))
+                .endTimestamp(CommonDateTimeUtils.formatDateTimeToJson(scheduleSummaryMessage.getEndTimestamp()))
+                .processedSuccessfully(scheduleSummaryMessage.isProcessedSuccessfully())
+                .batched(false)
+                .build();
+
+        publishScheduleEvent(scheduleSummaryDto);
+    }
+
+    private void publishScheduleEvent(final ScheduleSummaryDto scheduleSummaryDto) {
         cache.asMap().values().forEach(sb -> {
             LOG.debug("Emitting schedule summary event to subscriber '{}'", sb.getSubscriberId());
 

@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.scheduler.schedules;
 
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessageBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig;
 import com.kronostools.timehammer.scheduler.config.SchedulesConfig.ScheduledProcessConfig;
@@ -9,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 
-public abstract class Schedule<T> {
+public abstract class Schedule {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     protected SchedulesConfig schedulesConfig;
@@ -45,9 +47,14 @@ public abstract class Schedule<T> {
         }
     }
 
-    protected abstract Emitter<T> getChannel();
+    private ScheduleTriggerMessage getTriggerMessage(final LocalDateTime timestamp) {
+        return new ScheduleTriggerMessageBuilder()
+                .generated(timestamp)
+                .name(getConfig().getName())
+                .build();
+    }
 
-    protected abstract T getTriggerMessage(final LocalDateTime timestamp);
+    protected abstract Emitter<ScheduleTriggerMessage> getChannel();
 
     protected abstract ScheduledProcessConfig getConfig();
 }

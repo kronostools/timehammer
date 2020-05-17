@@ -21,7 +21,7 @@ public class TimeMachineEventMessageBuilder extends PlatformMessageBuilder<TimeM
     public static TimeMachineEventMessageBuilder copy(final TimeMachineEventMessage timeMachineEventMessage) {
         return Optional.ofNullable(timeMachineEventMessage)
                 .map(tmem -> new TimeMachineEventMessageBuilder()
-                        .timestamp(tmem.getTimestamp())
+                        .generated(tmem.getGenerated())
                         .newTimestamp(tmem.getNewTimestamp())
                         .timezone(tmem.getTimezone()))
                 .orElse(null);
@@ -38,7 +38,7 @@ public class TimeMachineEventMessageBuilder extends PlatformMessageBuilder<TimeM
     }
 
     public TimeMachineEventMessage build() {
-        final TimeMachineEventMessage result = new TimeMachineEventMessage(timestamp);
+        final TimeMachineEventMessage result = new TimeMachineEventMessage(generated);
         result.setNewTimestamp(newTimestamp);
         result.setTimezone(timezone);
 

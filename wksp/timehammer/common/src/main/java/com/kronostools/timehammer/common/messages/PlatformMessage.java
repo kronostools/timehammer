@@ -3,13 +3,13 @@ package com.kronostools.timehammer.common.messages;
 import java.time.LocalDateTime;
 
 public abstract class PlatformMessage {
-    protected final LocalDateTime timestamp;
+    protected final LocalDateTime generated;
 
-    protected PlatformMessage(final LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    protected PlatformMessage(final LocalDateTime generated) {
+        this.generated = generated;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public LocalDateTime getGenerated() {
+        return generated;
     }
 }

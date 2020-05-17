@@ -18,15 +18,15 @@
                     <h1 class="mb-3">Demo</h1>
                     <p class="lead">Hora establecida: <span id="visibleTimestamp"></span></p>
 
-                    <form id="timestampForm" class="needs-validation" novalidate="novalidate" action="/demo/timemachine/now" method="POST">
-                        <input type="hidden" id="timestamp" name="timestamp" value="" />
+                    <form id="timestampForm" class="needs-validation" novalidate="novalidate" method="POST">
+                        <input type="hidden" id="timestamp" value="" />
 
                         <hr class="d-md-none" />
 
                         <div class="form-group form-row">
                             <div class="col-md-2">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="d"><i class="fas fa-caret-up"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="day" name="day" value="" data-toggle="tooltip" title="Día">
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="day" value="" data-toggle="tooltip" title="Día">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="d"><i class="fas fa-caret-down"></i></button>
                             </div>
 
@@ -34,7 +34,7 @@
 
                             <div class="col-md-2">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="M"><i class="fas fa-caret-up"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="month" name="month" value="" data-toggle="tooltip" title="Mes">
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="month" value="" data-toggle="tooltip" title="Mes">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="M"><i class="fas fa-caret-down"></i></button>
                             </div>
 
@@ -42,7 +42,7 @@
 
                             <div class="col-md-4">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="y"><i class="fas fa-caret-up"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="year" name="year" value="" data-toggle="tooltip" title="Año">
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="year" value="" data-toggle="tooltip" title="Año">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="y"><i class="fas fa-caret-down"></i></button>
                             </div>
 
@@ -50,7 +50,7 @@
 
                             <div class="col-md-2">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="h"><i class="fas fa-caret-up"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="hours" name="hours" value="" data-toggle="tooltip" title="Horas">
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="hours" value="" data-toggle="tooltip" title="Horas">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="h"><i class="fas fa-caret-down"></i></button>
                             </div>
 
@@ -58,7 +58,7 @@
 
                             <div class="col-md-2">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="plus" data-unit="m"><i class="fas fa-caret-up"></i></button>
-                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="minutes" name="minutes" value="" data-toggle="tooltip" title="Minutos">
+                                <input type="text" class="form-control form-control-sm text-center timestamp-element" id="minutes" value="" data-toggle="tooltip" title="Minutos">
                                 <button type="button" class="my-1 btn btn-sm btn-block btn-outline-dark timestamp-action" data-action="minus" data-unit="m"><i class="fas fa-caret-down"></i></button>
                             </div>
                         </div>
@@ -128,17 +128,17 @@
                     <form id="schedulesForm" novalidate="novalidate" action="/demo/schedules" method="POST">
                         <div class="form-row align-items-center">
                             <span class="lead text-left col-md-7">Actualizar estado trabajadores</span>
-                            <button id="updateWorkersStatus" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <button id="updateWorkersStatus" type="button" class="btn btn-sm btn-success col-md-1 schedule-button" data-schedule="updateWorkersStatus" disabled="disabled"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
                         <div class="form-row mt-2 align-items-center">
                             <span class="lead text-left col-md-7">Actualizar vacaciones trabajadores</span>
-                            <button id="updateWorkersHoliday" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <button id="updateWorkersHoliday" type="button" class="btn btn-sm btn-success col-md-1 schedule-button" data-schedule="updateWorkersHoliday"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
                         <div class="form-row mt-2 align-items-center">
                             <span class="lead text-left col-md-7">Limpiar vacaciones pasadas de trabajadores</span>
-                            <button id="cleanPastWorkersHolidays" type="button" class="btn btn-sm btn-success col-md-1 schedule-button"><i class="fas fa-play"></i></button>
+                            <button id="cleanPastWorkersHolidays" type="button" class="btn btn-sm btn-success col-md-1 schedule-button" data-schedule="cleanPastWorkersHolidays"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
 
@@ -146,7 +146,7 @@
 
                         <div class="form-row mt-2 align-items-center">
                             <span class="lead text-left col-md-7">Update workers holidays test</span>
-                            <button id="updateWorkersHolidaysTest" type="button" class="btn btn-sm btn-success col-md-1 schedule-button" data-schedule="updateWorkersHoliday"><i class="fas fa-play"></i></button>
+                            <button id="updateWorkersHolidaysTest" type="button" class="btn btn-sm btn-success col-md-1" data-schedule="updateWorkersHoliday"><i class="fas fa-play"></i></button>
                             <small class="text-left col-md-4 pl-2 schedule-duration"></small>
                         </div>
                     </form>

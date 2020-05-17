@@ -12,19 +12,19 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class UpdateWorkersHolidaySchedule extends Schedule {
+public class CleanPastWorkersHolidaysSchedule extends Schedule {
 
     private final Emitter<ScheduleTriggerMessage> scheduleChannel;
 
-    public UpdateWorkersHolidaySchedule(final SchedulesConfig schedulesConfig,
-                                        final TimeMachineService timeMachineService,
-                                        @Channel(Channels.SCHEDULE_UPDATE_HOLIDAYS) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
+    public CleanPastWorkersHolidaysSchedule(final SchedulesConfig schedulesConfig,
+                                            final TimeMachineService timeMachineService,
+                                            @Channel(Channels.SCHEDULE_CLEAN_HOLIDAYS) final Emitter<ScheduleTriggerMessage> scheduleChannel) {
         super(schedulesConfig, timeMachineService);
         this.scheduleChannel = scheduleChannel;
     }
 
-    @Scheduled(cron = "{timehammer.schedules.update-workers-holiday.cron}")
-    void updateWorkersHoliday() {
+    @Scheduled(cron = "{timehammer.schedules.clean-past-workers-holidays.cron}")
+    void cleanPastWorkersHolidays() {
         run();
     }
 

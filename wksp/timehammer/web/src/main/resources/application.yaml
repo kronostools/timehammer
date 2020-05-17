@@ -1,6 +1,11 @@
 mp:
   messaging:
     incoming:
+      batch-schedule-summary:
+        connector: smallrye-kafka
+        topic: batch-schedule-summary
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleSummaryMessageJacksonDeserializer
       schedule-summary:
         connector: smallrye-kafka
         topic: schedule-summary

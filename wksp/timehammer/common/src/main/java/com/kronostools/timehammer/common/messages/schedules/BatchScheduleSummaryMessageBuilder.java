@@ -6,10 +6,26 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class BatchScheduleSummaryMessageBuilder extends BatchScheduleMessageBuilder<BatchScheduleSummaryMessageBuilder> {
+public class BatchScheduleSummaryMessageBuilder extends AbstractScheduleSummaryMessageBuilder<BatchScheduleSummaryMessageBuilder> {
+    private int batchSize;
     private int processedOk;
     private int processedKo;
-    private LocalDateTime endTimestamp;
+
+    public static BatchScheduleSummaryMessage copyAndBuild(final ProcessableBatchScheduleMessage processableBatchScheduleMessage) {
+        return Optional.ofNullable(processableBatchScheduleMessage)
+                .map(pbsm -> BatchScheduleSummaryMessageBuilder.copy(pbsm).build())
+                .orElse(null);
+    }
+
+    public static BatchScheduleSummaryMessageBuilder copy(final ProcessableBatchScheduleMessage processableBatchScheduleMessage) {
+        return Optional.ofNullable(processableBatchScheduleMessage)
+                .map(pbsm -> new BatchScheduleSummaryMessageBuilder()
+                        .generated(pbsm.getGenerated())
+                        .name(pbsm.getName())
+                        .executionId(pbsm.getExecutionId())
+                        .batchSize(pbsm.getBatchSize()))
+                .orElse(null);
+    }
 
     public static BatchScheduleSummaryMessage copyAndBuild(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
         return Optional.ofNullable(batchScheduleSummaryMessage)
@@ -17,35 +33,23 @@ public class BatchScheduleSummaryMessageBuilder extends BatchScheduleMessageBuil
                 .orElse(null);
     }
 
-    public static BatchScheduleSummaryMessage copyAndBuild(final BatchScheduleMessage batchScheduleMessage) {
-        return Optional.ofNullable(batchScheduleMessage)
-                .map(bsm -> BatchScheduleSummaryMessageBuilder.copy(batchScheduleMessage).build())
-                .orElse(null);
-    }
-
-    public static BatchScheduleSummaryMessageBuilder copy(final BatchScheduleMessage batchScheduleMessage) {
-        return Optional.ofNullable(batchScheduleMessage)
-                .map(bsm -> new BatchScheduleSummaryMessageBuilder()
-                        .timestamp(bsm.getTimestamp())
-                        .name(bsm.getName())
-                        .executionId(bsm.getExecutionId())
-                        .batchSize(bsm.getBatchSize()))
-                .orElse(null);
-    }
-
     public static BatchScheduleSummaryMessageBuilder copy(final BatchScheduleSummaryMessage batchScheduleSummaryMessage) {
         return Optional.ofNullable(batchScheduleSummaryMessage)
                 .map(bssm -> new BatchScheduleSummaryMessageBuilder()
-                        .timestamp(bssm.getTimestamp())
+                        .generated(bssm.getGenerated())
                         .name(bssm.getName())
                         .executionId(bssm.getExecutionId())
+                        .endTimestamp(bssm.getEndTimestamp())
                         .batchSize(bssm.getBatchSize())
                         .processedOk(bssm.getProcessedOk())
-                        .processedKo(bssm.getProcessedKo())
-                        .endTimestamp(bssm.getEndTimestamp()))
+                        .processedKo(bssm.getProcessedKo()))
                 .orElse(null);
     }
 
+    public BatchScheduleSummaryMessageBuilder batchSize(final int batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
 
     public BatchScheduleSummaryMessageBuilder processedOk(final int processedOk) {
         this.processedOk = processedOk;
@@ -54,11 +58,6 @@ public class BatchScheduleSummaryMessageBuilder extends BatchScheduleMessageBuil
 
     public BatchScheduleSummaryMessageBuilder processedKo(final int processedKo) {
         this.processedKo = processedKo;
-        return this;
-    }
-
-    BatchScheduleSummaryMessageBuilder endTimestamp(final LocalDateTime endTimestamp) {
-        this.endTimestamp = endTimestamp;
         return this;
     }
 
@@ -77,10 +76,9 @@ public class BatchScheduleSummaryMessageBuilder extends BatchScheduleMessageBuil
     }
 
     public BatchScheduleSummaryMessage build() {
-        final BatchScheduleSummaryMessage result = new BatchScheduleSummaryMessage(timestamp, name, executionId, batchSize);
+        final BatchScheduleSummaryMessage result = new BatchScheduleSummaryMessage(generated, name, executionId, endTimestamp, batchSize);
         result.setProcessedOk(processedOk);
         result.setProcessedKo(processedKo);
-        result.setEndTimestamp(endTimestamp);
 
         return result;
     }

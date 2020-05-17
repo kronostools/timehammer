@@ -44,7 +44,7 @@ public class UpdateWorkersHolidayWorkerProcessor {
         } else {
             if (worker.getCheckHolidayPhase().isHoliday()) {
                 return workerHolidaysDao
-                        .upsert(worker.getWorkerInternalId(), worker.getHolidayCandidate())
+                        .upsertHoliday(worker.getWorkerInternalId(), worker.getHolidayCandidate())
                         .onItem()
                         .produceUni((upsertResult) -> {
                             final SaveHolidayPhase saveHolidayPhase;

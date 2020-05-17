@@ -32,22 +32,22 @@ public class UpdateWorkersHolidayScheduleProcessor {
     public Multi<Message<UpdateWorkersHolidayWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();
 
-        LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getTimestamp()));
+        LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        final List<Message<UpdateWorkersHolidayWorker>> workers = workerCurrentPreferencesDao.findAll(triggerMessage.getTimestamp())
+        final List<Message<UpdateWorkersHolidayWorker>> workers = workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated())
                 .map(wcpl -> {
                     LOG.debug("Transforming result from db to list of workers ...");
 
                     return wcpl.stream()
                             .map(wcp -> Message.of(new UpdateWorkersHolidayWorkerBuilder()
-                                    .timestamp(triggerMessage.getTimestamp())
+                                    .generated(triggerMessage.getGenerated())
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())
                                     .batchSize(wcpl.size())
                                     .workerInternalId(wcp.getWorkerInternalId())
                                     .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
-                                    .holidayCandidate(triggerMessage.getTimestamp().toLocalDate())
+                                    .holidayCandidate(triggerMessage.getGenerated().toLocalDate())
                                     .build()))
                             .collect(Collectors.toList());
                 })

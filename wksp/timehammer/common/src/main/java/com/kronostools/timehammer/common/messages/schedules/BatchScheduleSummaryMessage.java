@@ -7,13 +7,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @JsonDeserialize(builder = BatchScheduleSummaryMessageBuilder.class)
-public class BatchScheduleSummaryMessage extends BatchScheduleMessage {
+public class BatchScheduleSummaryMessage extends AbstractScheduleSummaryMessage {
+    private int batchSize;
     private int processedOk;
     private int processedKo;
-    private LocalDateTime endTimestamp;
 
-    BatchScheduleSummaryMessage(LocalDateTime timestamp, String name, UUID executionId, int batchSize) {
-        super(timestamp, name, executionId, batchSize);
+    BatchScheduleSummaryMessage(final LocalDateTime generated, final String name, final UUID executionId, final LocalDateTime endTimestamp, final int batchSize) {
+        super(generated, name, executionId, endTimestamp);
+        this.batchSize = batchSize;
     }
 
     @JsonIgnore
@@ -24,6 +25,19 @@ public class BatchScheduleSummaryMessage extends BatchScheduleMessage {
     @JsonIgnore
     public int getProcessed() {
         return processedOk + processedKo;
+    }
+
+    @JsonIgnore
+    public boolean isProcessedSuccessfully() {
+        return processedOk == batchSize;
+    }
+
+    public int getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(int batchSize) {
+        this.batchSize = batchSize;
     }
 
     public int getProcessedOk() {
@@ -40,13 +54,5 @@ public class BatchScheduleSummaryMessage extends BatchScheduleMessage {
 
     public void setProcessedKo(int processedKo) {
         this.processedKo = processedKo;
-    }
-
-    public LocalDateTime getEndTimestamp() {
-        return endTimestamp;
-    }
-
-    public void setEndTimestamp(LocalDateTime endTimestamp) {
-        this.endTimestamp = endTimestamp;
     }
 }

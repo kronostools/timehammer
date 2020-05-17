@@ -4,6 +4,8 @@ public class ScheduleSummaryDto extends Dto {
     private String name;
     private String startTimestamp;
     private String endTimestamp;
+    private boolean processedSuccessfully;
+    private boolean batched;
     private int totalItemsProcessed;
     private int itemsProcessedOk;
     private int itemsProcessedKo;
@@ -30,6 +32,22 @@ public class ScheduleSummaryDto extends Dto {
 
     public void setEndTimestamp(String endTimestamp) {
         this.endTimestamp = endTimestamp;
+    }
+
+    public boolean isProcessedSuccessfully() {
+        return processedSuccessfully;
+    }
+
+    public void setProcessedSuccessfully(boolean processedSuccessfully) {
+        this.processedSuccessfully = processedSuccessfully;
+    }
+
+    public boolean isBatched() {
+        return batched;
+    }
+
+    public void setBatched(boolean batched) {
+        this.batched = batched;
     }
 
     public int getTotalItemsProcessed() {

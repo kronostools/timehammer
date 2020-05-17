@@ -25,7 +25,7 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
     public static UpdateWorkersHolidayWorkerBuilder copy(final UpdateWorkersHolidayWorker worker) {
         return Optional.ofNullable(worker)
                 .map(w -> new UpdateWorkersHolidayWorkerBuilder()
-                    .timestamp(w.getTimestamp())
+                    .generated(w.getGenerated())
                     .executionId(w.getExecutionId())
                     .name(w.getName())
                     .batchSize(w.getBatchSize())
@@ -59,23 +59,23 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
         return this;
     }
 
-    public UpdateWorkersHolidayWorkerBuilder credentialPhase(final CredentialPhase credentialResult) {
-        this.credentialPhase = credentialResult;
+    public UpdateWorkersHolidayWorkerBuilder credentialPhase(final CredentialPhase credentialPhase) {
+        this.credentialPhase = credentialPhase;
         return this;
     }
 
-    public UpdateWorkersHolidayWorkerBuilder checkHolidayPhase(final CheckHolidayPhase checkHolidayResult) {
-        this.checkHolidayPhase = checkHolidayResult;
+    public UpdateWorkersHolidayWorkerBuilder checkHolidayPhase(final CheckHolidayPhase checkHolidayPhase) {
+        this.checkHolidayPhase = checkHolidayPhase;
         return this;
     }
 
-    public UpdateWorkersHolidayWorkerBuilder saveHolidayPhase(final SaveHolidayPhase saveHolidayResult) {
-        this.saveHolidayPhase = saveHolidayResult;
+    public UpdateWorkersHolidayWorkerBuilder saveHolidayPhase(final SaveHolidayPhase saveHolidayPhase) {
+        this.saveHolidayPhase = saveHolidayPhase;
         return this;
     }
 
     public UpdateWorkersHolidayWorker build() {
-        final UpdateWorkersHolidayWorker result = new UpdateWorkersHolidayWorker(timestamp, name, executionId, batchSize);
+        final UpdateWorkersHolidayWorker result = new UpdateWorkersHolidayWorker(generated, name, executionId, batchSize);
         result.setHolidayCandidate(holidayCandidate);
         result.setWorkerInternalId(workerInternalId);
         result.setCompany(company);

@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @JsonDeserialize(builder = ScheduleTriggerMessageBuilder.class)
 public class ScheduleTriggerMessage extends ScheduleMessage {
-    ScheduleTriggerMessage(final LocalDateTime timestamp, final String name, final UUID executionId) {
-        super(timestamp, name, executionId);
+    ScheduleTriggerMessage(final LocalDateTime generated, final String name, final UUID executionId) {
+        super(generated, name, executionId);
     }
 }

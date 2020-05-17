@@ -35,7 +35,7 @@ public class ToDeleteRoutes {
         final String scheduleName = "updateWorkersHoliday";
 
         final UpdateWorkersHolidayWorker worker = new UpdateWorkersHolidayWorkerBuilder()
-                .timestamp(timeMachineService.getNow())
+                .generated(timeMachineService.getNow())
                 .executionId(UUID.randomUUID())
                 .name(scheduleName)
                 .batchSize(1)

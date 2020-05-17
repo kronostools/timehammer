@@ -9,8 +9,8 @@ public abstract class ScheduleMessage extends PlatformMessage {
     protected final String name;
     protected final UUID executionId;
 
-    ScheduleMessage(final LocalDateTime timestamp, final String name, final UUID executionId) {
-        super(timestamp);
+    ScheduleMessage(final LocalDateTime generated, final String name, final UUID executionId) {
+        super(generated);
         this.name = name;
         this.executionId = executionId;
     }

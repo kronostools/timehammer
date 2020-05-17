@@ -40,18 +40,39 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.info('Closed schedules summary stream')
     })
 
+    const changeScheduleButtonClass = (scheduleButton, class) => {
+        scheduleButton.classList.remove('btn-success')
+        scheduleButton.classList.remove('btn-danger')
+        scheduleButton.classList.remove('btn-primary')
+        scheduleButton.classList.add(class)
+    }
+
     schedulesSummaryEventSource.addEventListener('message', (event) => {
         const scheduleSummaryEvent = JSON.parse(event.data)
         const scheduleStartTimestamp = moment(scheduleSummaryEvent.startTimestamp, TIMESTAMP_JSON_FORMAT)
         const scheduleEndTimestamp = moment(scheduleSummaryEvent.endTimestamp, TIMESTAMP_JSON_FORMAT)
         const scheduleDuration = moment.duration(scheduleEndTimestamp.diff(scheduleStartTimestamp)).humanize()
 
+        var scheduleText
+
+        if (scheduleSummaryEvent.batched) {
+            scheduleText = `${scheduleDuration} [O: ${scheduleSummaryEvent.itemsProcessedOk} - K: ${scheduleSummaryEvent.itemsProcessedKo} - T: ${scheduleSummaryEvent.totalItemsProcessed}]`
+        } else {
+            scheduleText = `${scheduleDuration}`
+        }
+
         console.debug(`Received schedule summary event: ${event.data}`)
 
         const targetButton = document.getElementById(scheduleSummaryEvent.name)
 
+        if (scheduleSummaryEvent.processedSuccessfully) {
+            changeScheduleButtonClass(targetButton, 'btn-success')
+        } else {
+            changeScheduleButtonClass(targetButton, 'btn-danger')
+        }
+
         Array.from(targetButton.parentNode.getElementsByClassName('schedule-duration'))
-            .map(e => e.textContent = scheduleDuration)
+            .map(e => e.textContent = scheduleText)
 
         Array.from(targetButton.getElementsByTagName('i'))
             .map(e => {
@@ -219,15 +240,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // END TIMEMACHINE
 
     // BEGIN SCHEDULES
-    const updateWorkersHolidaysButton = document.getElementById('updateWorkersHolidaysTest')
-    const updateWorkersHolidaysButtonClick$ = fromEvent(updateWorkersHolidaysButton, 'click')
+    const scheduleButtons = document.getElementsByClassName('schedule-button')
+    const scheduleButtonClick$ = fromEvent(scheduleButtons, 'click')
 
-    const sendUpdateWorkersHolidays = (e) => {
+    const triggerSchedule = (e) => {
         const clickedButton = e.currentTarget
         const scheduleName = clickedButton.getAttribute('data-schedule')
 
         const targetButton = document.getElementById(scheduleName)
         targetButton.setAttribute('disabled', 'disabled')
+
+        changeScheduleButtonClass(targetButton, 'btn-primary')
+
         Array.from(targetButton.getElementsByTagName('i'))
             .map(e => {
                 e.classList.remove('fa-play')
@@ -237,7 +261,49 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         console.debug(`Triggering schedule '${scheduleName}'`)
 
-        // TODO: infer url based on scheduleName
+        return rxjs.ajax.ajax({
+            url: `/demo/triggerSchedule/${scheduleName}`,
+            method: 'POST'
+        })
+    }
+
+    scheduleButtonClick$
+        .pipe(flatMap(triggerSchedule))
+        .subscribe(
+            // success
+            (r) => {
+                if (r.response.result) {
+                    console.info(`Schedule '${r.response.name}' was triggered successfully!`)
+                } else {
+                    console.error(`Error while triggering schedule '${r.response.name}'`)
+                }
+            },
+            // error
+            (e) => console.error(`Unexpected error while triggering schedule. Error: ${e.message}`)
+        )
+
+    // TODO: delete, this is for testing purposes
+    const updateWorkersHolidaysButton = document.getElementById('updateWorkersHolidaysTest')
+    const updateWorkersHolidaysButtonClick$ = fromEvent(updateWorkersHolidaysButton, 'click')
+
+    const sendUpdateWorkersHolidays = (e) => {
+        const clickedButton = e.currentTarget
+        const scheduleName = clickedButton.getAttribute('data-schedule')
+
+        const targetButton = document.getElementById(scheduleName)
+        targetButton.setAttribute('disabled', 'disabled')
+
+        changeScheduleButtonClass(targetButton, 'btn-primary')
+
+        Array.from(targetButton.getElementsByTagName('i'))
+            .map(e => {
+                e.classList.remove('fa-play')
+                e.classList.add('fa-sync')
+                e.classList.add('fa-spin')
+            })
+
+        console.debug(`Triggering schedule '${scheduleName}'`)
+
         return rxjs.ajax.ajax('/test/sendToComunytekWorkerHoliday')
     }
 

@@ -1,12 +1,9 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Web - página demo
-        - revisar el resumen de los schedule, prepararlo para que funcione con los que no son batch
-            - los que no son batch solo tendrán inicio y fin
-            - los que son batch, tendrán también el número de elementos
-            - mostrar el resumen en función de si es batch o no (solo con duración o con duración y número de items)
-    - Implementar schedule para limpieza de vacaciones pasadas
+    - Test
+        - schedule update workers holiday
+        - schedule clean past workers holidays
     - Configurar el liveness y readyness (ver cómo funciona con kafka)
         - Revisar el workshop de quarkus que creo que hay un ejemplo
     - Monitorización de componentes con Graphana y Prometheus

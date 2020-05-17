@@ -19,6 +19,11 @@ mp:
         topic: schedule-update-holidays
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleTriggerMessageJacksonDeserializer
+      schedule-clean-holidays:
+        connector: smallrye-kafka
+        topic: schedule-clean-holidays
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleTriggerMessageJacksonDeserializer
       holidays-worker-update:
         connector: smallrye-kafka
         topic: holidays-worker-update
@@ -33,5 +38,10 @@ mp:
       holidays-worker-summary:
         connector: smallrye-kafka
         topic: holidays-worker-summary
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      holidays-clean-summary:
+        connector: smallrye-kafka
+        topic: holidays-clean-summary
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

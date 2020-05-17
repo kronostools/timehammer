@@ -2,6 +2,8 @@ package com.kronostools.timehammer.web.resource;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
+import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessageBuilder;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessage;
 import com.kronostools.timehammer.common.messages.timemachine.TimeMachineEventMessageBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
@@ -15,15 +17,27 @@ import io.vertx.ext.web.RoutingContext;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @RouteBase(path = "/demo")
 public class DemoRoutes {
     private final TimeMachineService timeMachineService;
     private final Emitter<TimeMachineEventMessage> timeMachineChannel;
+    private final Map<String, Emitter<ScheduleTriggerMessage>> scheduleChannels;
 
     public DemoRoutes(final TimeMachineService timeMachineService,
-                      @Channel(Channels.TIMEMACHINE_OUT) final Emitter<TimeMachineEventMessage> timeMachineChannel) {
+                      @Channel(Channels.TIMEMACHINE_OUT) final Emitter<TimeMachineEventMessage> timeMachineChannel,
+                      @Channel(Channels.SCHEDULE_UPDATE_HOLIDAYS) final Emitter<ScheduleTriggerMessage> updateWorkersHolidayChannel,
+                      @Channel(Channels.SCHEDULE_CLEAN_HOLIDAYS) final Emitter<ScheduleTriggerMessage> cleanPastWorkersHolidaysChannel) {
         this.timeMachineService = timeMachineService;
         this.timeMachineChannel = timeMachineChannel;
+
+        this.scheduleChannels = new HashMap<>() {{
+            put("updateWorkersHoliday", updateWorkersHolidayChannel);
+            put("cleanPastWorkersHolidays", cleanPastWorkersHolidaysChannel);
+        }};
     }
 
     @Route(path = "/currentTimestamp", methods = HttpMethod.GET)
@@ -39,7 +53,7 @@ public class DemoRoutes {
         final String newTimestampRaw = rc.getBodyAsJson().getString("timestamp");
 
         final TimeMachineEventMessage timeMachineEvent = new TimeMachineEventMessageBuilder()
-                .timestamp(timeMachineService.getNow())
+                .generated(timeMachineService.getNow())
                 .newTimestamp(CommonDateTimeUtils.parseDateTimeFromJson(newTimestampRaw))
                 .timezone(SupportedTimezone.EUROPE_MADRID)
                 .build();
@@ -49,6 +63,32 @@ public class DemoRoutes {
         request.pause();
 
         timeMachineChannel.send(timeMachineEvent).handleAsync((Void, e) -> {
+            request.resume();
+
+            final JsonObject result = new JsonObject();
+            result.put("result", e == null);
+
+            rc.response().end(result.toBuffer());
+
+            return null;
+        });
+    }
+
+    @Route(path = "/triggerSchedule/{scheduleName}", methods = HttpMethod.POST)
+    void triggerSchedule(RoutingContext rc) {
+        final String scheduleName = rc.pathParam("scheduleName");
+
+        final ScheduleTriggerMessage scheduleTriggerMessage = new ScheduleTriggerMessageBuilder()
+                .generated(timeMachineService.getNow())
+                .name(scheduleName)
+                .executionId(UUID.randomUUID())
+                .build();
+
+        final HttpServerRequest request = rc.request();
+
+        request.pause();
+
+        scheduleChannels.get(scheduleName).send(scheduleTriggerMessage).handleAsync((Void, e) -> {
             request.resume();
 
             final JsonObject result = new JsonObject();

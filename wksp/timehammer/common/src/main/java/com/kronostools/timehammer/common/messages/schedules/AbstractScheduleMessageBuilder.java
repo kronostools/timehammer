@@ -4,7 +4,7 @@ import com.kronostools.timehammer.common.messages.PlatformMessageBuilder;
 
 import java.util.UUID;
 
-public abstract class ScheduleMessageBuilder<B> extends PlatformMessageBuilder<B> {
+public abstract class AbstractScheduleMessageBuilder<B> extends PlatformMessageBuilder<B> {
     protected String name;
     protected UUID executionId;
 

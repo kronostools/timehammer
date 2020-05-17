@@ -12,9 +12,19 @@ mp:
         topic: schedule-update-holidays
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-clean-holidays:
+        connector: smallrye-kafka
+        topic: schedule-clean-holidays
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       schedule-summary:
         connector: smallrye-kafka
         topic: schedule-summary
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      batch-schedule-summary:
+        connector: smallrye-kafka
+        topic: batch-schedule-summary
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
