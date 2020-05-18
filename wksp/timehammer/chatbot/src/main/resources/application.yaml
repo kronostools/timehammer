@@ -1,0 +1,13 @@
+quarkus:
+  camel:
+    main:
+      routes-discovery:
+        enabled: false
+
+camel:
+  context:
+    name: timehammer-camel-cdi
+
+timehammer:
+  chatbot:
+    token: ${TIMEHAMMER_CHATBOT_TOKEN}

@@ -1,6 +1,8 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Chatbot
+        - Probar que se puede tener el módulo chatbot leyendo mensajes de telegram y al mismo tiempo otro módulo que envía mensajes a telegram
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays

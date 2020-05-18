@@ -33,6 +33,7 @@
 
   <modules>
     <module>../auth</module>
+    <module>../chatbot</module>
     <module>../core</module>
     <module>../comunytek</module>
     <module>../integration</module>
