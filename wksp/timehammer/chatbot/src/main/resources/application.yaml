@@ -4,6 +4,15 @@ quarkus:
       routes-discovery:
         enabled: false
 
+mp:
+  messaging:
+    outgoing:
+      command-id:
+        connector: smallrye-kafka
+        topic: command-id
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+
 camel:
   context:
     name: timehammer-camel-cdi
