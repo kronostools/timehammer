@@ -1,8 +1,8 @@
-package com.kronostools.timehammer.common.messages.chatbot;
+package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.kronostools.timehammer.common.messages.PlatformMessageBuilder;
 
-public abstract class ChatbotInputMessageBuilder<B> extends PlatformMessageBuilder<B> {
+public abstract class TelegramChatbotInputMessageBuilder<B> extends PlatformMessageBuilder<B> {
     protected String chatId;
     protected Long messageId;
 

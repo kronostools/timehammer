@@ -149,7 +149,7 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-  chatbot:
+  telegramchatbot:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-chatbot
     environment:
@@ -157,7 +157,7 @@ services:
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer/chatbot
+    working_dir: /root/wksp/timehammer/telegramchatbot
     command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
     depends_on:
       - kafka

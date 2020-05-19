@@ -1,14 +1,14 @@
-package com.kronostools.timehammer.common.messages.chatbot;
+package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDateTime;
 
-public abstract class ChatbotInputMessage extends PlatformMessage {
+public abstract class TelegramChatbotInputMessage extends PlatformMessage {
     private String chatId;
     private Long messageId;
 
-    ChatbotInputMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
+    TelegramChatbotInputMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
         super(generated);
         this.chatId = chatId;
         this.messageId = messageId;

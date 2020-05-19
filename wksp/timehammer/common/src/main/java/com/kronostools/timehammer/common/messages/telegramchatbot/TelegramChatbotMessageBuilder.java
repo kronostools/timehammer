@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.common.messages.chatbot;
+package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
@@ -6,20 +6,20 @@ import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class ChatbotMessageBuilder extends ChatbotInputMessageBuilder<ChatbotMessageBuilder> {
+public class TelegramChatbotMessageBuilder extends TelegramChatbotInputMessageBuilder<TelegramChatbotMessageBuilder> {
     private ChatbotCommand command;
     private String rawCommand;
     private String text;
 
-    public static ChatbotMessage copyAndBuild(final ChatbotMessage chatbotMessage) {
+    public static TelegramChatbotMessage copyAndBuild(final TelegramChatbotMessage chatbotMessage) {
         return Optional.ofNullable(chatbotMessage)
-                .map(ccm -> ChatbotMessageBuilder.copy(ccm).build())
+                .map(ccm -> TelegramChatbotMessageBuilder.copy(ccm).build())
                 .orElse(null);
     }
 
-    public static ChatbotMessageBuilder copy(final ChatbotMessage chatbotMessage) {
+    public static TelegramChatbotMessageBuilder copy(final TelegramChatbotMessage chatbotMessage) {
         return Optional.ofNullable(chatbotMessage)
-                .map(ccm -> new ChatbotMessageBuilder()
+                .map(ccm -> new TelegramChatbotMessageBuilder()
                         .generated(ccm.getGenerated())
                         .chatId(ccm.getChatId())
                         .messageId(ccm.getMessageId())
@@ -28,23 +28,23 @@ public class ChatbotMessageBuilder extends ChatbotInputMessageBuilder<ChatbotMes
                 .orElse(null);
     }
 
-    public ChatbotMessageBuilder command(final ChatbotCommand command) {
+    public TelegramChatbotMessageBuilder command(final ChatbotCommand command) {
         this.command = command;
         return this;
     }
 
-    public ChatbotMessageBuilder rawCommand(final String rawCommand) {
+    public TelegramChatbotMessageBuilder rawCommand(final String rawCommand) {
         this.rawCommand = rawCommand;
         return this;
     }
 
-    public ChatbotMessageBuilder text(final String text) {
+    public TelegramChatbotMessageBuilder text(final String text) {
         this.text = text;
         return this;
     }
 
-    public ChatbotMessage build() {
-        final ChatbotMessage result = new ChatbotMessage(generated, chatId, messageId, text);
+    public TelegramChatbotMessage build() {
+        final TelegramChatbotMessage result = new TelegramChatbotMessage(generated, chatId, messageId, text);
         result.setCommand(command);
         result.setRawCommand(rawCommand);
 

@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.common.messages.chatbot;
+package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -6,13 +6,13 @@ import com.kronostools.timehammer.common.constants.ChatbotCommand;
 
 import java.time.LocalDateTime;
 
-@JsonDeserialize(builder = ChatbotMessageBuilder.class)
-public class ChatbotMessage extends ChatbotInputMessage {
+@JsonDeserialize(builder = TelegramChatbotMessageBuilder.class)
+public class TelegramChatbotMessage extends TelegramChatbotInputMessage {
     private ChatbotCommand command;
     private String rawCommand;
     private String text;
 
-    ChatbotMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
+    TelegramChatbotMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
         super(generated, chatId, messageId);
         this.text = text;
     }

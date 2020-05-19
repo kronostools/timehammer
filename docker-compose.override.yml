@@ -40,7 +40,7 @@ services:
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6050:5005
-  chatbot:
+  telegramchatbot:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]

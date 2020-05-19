@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.telegramchatbot.interceptors;
 
-import com.kronostools.timehammer.common.messages.chatbot.ChatbotAnswerMessageBuilder;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessageBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Headers;
 import org.apache.camel.Exchange;
@@ -29,7 +29,7 @@ public class TelegramAnswerChatIdInterceptor implements Processor {
             final String chatId = incomingMessage.getChat().getId();
             final Long messageId = incomingMessage.getMessageId();
 
-            exchange.getMessage().setHeader(Headers.ANSWER_MESSAE, new ChatbotAnswerMessageBuilder()
+            exchange.getMessage().setHeader(Headers.ANSWER_MESSAE, new TelegramChatbotAnswerMessageBuilder()
                     .generated(generated)
                     .chatId(chatId)
                     .messageId(messageId).build());

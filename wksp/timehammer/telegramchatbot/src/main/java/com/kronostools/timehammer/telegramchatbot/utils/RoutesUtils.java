@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.telegramchatbot.utils;
 
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
-import com.kronostools.timehammer.common.messages.chatbot.ChatbotMessage;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotMessage;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Commands;
 import org.apache.camel.Exchange;
@@ -43,8 +43,8 @@ public class RoutesUtils {
                 });
     }
 
-    public static ChatbotMessage getMessage(final Exchange exchange) {
+    public static TelegramChatbotMessage getMessage(final Exchange exchange) {
         return exchange.getMessage()
-                .getHeader(RoutesConstants.Headers.COMMAND_MESSAGE, ChatbotMessage.class);
+                .getHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotMessage.class);
     }
 }

@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.telegramchatbot.interceptors;
 
-import com.kronostools.timehammer.common.messages.chatbot.ChatbotMessageBuilder;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotMessageBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Headers;
 import org.apache.camel.Exchange;
@@ -26,7 +26,7 @@ public class TelegramMessageChatIdInterceptor implements Processor {
         Optional.ofNullable(incomingMessage).ifPresent(im -> {
             final LocalDateTime generated = CommonDateTimeUtils.getDateTime(im.getDate());
 
-            exchange.getMessage().setHeader(Headers.COMMAND_MESSAGE, new ChatbotMessageBuilder()
+            exchange.getMessage().setHeader(Headers.COMMAND_MESSAGE, new TelegramChatbotMessageBuilder()
                     .generated(generated)
                     .chatId(im.getChat().getId())
                     .messageId(im.getMessageId())
