@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotInputMessageBuilder<TelegramChatbotAnswerMessageBuilder> {
+public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageBuilder<TelegramChatbotAnswerMessageBuilder> {
     private String answer;
 
     public static TelegramChatbotAnswerMessage copyAndBuild(final TelegramChatbotAnswerMessage telegramChatbotAnswerMessage) {

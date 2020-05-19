@@ -19,7 +19,8 @@ public class ScheduleSummaryMessageBuilder extends AbstractScheduleSummaryMessag
                 .map(psm -> new ScheduleSummaryMessageBuilder()
                         .generated(psm.getGenerated())
                         .name(psm.getName())
-                        .executionId(psm.getExecutionId()))
+                        .executionId(psm.getExecutionId())
+                        .processedSuccessfully(psm.processedSuccessfully()))
                 .orElse(null);
     }
 

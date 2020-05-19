@@ -1,45 +1,32 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kronostools.timehammer.common.constants.ChatbotCommand;
+import com.kronostools.timehammer.common.messages.PlatformMessage;
 
 import java.time.LocalDateTime;
 
-@JsonDeserialize(builder = TelegramChatbotMessageBuilder.class)
-public class TelegramChatbotMessage extends TelegramChatbotInputMessage {
-    private ChatbotCommand command;
-    private String rawCommand;
-    private String text;
+public abstract class TelegramChatbotMessage extends PlatformMessage {
+    private String chatId;
+    private Long messageId;
 
-    TelegramChatbotMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
-        super(generated, chatId, messageId);
-        this.text = text;
+    TelegramChatbotMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
+        super(generated);
+        this.chatId = chatId;
+        this.messageId = messageId;
     }
 
-    public ChatbotCommand getCommand() {
-        return command;
+    public String getChatId() {
+        return chatId;
     }
 
-    public void setCommand(ChatbotCommand command) {
-        this.command = command;
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
     }
 
-    public String getRawCommand() {
-        return rawCommand;
+    public Long getMessageId() {
+        return messageId;
     }
 
-    public void setRawCommand(String rawCommand) {
-        this.rawCommand = rawCommand;
-    }
-
-    @JsonIgnore
-    public boolean isCommandPresent() {
-        return command != null || rawCommand != null;
-    }
-
-    @JsonIgnore
-    public boolean isCommandUnknown() {
-        return rawCommand != null;
+    public void setMessageId(Long messageId) {
+        this.messageId = messageId;
     }
 }

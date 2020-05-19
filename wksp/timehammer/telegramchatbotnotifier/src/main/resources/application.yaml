@@ -1,0 +1,22 @@
+quarkus:
+  camel:
+    main:
+      routes-discovery:
+        enabled: false
+
+mp:
+  messaging:
+    incoming:
+      notification-telegram:
+        connector: smallrye-kafka
+        topic: notification-telegram
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotNotificationMessageJacksonDeserializer
+
+camel:
+  context:
+    name: timehammer-camel-cdi
+
+timehammer:
+  chatbot:
+    token: ${TIMEHAMMER_CHATBOT_TOKEN}

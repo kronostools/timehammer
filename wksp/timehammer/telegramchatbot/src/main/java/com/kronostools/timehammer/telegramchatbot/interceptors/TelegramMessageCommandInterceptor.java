@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.telegramchatbot.interceptors;
 
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
-import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotMessageBuilder;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotInputMessageBuilder;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants;
 import com.kronostools.timehammer.telegramchatbot.utils.RoutesUtils;
 import org.apache.camel.Exchange;
@@ -31,7 +31,7 @@ public class TelegramMessageCommandInterceptor implements Processor {
             command.ifPresentOrElse(
                     // known command
                     c -> exchange.getMessage()
-                                .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotMessageBuilder
+                                .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessageBuilder
                                         .copy(RoutesUtils.getMessage(exchange))
                                         .command(c).build()),
                     // unknown command
@@ -39,7 +39,7 @@ public class TelegramMessageCommandInterceptor implements Processor {
                         final String rawCommand = RoutesUtils.getRawCommand(incomingMessageText).orElse(null);
 
                         exchange.getMessage()
-                                .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotMessageBuilder
+                                .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessageBuilder
                                         .copy(RoutesUtils.getMessage(exchange))
                                         .rawCommand(rawCommand).build());
                     });

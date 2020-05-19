@@ -4,9 +4,6 @@
     - Chatbot
         - Probar que se puede tener el módulo chatbot leyendo mensajes de telegram y al mismo tiempo otro módulo que envía mensajes a telegram
         - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
-    - Renombrar
-        - chatbot -> telegramchatbot
-        - chatbot-notifier -> telegramchatbot-notifier
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays

@@ -70,11 +70,8 @@ public class ScheduleSummarizerService {
     }
 
     public CompletionStage<Void> processScheduleMessage(final Message<? extends ProcessableScheduleMessage> message) {
-        final ProcessableScheduleMessage scheduleMessage = message.getPayload();
-
-        final ScheduleSummaryMessage summaryMessage = ScheduleSummaryMessageBuilder.copy(scheduleMessage)
+        final ScheduleSummaryMessage summaryMessage = ScheduleSummaryMessageBuilder.copy(message.getPayload())
                 .endTimestamp(timeMachineService.getNow())
-                .processedSuccessfully(scheduleMessage.processedSuccessfully())
                 .build();
 
         LOG.info("Finished processing schedule '{}' (execution id: '{}') in '{}'", summaryMessage.getName(), summaryMessage.getExecutionId(), Duration.between(summaryMessage.getGenerated(), summaryMessage.getEndTimestamp()).toString());

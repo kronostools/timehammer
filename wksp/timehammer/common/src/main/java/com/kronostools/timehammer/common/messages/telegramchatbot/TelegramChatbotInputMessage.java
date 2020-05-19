@@ -1,32 +1,53 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
-import com.kronostools.timehammer.common.messages.PlatformMessage;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kronostools.timehammer.common.constants.ChatbotCommand;
 
 import java.time.LocalDateTime;
 
-public abstract class TelegramChatbotInputMessage extends PlatformMessage {
-    private String chatId;
-    private Long messageId;
+@JsonDeserialize(builder = TelegramChatbotInputMessageBuilder.class)
+public class TelegramChatbotInputMessage extends TelegramChatbotMessage {
+    private ChatbotCommand command;
+    private String rawCommand;
+    private String text;
 
-    TelegramChatbotInputMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
-        super(generated);
-        this.chatId = chatId;
-        this.messageId = messageId;
+    TelegramChatbotInputMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
+        super(generated, chatId, messageId);
+        this.text = text;
     }
 
-    public String getChatId() {
-        return chatId;
+    public ChatbotCommand getCommand() {
+        return command;
     }
 
-    public void setChatId(String chatId) {
-        this.chatId = chatId;
+    public void setCommand(ChatbotCommand command) {
+        this.command = command;
     }
 
-    public Long getMessageId() {
-        return messageId;
+    public String getRawCommand() {
+        return rawCommand;
     }
 
-    public void setMessageId(Long messageId) {
-        this.messageId = messageId;
+    public void setRawCommand(String rawCommand) {
+        this.rawCommand = rawCommand;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @JsonIgnore
+    public boolean isCommandPresent() {
+        return command != null || rawCommand != null;
+    }
+
+    @JsonIgnore
+    public boolean isCommandUnknown() {
+        return rawCommand != null;
     }
 }

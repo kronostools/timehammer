@@ -18,5 +18,6 @@ public class CommonConstants {
         public static final String SCHEDULE_SUMMARY = "schedule-summary";
         public static final String BATCH_SCHEDULE_SUMMARY = "batch-schedule-summary";
         public static final String COMMAND_ID = "command-id";
+        public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
     }
 }

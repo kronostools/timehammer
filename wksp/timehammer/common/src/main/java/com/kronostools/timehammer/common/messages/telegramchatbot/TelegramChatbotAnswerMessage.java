@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.time.LocalDateTime;
 
 @JsonDeserialize(builder = TelegramChatbotAnswerMessageBuilder.class)
-public class TelegramChatbotAnswerMessage extends TelegramChatbotInputMessage {
+public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
     private String answer;
 
     TelegramChatbotAnswerMessage(final LocalDateTime generated, final String chatId, final Long messageId) {

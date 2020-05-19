@@ -39,6 +39,7 @@
     <module>../monolith</module>
     <module>../scheduler</module>
     <module>../telegramchatbot</module>
+    <module>../telegramchatbotnotifier</module>
     <module>../web</module>
   </modules>
 </project>

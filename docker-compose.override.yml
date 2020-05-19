@@ -46,10 +46,16 @@ services:
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6060:5005
+  telegramchatbotnotifier:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 6070:5005
   web:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 9000:8080
-      - 6070:5005
+      - 6080:5005

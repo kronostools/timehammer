@@ -151,13 +151,28 @@ services:
     restart: unless-stopped
   telegramchatbot:
     image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer-chatbot
+    container_name: timehammer-telegramchatbot
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
     working_dir: /root/wksp/timehammer/telegramchatbot
+    command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+  telegramchatbotnotifier:
+    image: maven:3.6.3-jdk-11-slim
+    container_name: timehammer-telegramchatbotnotifier
+    environment:
+      TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+    volumes:
+      - ./wksp/timehammer:/root/wksp/timehammer
+      - ${HOME}/.m2/repository:/root/.m2/repository
+    working_dir: /root/wksp/timehammer/telegramchatbotnotifier
     command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
     depends_on:
       - kafka

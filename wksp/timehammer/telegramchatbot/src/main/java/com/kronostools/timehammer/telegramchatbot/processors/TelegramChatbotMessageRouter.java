@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.telegramchatbot.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotMessage;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotInputMessage;
 import com.kronostools.timehammer.telegramchatbot.utils.RoutesUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
@@ -16,9 +16,9 @@ import javax.enterprise.context.ApplicationScoped;
 public class TelegramChatbotMessageRouter implements Processor {
     private static final Logger LOG = LoggerFactory.getLogger(TelegramChatbotMessageRouter.class);
 
-    private final Emitter<TelegramChatbotMessage> chatbotMessageChannel;
+    private final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel;
 
-    public TelegramChatbotMessageRouter(@Channel(Channels.COMMAND_ID) final Emitter<TelegramChatbotMessage> chatbotMessageChannel) {
+    public TelegramChatbotMessageRouter(@Channel(Channels.COMMAND_ID) final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel) {
         this.chatbotMessageChannel = chatbotMessageChannel;
     }
 
