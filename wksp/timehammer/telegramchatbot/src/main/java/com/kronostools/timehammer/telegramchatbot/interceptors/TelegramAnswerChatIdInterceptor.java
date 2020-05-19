@@ -1,8 +1,8 @@
-package com.kronostools.timehammer.chatbot.interceptors;
+package com.kronostools.timehammer.telegramchatbot.interceptors;
 
-import com.kronostools.timehammer.chatbot.constants.RoutesConstants.Headers;
 import com.kronostools.timehammer.common.messages.chatbot.ChatbotAnswerMessageBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
+import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Headers;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.telegram.model.IncomingCallbackQuery;

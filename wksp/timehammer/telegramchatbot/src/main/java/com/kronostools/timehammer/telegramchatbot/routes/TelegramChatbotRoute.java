@@ -1,10 +1,10 @@
-package com.kronostools.timehammer.chatbot.routes;
+package com.kronostools.timehammer.telegramchatbot.routes;
 
-import com.kronostools.timehammer.chatbot.config.ChatbotConfig;
-import com.kronostools.timehammer.chatbot.interceptors.TelegramAnswerChatIdInterceptor;
-import com.kronostools.timehammer.chatbot.interceptors.TelegramMessageChatIdInterceptor;
-import com.kronostools.timehammer.chatbot.interceptors.TelegramMessageCommandInterceptor;
-import com.kronostools.timehammer.chatbot.processors.TelegramChatbotMessageRouter;
+import com.kronostools.timehammer.telegramchatbot.config.ChatbotConfig;
+import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramAnswerChatIdInterceptor;
+import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramMessageChatIdInterceptor;
+import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramMessageCommandInterceptor;
+import com.kronostools.timehammer.telegramchatbot.processors.TelegramChatbotMessageRouter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.telegram.model.IncomingCallbackQuery;
 import org.apache.camel.component.telegram.model.IncomingMessage;

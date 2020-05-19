@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.chatbot.constants;
+package com.kronostools.timehammer.telegramchatbot.constants;
 
 public class RoutesConstants {
 

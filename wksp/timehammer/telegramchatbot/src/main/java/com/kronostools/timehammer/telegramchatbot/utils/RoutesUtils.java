@@ -1,9 +1,9 @@
-package com.kronostools.timehammer.chatbot.utils;
+package com.kronostools.timehammer.telegramchatbot.utils;
 
-import com.kronostools.timehammer.chatbot.constants.RoutesConstants;
-import com.kronostools.timehammer.chatbot.constants.RoutesConstants.Commands;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import com.kronostools.timehammer.common.messages.chatbot.ChatbotMessage;
+import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants;
+import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Commands;
 import org.apache.camel.Exchange;
 
 import java.util.Optional;

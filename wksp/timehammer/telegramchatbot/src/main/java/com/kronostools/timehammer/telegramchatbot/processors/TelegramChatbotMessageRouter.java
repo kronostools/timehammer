@@ -1,8 +1,8 @@
-package com.kronostools.timehammer.chatbot.processors;
+package com.kronostools.timehammer.telegramchatbot.processors;
 
-import com.kronostools.timehammer.chatbot.utils.RoutesUtils;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.chatbot.ChatbotMessage;
+import com.kronostools.timehammer.telegramchatbot.utils.RoutesUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.eclipse.microprofile.reactive.messaging.Channel;

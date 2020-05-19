@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.chatbot.config;
+package com.kronostools.timehammer.telegramchatbot.config;
 
 import io.quarkus.arc.config.ConfigProperties;
 import io.quarkus.arc.config.ConfigProperties.NamingStrategy;
