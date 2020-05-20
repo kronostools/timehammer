@@ -14,7 +14,6 @@ public class UpdateWorkersHolidayWorker extends ProcessableBatchScheduleMessage 
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
-    private CredentialPhase credentialPhase;
     private CheckHolidayPhase checkHolidayPhase;
     private SaveHolidayPhase saveHolidayPhase;
 
@@ -58,14 +57,6 @@ public class UpdateWorkersHolidayWorker extends ProcessableBatchScheduleMessage 
 
     public void setWorkerExternalId(String workerExternalId) {
         this.workerExternalId = workerExternalId;
-    }
-
-    public CredentialPhase getCredentialPhase() {
-        return credentialPhase;
-    }
-
-    public void setCredentialPhase(CredentialPhase credentialPhase) {
-        this.credentialPhase = credentialPhase;
     }
 
     public CheckHolidayPhase getCheckHolidayPhase() {

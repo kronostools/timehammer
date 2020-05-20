@@ -28,7 +28,7 @@ public class UpdateWorkersHolidayScheduleProcessor {
     }
 
     @Incoming(Channels.SCHEDULE_UPDATE_HOLIDAYS)
-    @Outgoing(Channels.HOLIDAYS_WORKER_AUTH)
+    @Outgoing(Channels.HOLIDAYS_WORKER_GET)
     public Multi<Message<UpdateWorkersHolidayWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();
 

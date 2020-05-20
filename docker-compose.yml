@@ -110,19 +110,6 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-  auth:
-    image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer-auth
-    volumes:
-      - ./wksp/timehammer:/root/wksp/timehammer
-      - ${HOME}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer/auth
-    command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
-    depends_on:
-      - kafka
-    networks:
-      - timehammer
-    restart: unless-stopped
   integration:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-integration

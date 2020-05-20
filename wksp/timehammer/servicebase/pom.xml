@@ -32,7 +32,6 @@
   </dependencies>
 
   <modules>
-    <module>../auth</module>
     <module>../core</module>
     <module>../comunytek</module>
     <module>../integration</module>

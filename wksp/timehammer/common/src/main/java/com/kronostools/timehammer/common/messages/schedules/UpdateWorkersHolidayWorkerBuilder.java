@@ -12,7 +12,6 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
-    private CredentialPhase credentialPhase;
     private CheckHolidayPhase checkHolidayPhase;
     private SaveHolidayPhase saveHolidayPhase;
 
@@ -33,7 +32,6 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
                     .workerInternalId(w.getWorkerInternalId())
                     .company(w.getCompany())
                     .workerExternalId(w.getWorkerExternalId())
-                    .credentialPhase(CredentialPhaseBuilder.copyAndBuild(w.getCredentialPhase()))
                     .checkHolidayPhase(CheckHolidayPhaseBuilder.copyAndBuild(w.getCheckHolidayPhase()))
                     .saveHolidayPhase(SaveHolidayPhaseBuilder.copyAndBuild(w.getSaveHolidayPhase())))
                 .orElse(null);
@@ -59,11 +57,6 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
         return this;
     }
 
-    public UpdateWorkersHolidayWorkerBuilder credentialPhase(final CredentialPhase credentialPhase) {
-        this.credentialPhase = credentialPhase;
-        return this;
-    }
-
     public UpdateWorkersHolidayWorkerBuilder checkHolidayPhase(final CheckHolidayPhase checkHolidayPhase) {
         this.checkHolidayPhase = checkHolidayPhase;
         return this;
@@ -80,7 +73,6 @@ public class UpdateWorkersHolidayWorkerBuilder extends ProcessableBatchScheduleM
         result.setWorkerInternalId(workerInternalId);
         result.setCompany(company);
         result.setWorkerExternalId(workerExternalId);
-        result.setCredentialPhase(credentialPhase);
         result.setCheckHolidayPhase(checkHolidayPhase);
         result.setSaveHolidayPhase(saveHolidayPhase);
 

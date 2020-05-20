@@ -1,6 +1,6 @@
-package com.kronostools.timehammer.auth.lifecycle;
+package com.kronostools.timehammer.comunytek.lifecycle;
 
-import com.kronostools.timehammer.auth.service.WorkerCredentialsService;
+import com.kronostools.timehammer.comunytek.service.WorkerCredentialsService;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
