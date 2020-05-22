@@ -11,6 +11,7 @@ public class TelegramChatbotInputMessage extends TelegramChatbotMessage {
     private ChatbotCommand command;
     private String rawCommand;
     private String text;
+    private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
 
     TelegramChatbotInputMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
         super(generated, chatId, messageId);
@@ -39,6 +40,14 @@ public class TelegramChatbotInputMessage extends TelegramChatbotMessage {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public WorkerCurrentPreferencesPhase getWorkerCurrentPreferencesPhase() {
+        return workerCurrentPreferencesPhase;
+    }
+
+    public void setWorkerCurrentPreferencesPhase(WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase) {
+        this.workerCurrentPreferencesPhase = workerCurrentPreferencesPhase;
     }
 
     @JsonIgnore

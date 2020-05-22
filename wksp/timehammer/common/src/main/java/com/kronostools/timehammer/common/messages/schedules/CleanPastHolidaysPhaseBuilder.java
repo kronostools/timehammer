@@ -1,11 +1,13 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.kronostools.timehammer.common.messages.PhaseBuilder;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class CleanPastHolidaysPhaseBuilder extends PhaseBuilder<CleanPastHolidaysPhaseBuilder> {
+public class CleanPastHolidaysPhaseBuilder extends PhaseBuilder<SimpleResult, CleanPastHolidaysPhaseBuilder> {
     private CleanPastHolidaysPhase cleanPastHolidaysPhase;
 
     public static CleanPastHolidaysPhase copyAndBuild(final CleanPastHolidaysPhase cleanPashtHolidaysPhase) {
@@ -17,6 +19,7 @@ public class CleanPastHolidaysPhaseBuilder extends PhaseBuilder<CleanPastHoliday
     public static CleanPastHolidaysPhaseBuilder copy(final CleanPastHolidaysPhase cleanPashtHolidaysPhase) {
         return Optional.ofNullable(cleanPashtHolidaysPhase)
                 .map(cphp -> new CleanPastHolidaysPhaseBuilder()
+                        .result(cphp.getResult())
                         .errorMessage(cphp.getErrorMessage()))
                 .orElse(null);
     }
@@ -27,6 +30,6 @@ public class CleanPastHolidaysPhaseBuilder extends PhaseBuilder<CleanPastHoliday
     }
 
     public CleanPastHolidaysPhase build() {
-        return new CleanPastHolidaysPhase(errorMessage);
+        return new CleanPastHolidaysPhase(result, errorMessage);
     }
 }

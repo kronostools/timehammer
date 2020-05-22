@@ -6,6 +6,7 @@ import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHoliday
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
+import com.kronostools.timehammer.core.model.WorkerCurrentPreferences;
 import io.smallrye.mutiny.Multi;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,12 +36,17 @@ public class UpdateWorkersHolidayScheduleProcessor {
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        final List<Message<UpdateWorkersHolidayWorker>> workers = workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated())
-                .map(wcpl -> {
+        final List<UpdateWorkersHolidayWorker> workers = new ArrayList<>();
+
+        workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
+            .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
+                if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
                     LOG.debug("Transforming result from db to list of workers ...");
 
-                    return wcpl.stream()
-                            .map(wcp -> Message.of(new UpdateWorkersHolidayWorkerBuilder()
+                    final List<WorkerCurrentPreferences> wcpl = workerCurrentPreferencesMultipleResult.getResult();
+
+                    wcpl.forEach(wcp -> workers
+                            .add(new UpdateWorkersHolidayWorkerBuilder()
                                     .generated(triggerMessage.getGenerated())
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())
@@ -48,18 +55,20 @@ public class UpdateWorkersHolidayScheduleProcessor {
                                     .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
                                     .holidayCandidate(triggerMessage.getGenerated().toLocalDate())
-                                    .build()))
-                            .collect(Collectors.toList());
-                })
-                .await().indefinitely();
+                                    .build()));
+                } else {
+                    LOG.error("Holidays of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());
+                }
+            })
+            .await().indefinitely();
 
         LOG.debug("Holidays of {} workers will be updated", workers.size());
 
-        return Multi.createFrom().iterable(workers)
+        return Multi.createFrom().iterable(workers.stream().map(Message::of).collect(Collectors.toList()))
                 .onCompletion().invoke(() -> {
-                    LOG.debug("Acknowleding trigger message ...");
+                    LOG.debug("Acknowleding trigger message of schedule '{}' ...", triggerMessage.getName());
                     message.ack();
-                    LOG.debug("Acknowleded trigger message");
+                    LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
                 });
     }
 }

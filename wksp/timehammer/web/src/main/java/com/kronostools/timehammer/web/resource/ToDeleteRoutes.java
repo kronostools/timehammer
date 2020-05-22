@@ -3,7 +3,6 @@ package com.kronostools.timehammer.web.resource;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.schedules.CheckHolidayPhaseBuilder;
-import com.kronostools.timehammer.common.messages.schedules.CredentialPhaseBuilder;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
 import com.kronostools.timehammer.common.services.TimeMachineService;
@@ -43,9 +42,6 @@ public class ToDeleteRoutes {
                 .workerInternalId("1111-1111-1111-1111")
                 .company(Company.COMUNYTEK)
                 .workerExternalId("DCV")
-                .credentialPhase(new CredentialPhaseBuilder()
-                        .externalPassword("blablabla")
-                        .build())
                 .checkHolidayPhase(new CheckHolidayPhaseBuilder()
                         .holiday(Boolean.TRUE)
                         .build())

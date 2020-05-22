@@ -1,11 +1,13 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.kronostools.timehammer.common.messages.PhaseBuilder;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class CheckHolidayPhaseBuilder extends PhaseBuilder<CheckHolidayPhaseBuilder> {
+public class CheckHolidayPhaseBuilder extends PhaseBuilder<SimpleResult, CheckHolidayPhaseBuilder> {
     private Boolean holiday;
 
     public static CheckHolidayPhase copyAndBuild(final CheckHolidayPhase checkHolidayPhase) {
@@ -17,6 +19,7 @@ public class CheckHolidayPhaseBuilder extends PhaseBuilder<CheckHolidayPhaseBuil
     public static CheckHolidayPhaseBuilder copy(final CheckHolidayPhase checkHolidayPhase) {
         return Optional.ofNullable(checkHolidayPhase)
                 .map(chp -> new CheckHolidayPhaseBuilder()
+                        .result(chp.getResult())
                         .errorMessage(chp.getErrorMessage())
                         .holiday(chp.isHoliday()))
                 .orElse(null);
@@ -28,9 +31,9 @@ public class CheckHolidayPhaseBuilder extends PhaseBuilder<CheckHolidayPhaseBuil
     }
 
     public CheckHolidayPhase build() {
-        final CheckHolidayPhase result = new CheckHolidayPhase(errorMessage);
-        result.setHoliday(holiday);
+        final CheckHolidayPhase chp = new CheckHolidayPhase(result, errorMessage);
+        chp.setHoliday(holiday);
 
-        return result;
+        return chp;
     }
 }

@@ -10,6 +10,7 @@ public class TelegramChatbotInputMessageBuilder extends TelegramChatbotMessageBu
     private ChatbotCommand command;
     private String rawCommand;
     private String text;
+    private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
 
     public static TelegramChatbotInputMessage copyAndBuild(final TelegramChatbotInputMessage chatbotMessage) {
         return Optional.ofNullable(chatbotMessage)
@@ -43,10 +44,16 @@ public class TelegramChatbotInputMessageBuilder extends TelegramChatbotMessageBu
         return this;
     }
 
+    public TelegramChatbotInputMessageBuilder text(final WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase) {
+        this.workerCurrentPreferencesPhase = workerCurrentPreferencesPhase;
+        return this;
+    }
+
     public TelegramChatbotInputMessage build() {
         final TelegramChatbotInputMessage result = new TelegramChatbotInputMessage(generated, chatId, messageId, text);
         result.setCommand(command);
         result.setRawCommand(rawCommand);
+        result.setWorkerCurrentPreferencesPhase(workerCurrentPreferencesPhase);
 
         return result;
     }
