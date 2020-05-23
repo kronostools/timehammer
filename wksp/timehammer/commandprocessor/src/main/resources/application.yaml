@@ -24,8 +24,5 @@ timehammer:
 
 "%localdemo":
   timehammer:
-    baseUrl: http://192.168.86.168:9000
-
-"%remotedemo":
-  timehammer:
-    baseUrl: https://timehammer.kronostools.com
+    domain:
+      base-url: http://192.168.86.168:9000

@@ -3,6 +3,7 @@ package com.kronostools.timehammer.common.messages.telegramchatbot;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
+import com.kronostools.timehammer.common.messages.constants.WorkerCurrentPreferencesResult;
 
 import java.time.LocalDateTime;
 
@@ -56,12 +57,22 @@ public class TelegramChatbotInputMessage extends TelegramChatbotMessage {
     }
 
     @JsonIgnore
+    public boolean isCommandMissing() {
+        return !isCommandPresent();
+    }
+
+    @JsonIgnore
     public boolean isCommandKnown() {
         return command != null;
     }
 
     @JsonIgnore
+    public boolean isCommandUnknown() {
+        return rawCommand != null;
+    }
+
+    @JsonIgnore
     public boolean identifiedWorker() {
-        return workerCurrentPreferencesPhase != null;
+        return workerCurrentPreferencesPhase.getResult() == WorkerCurrentPreferencesResult.OK;
     }
 }

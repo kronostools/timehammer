@@ -32,7 +32,7 @@ public class CommandWorkerIdentifierProcessor {
         this.timeMachineService = timeMachineService;
     }
 
-    @Incoming(Channels.COMMAND_ID)
+    @Incoming(Channels.COMMAND_ID_IN)
     @Outgoing(Channels.COMMAND_PROCESS)
     public Uni<Message<TelegramChatbotInputMessage>> process(final Message<TelegramChatbotInputMessage> message) {
         final TelegramChatbotInputMessage inputMessage = TelegramChatbotInputMessageBuilder.copy(message.getPayload()).build();

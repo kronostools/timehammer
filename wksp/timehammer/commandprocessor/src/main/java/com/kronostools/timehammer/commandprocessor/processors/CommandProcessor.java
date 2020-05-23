@@ -7,6 +7,7 @@ import com.kronostools.timehammer.commandprocessor.config.TimehammerDomainConfig
 import com.kronostools.timehammer.commandprocessor.model.ChatbotRegistrationRequest;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
 import com.kronostools.timehammer.common.messages.telegramchatbot.*;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import io.smallrye.mutiny.Uni;
@@ -47,7 +48,7 @@ public class CommandProcessor {
 
         final String chatId = inputMessage.getChatId();
 
-        TelegramChatbotNotificationMessageBuilder notificationMessage = null;
+        TelegramChatbotNotificationMessage notificationMessage = null;
 
         // TODO: try to implement a Rule pattern to avoid the excessive use of if-else (see https://www.baeldung.com/java-replace-if-statements)
         if (inputMessage.isCommandPresent()) {
@@ -65,32 +66,56 @@ public class CommandProcessor {
                         LOG.debug("Authentication is required and logged in user is: {}", worker.getWorkerInternalId());
 
                         if (chatbotCommand == ChatbotCommand.UNREGISTER) {
-                            final String unregisterUrl = timehammerDomainConfig.getUnregisterUrl(worker.getWorkerInternalId());
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNREGISTER);
+                            final String url = timehammerDomainConfig.getUnregisterUrl(worker.getWorkerInternalId());
+
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_UNREGISTER_INIT(url))
+                                    .build();
                         } else if (chatbotCommand == ChatbotCommand.SETTINGS) {
-                            final String settingsUrl = timehammerDomainConfig.getSettingsUrl(worker.getWorkerInternalId());
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNIMPLEMENTED);
+                            final String url = timehammerDomainConfig.getSettingsUrl(worker.getWorkerInternalId());
+
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_UPDATE_SETTINGS_INIT(url))
+                                    .build();
                         } else if (chatbotCommand == ChatbotCommand.UPDATE_PASSWORD) {
-                            final String settingsUrl = timehammerDomainConfig.getUpdatePasswordUrl(worker.getWorkerInternalId());
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UPDATE_PASSWORD(chatbotUpdatePasswordResponse.getUpdatePasswordUrl()));
+                            final String url = timehammerDomainConfig.getUpdatePasswordUrl(worker.getWorkerInternalId());
+
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_UPDATE_PASSWORD_INIT(url))
+                                    .build();
                         }
                     } else {
                         LOG.info("Command '{}' requires being authenticated, but no worker is logged in", chatbotCommand.name());
 
-                        outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTRATION_REQUIRED);
+                        notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                .copy(inputMessage)
+                                .text(ChatbotMessages.COMMAND_REGISTRATION_REQUIRED)
+                                .build();
                     }
                 } else {
                     LOG.info("Authentication is not required");
 
                     if (chatbotCommand == ChatbotCommand.START) {
                         if (inputMessage.identifiedWorker()) {
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_START_REGISTERED);
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_START_REGISTERED)
+                                    .build();
                         } else {
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_START_UNREGISTERED);
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_START_UNREGISTERED)
+                                    .build();
                         }
                     } else if (chatbotCommand == ChatbotCommand.REGISTER) {
                         if (inputMessage.identifiedWorker()) {
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTER_REGISTERED(workerCurrentPreferences.getWorkerExternalId()));
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_REGISTER_REGISTERED(inputMessage.getWorkerCurrentPreferencesPhase().getWorkerExternalId()))
+                                    .build();
                         } else {
                             final String newWorkerInternalId = UUID.randomUUID().toString();
                             final ChatbotRegistrationRequest chatbotRegistrationRequest = new ChatbotRegistrationRequest(newWorkerInternalId, chatId, timeMachineService.getNow());
@@ -98,20 +123,28 @@ public class CommandProcessor {
                             chatbotRegistrationRequestCache.put(newWorkerInternalId, chatbotRegistrationRequest);
 
                             final String registerUrl = timehammerDomainConfig.getUpdatePasswordUrl(newWorkerInternalId);
-                            outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_REGISTER_INIT(chatbotRegistrationResponse.getLoginUrl()));
+
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_REGISTER_INIT(registerUrl))
+                                    .build();
                         }
                     } else if (chatbotCommand == ChatbotCommand.HELP) {
                         final String helpUrl = timehammerDomainConfig.getHelpUrl();
 
-                        outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_HELP(timehammerConfig.getHelpUrl()));
+                        notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                .copy(inputMessage)
+                                .text(ChatbotMessages.COMMAND_HELP(helpUrl))
+                                .build();
                     }
                 }
             } else {
                 LOG.debug("Unrecognized command");
 
-                outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_UNRECOGNIZED);
-
-                storeTrashMessage(incomingMessage);
+                notificationMessage = TelegramChatbotNotificationMessageBuilder
+                        .copy(inputMessage)
+                        .text(ChatbotMessages.COMMAND_UNRECOGNIZED)
+                        .build();
             }
         } else {
             LOG.debug("Message has not any command");
@@ -119,16 +152,20 @@ public class CommandProcessor {
             if (inputMessage.identifiedWorker()) {
                 LOG.debug("Message from logged in user");
 
-                outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_MISSING_REGISTERED);
+                notificationMessage = TelegramChatbotNotificationMessageBuilder
+                        .copy(inputMessage)
+                        .text(ChatbotMessages.COMMAND_MISSING_REGISTERED)
+                        .build();
             } else {
                 LOG.debug("Message from an unknown user");
 
-                outgoingMessage = NotificationService.getOutgoingMessage(chatId, ChatbotMessages.COMMAND_MISSING_UNREGISTERED);
+                notificationMessage = TelegramChatbotNotificationMessageBuilder
+                        .copy(inputMessage)
+                        .text(ChatbotMessages.COMMAND_MISSING_UNREGISTERED)
+                        .build();
             }
-
-            storeTrashMessage(incomingMessage);
         }
 
-        return Uni.createFrom().item(Message.of(notificationMessage.build(), message::ack));
+        return Uni.createFrom().item(Message.of(notificationMessage, message::ack));
     }
 }

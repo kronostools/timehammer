@@ -17,7 +17,9 @@ public class CommonConstants {
         public static final String HOLIDAYS_CLEAN_SUMMARY = "holidays-clean-summary";
         public static final String SCHEDULE_SUMMARY = "schedule-summary";
         public static final String BATCH_SCHEDULE_SUMMARY = "batch-schedule-summary";
-        public static final String COMMAND_ID = "command-id";
+        public static final String COMMAND_PREPROCESS = "command-preprocess";
+        public static final String COMMAND_ID_IN = "command-id";
+        public static final String COMMAND_ID_OUT = "command-id";
         public static final String COMMAND_PROCESS = "command-process";
         public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
     }

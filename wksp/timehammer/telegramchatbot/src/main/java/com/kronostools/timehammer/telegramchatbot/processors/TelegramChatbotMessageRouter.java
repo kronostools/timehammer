@@ -18,7 +18,7 @@ public class TelegramChatbotMessageRouter implements Processor {
 
     private final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel;
 
-    public TelegramChatbotMessageRouter(@Channel(Channels.COMMAND_ID) final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel) {
+    public TelegramChatbotMessageRouter(@Channel(Channels.COMMAND_PREPROCESS) final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel) {
         this.chatbotMessageChannel = chatbotMessageChannel;
     }
 

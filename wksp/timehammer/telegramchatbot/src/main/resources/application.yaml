@@ -7,9 +7,9 @@ quarkus:
 mp:
   messaging:
     outgoing:
-      command-id:
+      command-preprocess:
         connector: smallrye-kafka
-        topic: command-id
+        topic: command-preprocess
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 

@@ -1,10 +1,9 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Chatbot
-        - Añadir commandprocessor
-        - Probar que se puede tener el módulo chatbot leyendo mensajes de telegram y al mismo tiempo otro módulo que envía mensajes a telegram
-        - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
+    - Web
+        - Página de registro
+            - Cambiar el componente Slider por inputs de html5 de tipo time
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays
@@ -12,7 +11,11 @@
         - Revisar el workshop de quarkus que creo que hay un ejemplo
         - En chatbot añadir ping sobre telegram
         - En comunytek añadir ping sobre comunytek
+    - Chatbot
+        - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
     - Monitorización de componentes con Graphana y Prometheus
+    - Schedule
+        - Añadir schedule para limpiar los trash_message
 - Llevar servicio /auth/mock/chatbotRegistration a /demo
 - Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
     - Si el usuario no existe se establece la contraseña

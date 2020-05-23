@@ -29,7 +29,12 @@ mp:
         topic: holidays-worker-update
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidayWorkerJacksonDeserializer
-      command-id:
+      command-preprocess:
+        connector: smallrye-kafka
+        topic: command-preprocess
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotInputMessageJacksonDeserializer
+      command-id-in:
         connector: smallrye-kafka
         topic: command-id
         value:
@@ -48,6 +53,11 @@ mp:
       holidays-clean-summary:
         connector: smallrye-kafka
         topic: holidays-clean-summary
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      command-id-out:
+        connector: smallrye-kafka
+        topic: command-id
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       command-process:
