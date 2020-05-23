@@ -1,0 +1,31 @@
+mp:
+  messaging:
+    incoming:
+      command-process:
+        connector: smallrye-kafka
+        topic: command-process
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotInputMessageJacksonDeserializer
+    outgoing:
+      notification-telegram:
+        connector: smallrye-kafka
+        topic: notification-telegram
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+
+timehammer:
+  domain:
+    base-url: https://timehammer.kronostools.com
+  chatbot:
+    registration-request-cache:
+      expiration:
+        qty: 10
+        unit: MINUTES
+
+"%localdemo":
+  timehammer:
+    baseUrl: http://192.168.86.168:9000
+
+"%remotedemo":
+  timehammer:
+    baseUrl: https://timehammer.kronostools.com

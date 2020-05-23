@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.comunytek.config.converters;
+package com.kronostools.timehammer.common.config.converter;
 
 import org.eclipse.microprofile.config.spi.Converter;
 

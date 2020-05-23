@@ -2,7 +2,6 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Chatbot
-        - Probar flujo telegramchatbot => core
         - Añadir commandprocessor
         - Probar que se puede tener el módulo chatbot leyendo mensajes de telegram y al mismo tiempo otro módulo que envía mensajes a telegram
         - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot

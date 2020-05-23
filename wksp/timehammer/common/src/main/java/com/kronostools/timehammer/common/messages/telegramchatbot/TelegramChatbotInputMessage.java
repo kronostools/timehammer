@@ -56,7 +56,12 @@ public class TelegramChatbotInputMessage extends TelegramChatbotMessage {
     }
 
     @JsonIgnore
-    public boolean isCommandUnknown() {
-        return rawCommand != null;
+    public boolean isCommandKnown() {
+        return command != null;
+    }
+
+    @JsonIgnore
+    public boolean identifiedWorker() {
+        return workerCurrentPreferencesPhase != null;
     }
 }
