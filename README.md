@@ -1,8 +1,6 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Comunytek
-        - Transformar el CredentialService en 2 implementaciones... 1 mocked y 1 real, en la mocked siempre se devuelve un password y en la real se deja lo que hay
     - Chatbot
         - Probar flujo telegramchatbot => core
         - Añadir commandprocessor
