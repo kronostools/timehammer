@@ -14,7 +14,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class WorkerCurrentPreferencesDao {
@@ -111,9 +110,7 @@ public class WorkerCurrentPreferencesDao {
                         }
                     }
 
-                    return Optional.ofNullable(worker)
-                            .map(WorkerCurrentPreferencesSingleResultBuilder::buildFromResult)
-                            .orElse(null);
+                    return WorkerCurrentPreferencesSingleResultBuilder.buildFromResult(worker);
                 })
                 .onFailure()
                     .recoverWithItem((e) -> {

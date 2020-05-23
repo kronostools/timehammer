@@ -24,7 +24,7 @@ public class TelegramChatbotMessageRouter implements Processor {
 
     @Override
     public void process(final Exchange exchange) {
-        chatbotMessageChannel.send(RoutesUtils.getMessage(exchange)).handle((Void, e) -> {
+        chatbotMessageChannel.send(RoutesUtils.getCommandMessage(exchange)).handle((Void, e) -> {
             if (e != null) {
                 LOG.error("Exception while routing chatbot message", e);
             } else {

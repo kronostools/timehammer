@@ -43,7 +43,7 @@ public class RoutesUtils {
                 });
     }
 
-    public static TelegramChatbotInputMessage getMessage(final Exchange exchange) {
+    public static TelegramChatbotInputMessage getCommandMessage(final Exchange exchange) {
         return exchange.getMessage()
                 .getHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessage.class);
     }

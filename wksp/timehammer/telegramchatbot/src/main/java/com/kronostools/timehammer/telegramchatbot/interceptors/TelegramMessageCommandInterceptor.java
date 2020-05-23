@@ -32,7 +32,7 @@ public class TelegramMessageCommandInterceptor implements Processor {
                     // known command
                     c -> exchange.getMessage()
                                 .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessageBuilder
-                                        .copy(RoutesUtils.getMessage(exchange))
+                                        .copy(RoutesUtils.getCommandMessage(exchange))
                                         .command(c).build()),
                     // unknown command
                     () -> {
@@ -40,7 +40,7 @@ public class TelegramMessageCommandInterceptor implements Processor {
 
                         exchange.getMessage()
                                 .setHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessageBuilder
-                                        .copy(RoutesUtils.getMessage(exchange))
+                                        .copy(RoutesUtils.getCommandMessage(exchange))
                                         .rawCommand(rawCommand).build());
                     });
         }

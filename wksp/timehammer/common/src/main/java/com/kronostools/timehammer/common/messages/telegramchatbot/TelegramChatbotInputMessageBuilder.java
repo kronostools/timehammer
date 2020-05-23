@@ -25,7 +25,9 @@ public class TelegramChatbotInputMessageBuilder extends TelegramChatbotMessageBu
                         .chatId(ccm.getChatId())
                         .messageId(ccm.getMessageId())
                         .command(ccm.getCommand())
-                        .rawCommand(ccm.getRawCommand()))
+                        .rawCommand(ccm.getRawCommand())
+                        .text(ccm.getText())
+                        .workerCurrentPreferencesPhase(ccm.getWorkerCurrentPreferencesPhase()))
                 .orElse(null);
     }
 
@@ -44,7 +46,7 @@ public class TelegramChatbotInputMessageBuilder extends TelegramChatbotMessageBu
         return this;
     }
 
-    public TelegramChatbotInputMessageBuilder text(final WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase) {
+    public TelegramChatbotInputMessageBuilder workerCurrentPreferencesPhase(final WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase) {
         this.workerCurrentPreferencesPhase = workerCurrentPreferencesPhase;
         return this;
     }

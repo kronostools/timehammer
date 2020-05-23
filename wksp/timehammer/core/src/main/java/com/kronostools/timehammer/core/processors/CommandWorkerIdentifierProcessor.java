@@ -48,7 +48,7 @@ public class CommandWorkerIdentifierProcessor {
                         if (workerCurrentPreferencesResult.getResult() != null) {
                             final WorkerCurrentPreferences wcp = workerCurrentPreferencesResult.getResult();
 
-                            LOG.info("Worker '{}' was identified for message comming from chat '{}'", inputMessage.getChatId(), wcp.getWorkerExternalId());
+                            LOG.info("Worker '{}' was identified for message comming from chat '{}'", wcp.getWorkerExternalId(), inputMessage.getChatId());
 
                             workerCurrentPreferencesPhase = new WorkerCurrentPreferencesPhaseBuilder()
                                     .result(WorkerCurrentPreferencesResult.OK)
@@ -68,6 +68,8 @@ public class CommandWorkerIdentifierProcessor {
                                     .chatIds(wcp.getChatIds())
                                     .build();
                         } else {
+                            LOG.info("No worker was identified for message comming from chat '{}'", inputMessage.getChatId());
+
                             workerCurrentPreferencesPhase = new WorkerCurrentPreferencesPhaseBuilder()
                                     .result(WorkerCurrentPreferencesResult.UNREGISTERED_CHAT)
                                     .errorMessage(CommonUtils.stringFormat("There is no registered worker for chat '{}'", inputMessage.getChatId()))

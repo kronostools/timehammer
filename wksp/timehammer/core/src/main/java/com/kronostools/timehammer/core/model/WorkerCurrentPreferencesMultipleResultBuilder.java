@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.core.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,15 +11,15 @@ public class WorkerCurrentPreferencesMultipleResultBuilder extends MultipleResul
                 .map(wcprb -> new WorkerCurrentPreferencesMultipleResultBuilder()
                         .result(wcprb)
                         .build())
-                .orElse(null);
+                .orElse(new WorkerCurrentPreferencesMultipleResultBuilder()
+                        .result(Collections.emptyList())
+                        .build());
     }
 
     public static WorkerCurrentPreferencesMultipleResult buildFromError(final String errorMessage) {
-        return Optional.ofNullable(errorMessage)
-                .map(em -> new WorkerCurrentPreferencesMultipleResultBuilder()
-                        .errorMessage(em)
-                        .build())
-                .orElse(null);
+        return new WorkerCurrentPreferencesMultipleResultBuilder()
+                .errorMessage(errorMessage)
+                .build();
     }
 
     public WorkerCurrentPreferencesMultipleResult build() {

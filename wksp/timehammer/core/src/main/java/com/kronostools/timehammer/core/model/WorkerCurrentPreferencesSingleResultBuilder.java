@@ -9,15 +9,13 @@ public class WorkerCurrentPreferencesSingleResultBuilder extends SingleResultBui
                 .map(wcprb -> new WorkerCurrentPreferencesSingleResultBuilder()
                         .result(wcprb.build())
                         .build())
-                .orElse(null);
+                .orElse(new WorkerCurrentPreferencesSingleResultBuilder().build());
     }
 
     public static WorkerCurrentPreferencesSingleResult buildFromError(final String errorMessage) {
-        return Optional.ofNullable(errorMessage)
-                .map(em -> new WorkerCurrentPreferencesSingleResultBuilder()
-                        .errorMessage(em)
-                        .build())
-                .orElse(null);
+        return new WorkerCurrentPreferencesSingleResultBuilder()
+                .errorMessage(errorMessage)
+                .build();
     }
 
     public WorkerCurrentPreferencesSingleResult build() {
