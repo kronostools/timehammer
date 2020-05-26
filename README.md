@@ -1,9 +1,11 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Web
-        - Página de registro
-            - Cambiar el componente Slider por inputs de html5 de tipo time
+    - Registro
+        - Flujo: Comunytek, Core, Web, ChatbotNotifier
+        - Web
+            - Página de registro
+                - Cambiar el componente Slider por inputs de html5 de tipo time
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays

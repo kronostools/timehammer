@@ -1,15 +1,12 @@
 package com.kronostools.timehammer.commandprocessor.processors;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.kronostools.timehammer.commandprocessor.config.ChatbotRegistrationRequestCacheConfig;
 import com.kronostools.timehammer.commandprocessor.config.TimehammerDomainConfig;
 import com.kronostools.timehammer.commandprocessor.model.ChatbotRegistrationRequest;
+import com.kronostools.timehammer.commandprocessor.service.RegistrationRequestService;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
 import com.kronostools.timehammer.common.messages.telegramchatbot.*;
-import com.kronostools.timehammer.common.services.TimeMachineService;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -18,25 +15,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.UUID;
 
 @ApplicationScoped
 public class CommandProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(CommandProcessor.class);
 
-    private final Cache<String, ChatbotRegistrationRequest> chatbotRegistrationRequestCache;
+    private final RegistrationRequestService registrationRequestService;
     private final TimehammerDomainConfig timehammerDomainConfig;
-    private final TimeMachineService timeMachineService;
 
-    public CommandProcessor(final ChatbotRegistrationRequestCacheConfig chatbotRegistrationRequestCacheConfig,
-                            final TimehammerDomainConfig timehammerDomainConfig,
-                            final TimeMachineService timeMachineService) {
-        chatbotRegistrationRequestCache = Caffeine.newBuilder()
-                .expireAfterWrite(chatbotRegistrationRequestCacheConfig.getExpiration().getQty(), chatbotRegistrationRequestCacheConfig.getExpiration().getUnit())
-                .build();
-
+    public CommandProcessor(final RegistrationRequestService registrationRequestService,
+                            final TimehammerDomainConfig timehammerDomainConfig) {
+        this.registrationRequestService = registrationRequestService;
         this.timehammerDomainConfig = timehammerDomainConfig;
-        this.timeMachineService = timeMachineService;
     }
 
     @Incoming(Channels.COMMAND_PROCESS)
@@ -117,12 +107,9 @@ public class CommandProcessor {
                                     .text(ChatbotMessages.COMMAND_REGISTER_REGISTERED(inputMessage.getWorkerCurrentPreferencesPhase().getWorkerExternalId()))
                                     .build();
                         } else {
-                            final String newWorkerInternalId = UUID.randomUUID().toString();
-                            final ChatbotRegistrationRequest chatbotRegistrationRequest = new ChatbotRegistrationRequest(newWorkerInternalId, chatId, timeMachineService.getNow());
+                            final ChatbotRegistrationRequest chatbotRegistrationRequest = registrationRequestService.newRegistrationRequest(chatId);
 
-                            chatbotRegistrationRequestCache.put(newWorkerInternalId, chatbotRegistrationRequest);
-
-                            final String registerUrl = timehammerDomainConfig.getUpdatePasswordUrl(newWorkerInternalId);
+                            final String registerUrl = timehammerDomainConfig.getUpdatePasswordUrl(chatbotRegistrationRequest.getWorkerInternalId());
 
                             notificationMessage = TelegramChatbotNotificationMessageBuilder
                                     .copy(inputMessage)

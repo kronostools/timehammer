@@ -9,9 +9,9 @@ public class CommonConstants {
         public static final String TIMEMACHINE_STREAM = "timemachine-stream";
         public static final String SCHEDULE_UPDATE_HOLIDAYS = "schedule-update-holidays";
         public static final String SCHEDULE_CLEAN_HOLIDAYS = "schedule-clean-holidays";
-        public static final String HOLIDAYS_WORKER_AUTH = "holidays-worker-auth";
         public static final String HOLIDAYS_WORKER_GET = "holidays-worker-get";
         public static final String COMUNYTEK_WORKER_HOLIDAYS = "comunytek-worker-holidays";
+        public static final String COMUNYTEK_WORKER_REGISTER = "comunytek-worker-register";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
         public static final String HOLIDAYS_WORKER_SUMMARY = "holidays-worker-summary";
         public static final String HOLIDAYS_CLEAN_SUMMARY = "holidays-clean-summary";
@@ -22,5 +22,7 @@ public class CommonConstants {
         public static final String COMMAND_ID_OUT = "command-id";
         public static final String COMMAND_PROCESS = "command-process";
         public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
+        public static final String WORKER_EVENT_REGISTER = "worker-event-register";
+        public static final String REGISTER_WORKER = "register-worker";
     }
 }

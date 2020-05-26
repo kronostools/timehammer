@@ -6,9 +6,19 @@ mp:
         topic: holidays-worker-get
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
+      register-worker:
+        connector: smallrye-kafka
+        topic: register-worker
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
     outgoing:
       comunytek-worker-holidays:
         connector: smallrye-kafka
         topic: comunytek-worker-holidays
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      comunytek-worker-register:
+        connector: smallrye-kafka
+        topic: comunytek-worker-register
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

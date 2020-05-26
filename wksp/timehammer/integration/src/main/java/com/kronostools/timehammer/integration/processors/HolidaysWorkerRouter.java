@@ -21,22 +21,22 @@ import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 public class HolidaysWorkerRouter {
     private static final Logger LOG = LoggerFactory.getLogger(HolidaysWorkerRouter.class);
 
-    private final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidays;
+    private final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidaysChannel;
 
-    public HolidaysWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_HOLIDAYS) final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidays) {
-        this.comunytekWorkerHolidays = comunytekWorkerHolidays;
+    public HolidaysWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_HOLIDAYS) final Emitter<UpdateWorkersHolidayWorker> comunytekWorkerHolidaysChannel) {
+        this.comunytekWorkerHolidaysChannel = comunytekWorkerHolidaysChannel;
     }
 
     @Incoming(Channels.HOLIDAYS_WORKER_GET)
     public CompletionStage<Void> routeHolidays(final Message<UpdateWorkersHolidayWorker> message) {
         final UpdateWorkersHolidayWorker worker = UpdateWorkersHolidayWorkerBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Routing message of worker '{}' to company '{}'", worker.getWorkerInternalId(), worker.getCompany().getCode());
+        LOG.info("Routing update holidays message of worker '{}' to company '{}'", worker.getWorkerInternalId(), worker.getCompany().getCode());
 
         if (worker.getCompany() == Company.COMUNYTEK) {
-            return comunytekWorkerHolidays.send(worker).handle(getMessageHandler(message, worker.getCompany()));
+            return comunytekWorkerHolidaysChannel.send(worker).handle(getMessageHandler(message, worker.getCompany()));
         } else {
-            LOG.warn("Ignored message because there is no channel for company '{}'", worker.getCompany().getCode());
+            LOG.warn("Ignored update holidays message because there is no channel for company '{}'", worker.getCompany().getCode());
             return message.ack();
         }
     }
@@ -44,10 +44,10 @@ public class HolidaysWorkerRouter {
     private BiFunction<? super Void, Throwable, Void> getMessageHandler(final Message<?> message, final Company company) {
         return (Void, e) -> {
             if (e != null) {
-                LOG.error(stringFormat("Exception while routing message to '{}' channel", company.getCode()), e);
+                LOG.error(stringFormat("Exception while routing update holidays message to '{}' channel", company.getCode()), e);
             } else {
                 message.ack();
-                LOG.debug("Routed message to '{}' channel", company.getCode());
+                LOG.debug("Routed update holidays message to '{}' channel", company.getCode());
             }
 
             return null;
