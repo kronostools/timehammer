@@ -6,9 +6,9 @@ mp:
         topic: command-process
         value:
           deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotInputMessageJacksonDeserializer
-      worker-event-register:
+      worker-register-init:
         connector: smallrye-kafka
-        topic: worker-event-register
+        topic: worker-register-init
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
     outgoing:
@@ -17,9 +17,9 @@ mp:
         topic: notification-telegram
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      register-worker:
+      worker-register-route:
         connector: smallrye-kafka
-        topic: register-worker
+        topic: worker-register-route
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 

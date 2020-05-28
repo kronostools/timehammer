@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public class CachedWorkerCredentials {
     private String externalPassword;
-    private boolean expired;
-    private LocalDateTime expiredSince;
+    private boolean invalid;
+    private LocalDateTime invalidSince;
 
     public String getExternalPassword() {
         return externalPassword;
@@ -15,19 +15,19 @@ public class CachedWorkerCredentials {
         this.externalPassword = externalPassword;
     }
 
-    public boolean isExpired() {
-        return expired;
+    public boolean isInvalid() {
+        return invalid;
     }
 
-    public void setExpired(boolean expired) {
-        this.expired = expired;
+    public void setInvalid(boolean invalid) {
+        this.invalid = invalid;
     }
 
-    public LocalDateTime getExpiredSince() {
-        return expiredSince;
+    public LocalDateTime getInvalidSince() {
+        return invalidSince;
     }
 
-    public void setExpiredSince(LocalDateTime expiredSince) {
-        this.expiredSince = expiredSince;
+    public void setInvalidSince(LocalDateTime invalidSince) {
+        this.invalidSince = invalidSince;
     }
 }

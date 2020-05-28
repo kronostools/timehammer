@@ -11,10 +11,13 @@ public class WorkerRegistrationRequest extends PlatformMessage {
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
+    private String workerExternalPassword;
     private String workCity;
     private String workSsid;
     // TODO: add timetable
     private CheckRegistrationRequestPhase checkRegistrationRequestPhase;
+    private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
+    private ValidateRegistrationRequestPhase validateRegistrationRequestPhase;
 
     WorkerRegistrationRequest(final LocalDateTime generated, final String workerInternalId) {
         super(generated);
@@ -55,6 +58,14 @@ public class WorkerRegistrationRequest extends PlatformMessage {
         this.workerExternalId = workerExternalId;
     }
 
+    public String getWorkerExternalPassword() {
+        return workerExternalPassword;
+    }
+
+    public void setWorkerExternalPassword(String workerExternalPassword) {
+        this.workerExternalPassword = workerExternalPassword;
+    }
+
     public String getWorkCity() {
         return workCity;
     }
@@ -77,5 +88,21 @@ public class WorkerRegistrationRequest extends PlatformMessage {
 
     public void setCheckRegistrationRequestPhase(CheckRegistrationRequestPhase checkRegistrationRequestPhase) {
         this.checkRegistrationRequestPhase = checkRegistrationRequestPhase;
+    }
+
+    public CheckWorkerCredentialsPhase getCheckWorkerCredentialsPhase() {
+        return checkWorkerCredentialsPhase;
+    }
+
+    public void setCheckWorkerCredentialsPhase(CheckWorkerCredentialsPhase checkWorkerCredentialsPhase) {
+        this.checkWorkerCredentialsPhase = checkWorkerCredentialsPhase;
+    }
+
+    public ValidateRegistrationRequestPhase getValidateRegistrationRequestPhase() {
+        return validateRegistrationRequestPhase;
+    }
+
+    public void setValidateRegistrationRequestPhase(ValidateRegistrationRequestPhase validateRegistrationRequestPhase) {
+        this.validateRegistrationRequestPhase = validateRegistrationRequestPhase;
     }
 }

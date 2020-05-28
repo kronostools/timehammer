@@ -22,7 +22,11 @@ public class CommonConstants {
         public static final String COMMAND_ID_OUT = "command-id";
         public static final String COMMAND_PROCESS = "command-process";
         public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
-        public static final String WORKER_EVENT_REGISTER = "worker-event-register";
-        public static final String REGISTER_WORKER = "register-worker";
+        public static final String WORKER_REGISTER_INIT = "worker-register-init";
+        public static final String WORKER_REGISTER_ROUTE = "worker-register-route";
+        public static final String WORKER_REGISTER_VALIDATE = "worker-register-validate";
+        public static final String WORKER_REGISTER_PERSIST_OUT = "worker-register-persist-out";
+        public static final String WORKER_REGISTER_PERSIST_IN = "worker-register-persist-in";
+        public static final String WORKER_REGISTER_NOTIFY_OUT = "worker-register-notify-out";
     }
 }

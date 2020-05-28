@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.15.0/dist/bootstrap-vue.min.css" integrity="sha256-e4HOoF20aWN7tP3c3B+XjQLqx8C0l3sdrLEiyF27BJM=" crossorigin="anonymous">
+
+    <title>Timehammer: Registro</title>
+</head>
+<body>
+    <div id="app">
+        <b-container>
+            <div class="py-5 text-center">
+                <img class="d-block mx-auto mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+                <h2>Bienvenido a Timehammer!</h2>
+                <p class="lead">En esta página podrás registrarte en Timehammer y así podrás olvidarte del engorro de fichar.</p>
+
+                <h3>¿Cómo funciona esto?</h3>
+                <p class="lead">Pendiente de redactar</p>
+            </div>
+
+            <b-row class="justify-content-center">
+                <b-col md="10">
+                    <h4 class="mb-3">Formulario de registro</h4>
+
+                    <b-form @submit.prevent="onSubmit" novalidate="novalidate">
+                        <b-row>
+                            <b-col>
+                                <b-form-group id="companyGroup" label="Empresa (*):" label-for="company">
+                                    <b-form-select id="company" size="sm" v-model="form.company" :options="companies"></b-form-select>
+                                    <small id="companyHelp" class="form-text text-muted">Necesitamos saber la compañía en la que trabajas para poder autenticarte</small>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+
+                        <b-row>
+                            <b-col md="6">
+                                <b-form-group id="externalIdGroup" label="Usuario (*):" label-for="externalId">
+                                    <b-form-input id="externalId" type="text" size="sm" v-model="form.externalId"></b-form-input>
+                                    <small id="externalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa</small>
+                                </b-form-group>
+                            </b-col>
+                            <b-col md="6">
+                                <b-form-group id="externalPasswordGroup" label="Contraseña (*):" label-for="externalPassword">
+                                    <b-form-input id="externalPassword" type="password" size="sm" v-model="form.externalPassword"></b-form-input>
+                                    <small id="externalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+
+                        <b-row>
+                            <b-col md="6">
+                                <b-form-group id="workCityGroup" label="Ciudad de trabajo (*):" label-for="workCity">
+                                    <b-form-select id="workCity" size="sm" v-model="form.workCity" :options="cities"></b-form-select>
+                                    <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
+                                </b-form-group>
+                            </b-col>
+                            <b-col md="6">
+                                <b-form-group id="workSsidGroup" label="SSID de la WiFi del trabajo:" label-for="workSsid">
+                                    <b-form-input id="workSsid" type="text" size="sm" v-model="form.externalPassword"></b-form-input>
+                                    <small id="workSsidHelp" class="form-text text-muted">Necesario si se quiere automatizar el proceso de fichaje</small>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+
+                        <hr class="mb-4">
+
+                        <timehammer-timetable v-model="form.startWorkMon"></timehammer-timetable>
+
+                        <hr class="mb-4">
+
+                        <b-button type="submit" variant="primary">Enviar</b-button>
+                    </b-form>
+                </b-col>
+            </b-row>
+        </b-container>
+    </div>
+
+    <!-- Fontawesome -->
+    <script src="https://kit.fontawesome.com/ebff2e60d9.js" crossorigin="anonymous"></script>
+
+    <!-- VueBootstrap prerequisite: required for dropdowns -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"></script>
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+    <!-- VueBootstrap prerequisite: required by toasts -->
+    <script src="https://cdn.jsdelivr.net/npm/portal-vue@2.1.7/dist/portal-vue.umd.min.js" integrity="sha256-hpvN0uXcWg/hXFoIk7TfFKLWKV0HMa5WOICSKiyxxn4=" crossorigin="anonymous"></script>
+    <!-- VueBootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.15.0/dist/bootstrap-vue.min.js" integrity="sha256-y9Vp8fMtXILjsWZ2gqOIjf7cJBQ60GEplO+bhzXrXJg=" crossorigin="anonymous"></script>
+
+    <script src="../components/timehammer-timetable.js"></script>
+    <script src="register.js"></script>
+</body>
+</html>

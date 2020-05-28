@@ -27,8 +27,8 @@ public class RegistrationAliveChecker {
         this.registrationRequestService = registrationRequestService;
     }
 
-    @Incoming(Channels.WORKER_EVENT_REGISTER)
-    @Outgoing(Channels.REGISTER_WORKER)
+    @Incoming(Channels.WORKER_REGISTER_INIT)
+    @Outgoing(Channels.WORKER_REGISTER_ROUTE)
     public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest inputMessage = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
@@ -42,7 +42,7 @@ public class RegistrationAliveChecker {
             LOG.warn(errorMessage);
 
             inputMessage.setCheckRegistrationRequestPhase(new CheckRegistrationRequestPhaseBuilder()
-                    .result(SimpleResult.UNEXPECTED_ERROR)
+                    .result(SimpleResult.KO)
                     .errorMessage(errorMessage)
                     .build());
         } else {

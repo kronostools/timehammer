@@ -1,12 +1,12 @@
 package com.kronostools.timehammer.comunytek.model;
 
-import com.kronostools.timehammer.comunytek.constants.CredentialsResponse;
+import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
 
 public class WorkerCredentialsResponseBuilder {
-    private CredentialsResponse response;
+    private ComunytekLoginResult response;
     private String externalPassword;
 
-    public WorkerCredentialsResponseBuilder response(final CredentialsResponse response) {
+    public WorkerCredentialsResponseBuilder response(final ComunytekLoginResult response) {
         this.response = response;
         return this;
     }

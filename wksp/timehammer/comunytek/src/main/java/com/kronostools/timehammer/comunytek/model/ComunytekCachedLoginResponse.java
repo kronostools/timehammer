@@ -1,13 +1,13 @@
 package com.kronostools.timehammer.comunytek.model;
 
-import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekCachedLoginResult;
 
-public class ComunytekLoginResponse extends ComunytekResponse<ComunytekLoginResult> {
+public class ComunytekCachedLoginResponse extends ComunytekResponse<ComunytekCachedLoginResult> {
     private String sessionId;
     private String username;
     private String fullname;
 
-    ComunytekLoginResponse(final ComunytekLoginResult result, final String errorMessage) {
+    ComunytekCachedLoginResponse(final ComunytekCachedLoginResult result, final String errorMessage) {
         super(result, errorMessage);
     }
 

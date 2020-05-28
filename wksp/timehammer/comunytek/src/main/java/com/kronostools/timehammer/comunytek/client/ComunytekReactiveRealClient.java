@@ -2,17 +2,16 @@ package com.kronostools.timehammer.comunytek.client;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.config.LoginCacheConfig;
-import com.kronostools.timehammer.comunytek.exception.ComunytekException;
+import com.kronostools.timehammer.comunytek.constants.ComunytekCachedLoginResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
 import com.kronostools.timehammer.comunytek.exception.ComunytekExpiredSessionException;
-import com.kronostools.timehammer.comunytek.exception.ComunytekIncorrectLoginException;
 import com.kronostools.timehammer.comunytek.exception.ComunytekUnexpectedException;
-import com.kronostools.timehammer.comunytek.model.ComunytekHolidayForm;
-import com.kronostools.timehammer.comunytek.model.ComunytekHolidayResponse;
-import com.kronostools.timehammer.comunytek.model.ComunytekLoginForm;
-import com.kronostools.timehammer.comunytek.model.ComunytekLoginResponse;
+import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
@@ -30,7 +29,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
     private static final String BASE_URL = "/SWHandler";
 
     private static final long UNEXPECTED_ERROR_MAX_RETRIES = 2L;
-    private static final long EXPIRED_SESSION_MAX_RETRIES = 1L;
+    private static final long EXPIRED_SESSION_MAX_RETRIES = 2L;
 
     private static final String OK = "OK";
     private static final String LINE_BREAK = "\n";
@@ -43,95 +42,141 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
     private final WebClient client;
 
-    private final Cache<String, ComunytekLoginResponse> cache;
+    private final Cache<String, CachedWorkerCredentials> credentialsCache;
+    private final Cache<String, ComunytekCachedLoginResponse> loginCache;
 
-    public ComunytekReactiveRealClient(final Vertx vertx, final LoginCacheConfig loginCacheConfig) {
+    private final TimeMachineService timeMachineService;
+
+    public ComunytekReactiveRealClient(final Vertx vertx,
+                                       final LoginCacheConfig loginCacheConfig,
+                                       final TimeMachineService timeMachineService) {
         this.client = WebClient.create(vertx, new WebClientOptions()
                 .setDefaultHost("empleados.comunytek.com")
                 .setDefaultPort(443)
                 .setSsl(true)
                 .setTrustAll(true));
 
-        this.cache = Caffeine.newBuilder()
+        this.credentialsCache = Caffeine.newBuilder()
+                .build();
+
+        this.loginCache = Caffeine.newBuilder()
                 .expireAfterWrite(loginCacheConfig.getExpiration().getQty(), loginCacheConfig.getExpiration().getUnit())
                 .build();
+
+        this.timeMachineService = timeMachineService;
     }
 
+    @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
+        LOG.debug("Calling comunytek to login ...");
+
+        return client.post(getUrl("selfweb"))
+                .putHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
+                .sendBuffer(ComunytekLoginForm.Builder.builder()
+                        .username(username)
+                        .password(password)
+                        .build()
+                        .toBuffer())
+                .map(response -> {
+                    LOG.debug("Processing login response from comunytek - status: {}", response.statusCode());
+
+                    final ComunytekLoginResponse result;
+
+                    if (response.statusCode() == 200) {
+                        if (response.bodyAsString().startsWith("ERROR")) {
+                            final String message = CommonUtils.stringFormat("There was an error while login, incorrect username ({}) or password (*****)", username);
+                            LOG.warn(message);
+
+                            result = new ComunytekLoginResponseBuilder()
+                                    .result(ComunytekLoginResult.INVALID)
+                                    .build();
+
+                            markCredentialsAsInvalid(username);
+                        } else {
+                            LOG.debug("User '{}' was logged in successfully", username);
+
+                            final String[] responseParts = response.bodyAsString().split(LINE_BREAK);
+
+                            result = new ComunytekLoginResponseBuilder()
+                                    .result(ComunytekLoginResult.OK)
+                                    .fullname(responseParts[0])
+                                    .sessionId(responseParts[2])
+                                    .username(username)
+                                    .build();
+
+                            updateCredentials(username, password);
+                            updateSession(username, result.getSessionId(), result.getFullname());
+                        }
+                    } else {
+                        final String message = CommonUtils.stringFormat("There was an unexpected error trying to login user '{}'", username);
+                        LOG.error(message);
+
+                        throw new ComunytekUnexpectedException(message);
+                    }
+
+                    return result;
+                })
+                .onFailure(ComunytekUnexpectedException.class)
+                    .retry()
+                    .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
+    }
+
+    private Uni<ComunytekCachedLoginResponse> cachedLogin(final String username) {
         LOG.debug("Trying to login user '{}' ...", username);
 
-        final ComunytekLoginResponse loginResponse = cache.getIfPresent(username);
+        final ComunytekCachedLoginResponse loginResponse = loginCache.getIfPresent(username);
 
         if (loginResponse != null) {
             LOG.debug("Recovered login response from cache");
 
             return Uni.createFrom().item(loginResponse);
         } else {
-            LOG.debug("Calling comunytek to login ...");
+            final CachedWorkerCredentials cachedWorkerCredentials = credentialsCache.getIfPresent(username);
 
-            return client.post(getUrl("selfweb"))
-                    .putHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
-                    .sendBuffer(ComunytekLoginForm.Builder.builder()
-                            .username(username)
-                            .password(password)
-                            .build()
-                            .toBuffer())
-                    .map(response -> {
-                        LOG.debug("Processing login response from comunytek - status: {}", response.statusCode());
+            if (cachedWorkerCredentials == null) {
+                final String errorMessage = CommonUtils.stringFormat("Credentials of user '{}' are missing", username);
 
-                        final ComunytekLoginResponse result;
+                LOG.warn(errorMessage);
 
-                        if (response.statusCode() == 200) {
-                            if (response.bodyAsString().startsWith("ERROR")) {
-                                final String message = CommonUtils.stringFormat("There was an error while login, incorrect username ({}) or password (*****)", username);
-                                LOG.warn(message);
+                return Uni.createFrom().item(new ComunytekCachedLoginResponseBuilder()
+                        .result(ComunytekCachedLoginResult.MISSING)
+                        .build());
+            } else if (cachedWorkerCredentials.isInvalid()) {
+                final String errorMessage = CommonUtils.stringFormat("Last login (on {}) with registered credentials of user '{}' was unsuccessful", CommonDateTimeUtils.formatDateTimeToLog(cachedWorkerCredentials.getInvalidSince()), username);
 
-                                throw new ComunytekIncorrectLoginException(message);
-                            } else {
-                                LOG.debug("User '{}' was logged in successfully", username);
+                LOG.warn(errorMessage);
 
-                                final String[] responseParts = response.bodyAsString().split(LINE_BREAK);
+                return Uni.createFrom().item(new ComunytekCachedLoginResponseBuilder()
+                        .result(ComunytekCachedLoginResult.INVALID)
+                        .build());
+            } else {
+                LOG.debug("Calling comunytek to login ...");
 
-                                result = ComunytekLoginResponse.Builder.builder()
-                                        .fullname(responseParts[0])
-                                        .sessionId(responseParts[2])
-                                        .username(username)
-                                        .build();
-
-                                cache.put(username, result);
-                            }
-                        } else {
-                            final String message = CommonUtils.stringFormat("There was an unexpected error trying to login user '{}'", username);
-                            LOG.error(message);
-
-                            throw new ComunytekUnexpectedException(message);
-                        }
-
-                        return result;
-                    })
-                    .onFailure(ComunytekUnexpectedException.class)
-                        .retry()
-                        .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
+                return login(username, cachedWorkerCredentials.getExternalPassword())
+                        .onFailure(Exception.class)
+                            .recoverWithItem(e -> new ComunytekLoginResponseBuilder()
+                                    .result(ComunytekLoginResult.UNEXPECTED_ERROR)
+                                    .errorMessage(e.getMessage())
+                                    .build())
+                        .map(ComunytekCachedLoginResponseBuilder::copyAndBuild);
+            }
         }
     }
 
     @Override
-    public Uni<ComunytekHolidayResponse> isHoliday(final String username, final String password, final LocalDate holidayCandidate) {
+    public Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate holidayCandidate) {
         LOG.debug("Checking if '{}' is holiday for user '{}' ...", CommonDateTimeUtils.formatDateToLog(holidayCandidate), username);
 
-        return login(username, password)
-                .onFailure(ComunytekException.class)
-                    .recoverWithItem((e) -> ComunytekLoginResponse.Builder.builder().buildUnsuccessful(e.getMessage()))
-                .onItem()
-                .produceUni(loginResponse -> {
-                    if (loginResponse.isSuccessful()) {
+        return cachedLogin(username)
+                .flatMap(clr -> {
+                    if (clr.isSuccessful()) {
                         LOG.debug("Calling comunytek to get holidays ...");
 
                         return client
                                 .post(getUrl("regvac"))
                                 .putHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
                                 .sendBuffer(ComunytekHolidayForm.Builder.builder()
-                                        .sessionId(loginResponse.getSessionId())
+                                        .sessionId(clr.getSessionId())
                                         .username(username)
                                         .build()
                                         .toBuffer())
@@ -142,16 +187,17 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
                                     if (response.statusCode() == 200) {
                                         if (ERROR_EXPIRED_SESSION.equals(response.bodyAsString())) {
-                                            cache.invalidate(username);
+                                            invalidateSession(username);
 
-                                            final String message = CommonUtils.stringFormat("Session of user '{}' has expired and its holidays couldn't be retrieve", username);
+                                            final String message = CommonUtils.stringFormat("Session of user '{}' has expired and its holidays couldn't be retrieved", username);
                                             LOG.warn(message);
 
                                             throw new ComunytekExpiredSessionException(message);
                                         } else {
                                             LOG.debug("Holidays of user '{}' were retrieved successfully", username);
 
-                                            result = ComunytekHolidayResponse.Builder.builder()
+                                            result = new ComunytekHolidayResponseBuilder()
+                                                    .result(ComunytekSimpleResult.OK)
                                                     .date(holidayCandidate)
                                                     .holiday(Stream.of(response.bodyAsString().split(LINE_BREAK))
                                                         .map(rawHoliday -> rawHoliday.split(TAB))
@@ -174,8 +220,10 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                     .retry()
                                     .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
                     } else {
-                        return Uni.createFrom().item(ComunytekHolidayResponse.Builder.builder()
-                                .buildUnsuccessful(loginResponse.getErrorMessage()));
+                        return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
+                                .result(ComunytekSimpleResult.KO)
+                                .errorMessage(clr.getErrorMessage())
+                                .build());
                     }
                 })
                 .onFailure(ComunytekExpiredSessionException.class)
@@ -190,5 +238,45 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
     private String getUrl(final String urlPart) {
         return CommonUtils.stringFormat("{}/{}", BASE_URL, urlPart);
+    }
+
+    private void invalidateSession(final String username) {
+        loginCache.invalidate(username);
+    }
+
+    private void updateSession(final String username, final String sessionId, final String fullName) {
+        loginCache.put(username, new ComunytekCachedLoginResponseBuilder()
+                .username(username)
+                .sessionId(sessionId)
+                .fullname(fullName)
+                .build());
+    }
+
+    private void updateCredentials(final String username, final String externalPassword) {
+        credentialsCache.put(username, new CachedWorkerCredentialsBuilder()
+                .invalid(false)
+                .externalPassword(externalPassword)
+                .build());
+    }
+
+    private void markCredentialsAsInvalid(final String username) {
+        final CachedWorkerCredentials foundCredentials = credentialsCache.getIfPresent(username);
+
+        if (foundCredentials != null) {
+            credentialsCache.put(username, CachedWorkerCredentialsBuilder.copy(foundCredentials)
+                    .invalid(true)
+                    .invalidSince(timeMachineService.getNow())
+                    .build());
+        }
+    }
+
+    @Override
+    public void dumpCredentials() {
+        // TODO: implement logic
+    }
+
+    @Override
+    public void loadCredentials() {
+        // TODO; implement logic
     }
 }

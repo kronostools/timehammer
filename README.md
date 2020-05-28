@@ -2,7 +2,11 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
-        - Flujo: Comunytek, Core, Web, ChatbotNotifier
+        - Flujo: 
+        * Core > Web > ChatbotNotifier
+            - Implementar validaciones
+            - Guardar worker, worker_preferences y worker_chat en una unica transaccion con reactive psql
+            - Crear un resumen del registro para enviarlo al ChatbotNotifier
         - Web
             - Página de registro
                 - Cambiar el componente Slider por inputs de html5 de tipo time

@@ -4,7 +4,7 @@ import com.kronostools.timehammer.common.utils.CommonUtils;
 import io.vertx.mutiny.core.buffer.Buffer;
 
 public class ComunytekLoginForm {
-    private static final String FAKE_SESSIONID = "11111111";
+    public static final String FAKE_SESSIONID = "11111111";
     private static final String S = "S";
 
     private static final String ACTION_LOGIN = "LOGIN";

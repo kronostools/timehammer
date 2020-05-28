@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.comunytek.lifecycle;
 
-import com.kronostools.timehammer.comunytek.service.WorkerCredentialsService;
+import com.kronostools.timehammer.comunytek.client.ComunytekClient;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
@@ -13,10 +13,10 @@ import javax.enterprise.event.Observes;
 public class AuthLifecycle {
     private static final Logger LOG = LoggerFactory.getLogger(AuthLifecycle.class);
 
-    final WorkerCredentialsService workerCredentialsService;
+    final ComunytekClient comunytekClient;
 
-    public AuthLifecycle(final WorkerCredentialsService workerCredentialsService) {
-        this.workerCredentialsService = workerCredentialsService;
+    public AuthLifecycle(final ComunytekClient comunytekClient) {
+        this.comunytekClient = comunytekClient;
     }
 
     void onStartup(@Observes StartupEvent event) {
@@ -24,7 +24,7 @@ public class AuthLifecycle {
 
         LOG.info("Loading worker credentials from temp dump file ...");
 
-        workerCredentialsService.load();
+        comunytekClient.loadCredentials();
 
         LOG.info("Loaded worker credentials");
 
@@ -36,7 +36,7 @@ public class AuthLifecycle {
 
         LOG.debug("Dumping worker credentials to temp dump file ...");
 
-        workerCredentialsService.dump();
+        comunytekClient.dumpCredentials();
 
         LOG.debug("Dumped worker credentials");
 

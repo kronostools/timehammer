@@ -1,16 +1,22 @@
 package com.kronostools.timehammer.comunytek.model;
 
-public class ComunytekResponse {
-    protected final boolean successful;
-    protected final String errorMessage;
+import com.kronostools.timehammer.comunytek.constants.ComunytekResult;
 
-    ComunytekResponse(final boolean successful, final String errorMessage) {
-        this.successful = successful;
+public abstract class ComunytekResponse<R extends Enum<R> & ComunytekResult> {
+    protected R result;
+    protected String errorMessage;
+
+    ComunytekResponse(final R result, final String errorMessage) {
+        this.result = result;
         this.errorMessage = errorMessage;
     }
 
     public boolean isSuccessful() {
-        return successful;
+        return result.isSuccessful();
+    }
+
+    public R getResult() {
+        return result;
     }
 
     public String getErrorMessage() {

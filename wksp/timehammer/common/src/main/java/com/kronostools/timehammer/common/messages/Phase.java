@@ -6,22 +6,20 @@ import com.kronostools.timehammer.common.messages.constants.PhaseResult;
 public abstract class Phase<R extends Enum<R> & PhaseResult> {
     protected R result;
     protected String errorMessage;
-    protected boolean successful;
 
     protected Phase(final R result, final String errorMessage) {
         this.result = result;
         this.errorMessage = errorMessage;
-        this.successful = result == null;
     }
 
     @JsonIgnore
     public boolean isSuccessful() {
-        return successful;
+        return result.isSuccessful();
     }
 
     @JsonIgnore
     public boolean isNotSuccessful() {
-        return !successful;
+        return !result.isSuccessful();
     }
 
     public R getResult() {

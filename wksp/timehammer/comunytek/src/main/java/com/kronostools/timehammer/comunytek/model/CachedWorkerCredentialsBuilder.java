@@ -5,15 +5,15 @@ import java.util.Optional;
 
 public class CachedWorkerCredentialsBuilder {
     private String externalPassword;
-    private boolean expired;
-    private LocalDateTime expiredSince;
+    private boolean invalid;
+    private LocalDateTime invalidSince;
 
     public static CachedWorkerCredentialsBuilder copy(final CachedWorkerCredentials cachedWorkerCredentials) {
         return Optional.ofNullable(cachedWorkerCredentials)
                 .map(cwc -> new CachedWorkerCredentialsBuilder()
                         .externalPassword(cwc.getExternalPassword())
-                        .expired(cwc.isExpired())
-                        .expiredSince(cwc.getExpiredSince()))
+                        .invalid(cwc.isInvalid())
+                        .invalidSince(cwc.getInvalidSince()))
                 .orElse(null);
     }
 
@@ -22,21 +22,21 @@ public class CachedWorkerCredentialsBuilder {
         return this;
     }
 
-    public CachedWorkerCredentialsBuilder expired(final boolean expired) {
-        this.expired = expired;
+    public CachedWorkerCredentialsBuilder invalid(final boolean expired) {
+        this.invalid = expired;
         return this;
     }
 
-    public CachedWorkerCredentialsBuilder expiredSince(final LocalDateTime lastUsed) {
-        this.expiredSince = lastUsed;
+    public CachedWorkerCredentialsBuilder invalidSince(final LocalDateTime lastUsed) {
+        this.invalidSince = lastUsed;
         return this;
     }
 
     public CachedWorkerCredentials build() {
          final CachedWorkerCredentials result = new CachedWorkerCredentials();
          result.setExternalPassword(externalPassword);
-         result.setExpired(expired);
-         result.setExpiredSince(expiredSince);
+         result.setInvalid(invalid);
+         result.setInvalidSince(invalidSince);
 
          return result;
     }

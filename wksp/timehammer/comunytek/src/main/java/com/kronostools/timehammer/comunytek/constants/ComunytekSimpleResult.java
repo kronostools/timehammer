@@ -1,13 +1,13 @@
-package com.kronostools.timehammer.common.messages.constants;
+package com.kronostools.timehammer.comunytek.constants;
 
-public enum SimpleResult implements PhaseResult {
-    OK(true,null),
-    KO(false,"Error");
+public enum ComunytekSimpleResult implements ComunytekResult {
+    OK(true, null),
+    KO(true, "Error");
 
     private final boolean successful;
     private final String defaultErrorMessage;
 
-    SimpleResult(final boolean successful, final String defaultErrorMessage) {
+    ComunytekSimpleResult(final boolean successful, final String defaultErrorMessage) {
         this.successful = successful;
         this.defaultErrorMessage = defaultErrorMessage;
     }

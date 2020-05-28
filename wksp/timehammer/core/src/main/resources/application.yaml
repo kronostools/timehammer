@@ -39,6 +39,16 @@ mp:
         topic: command-id
         value:
           deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotInputMessageJacksonDeserializer
+      worker-register-validate:
+        connector: smallrye-kafka
+        topic: worker-register-validate
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-register-persist-in:
+        connector: smallrye-kafka
+        topic: worker-register-persist
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
     outgoing:
       holidays-worker-get:
         connector: smallrye-kafka
@@ -63,5 +73,15 @@ mp:
       command-process:
         connector: smallrye-kafka
         topic: command-process
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-register-persist-out:
+        connector: smallrye-kafka
+        topic: worker-register-persist
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-register-notify-out:
+        connector: smallrye-kafka
+        topic: worker-register-notify
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

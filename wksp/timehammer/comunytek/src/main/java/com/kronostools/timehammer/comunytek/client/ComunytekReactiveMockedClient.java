@@ -1,6 +1,8 @@
 package com.kronostools.timehammer.comunytek.client;
 
-import com.kronostools.timehammer.comunytek.model.ComunytekHolidayResponse;
+import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
+import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
 
 import java.time.LocalDate;
@@ -42,10 +44,21 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
             add(LocalDate.of(currentYear, 1, 10));
         }};
     }
-    
+
     @Override
-    public Uni<ComunytekHolidayResponse> isHoliday(final String username, final String password, final LocalDate holidayCandidate) {
-        return Uni.createFrom().item(ComunytekHolidayResponse.Builder.builder()
+    public Uni<ComunytekLoginResponse> login(final String username, final String password) {
+        return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
+                .result(ComunytekLoginResult.OK)
+                .fullname(username)
+                .username(username)
+                .sessionId(ComunytekLoginForm.FAKE_SESSIONID)
+                .build());
+    }
+
+    @Override
+    public Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate holidayCandidate) {
+        return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
+                .result(ComunytekSimpleResult.OK)
                 .holiday(mockedHolidays.contains(holidayCandidate))
                 .build());
     }
@@ -54,4 +67,10 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
     public boolean isMocked() {
         return true;
     }
+
+    @Override
+    public void dumpCredentials() {}
+
+    @Override
+    public void loadCredentials() {}
 }

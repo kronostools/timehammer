@@ -11,10 +11,13 @@ public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMe
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
+    private String workerExternalPassword;
     private String workCity;
     private String workSsid;
     // TODO: add timetable
     private CheckRegistrationRequestPhase checkRegistrationRequestPhase;
+    private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
+    private ValidateRegistrationRequestPhase validateRegistrationRequestPhase;
 
     public static WorkerRegistrationRequest copyAndBuild(final WorkerRegistrationRequest worker) {
         return Optional.ofNullable(worker)
@@ -29,9 +32,12 @@ public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMe
                     .workerInternalId(w.getWorkerInternalId())
                     .company(w.getCompany())
                     .workerExternalId(w.getWorkerExternalId())
+                    .workerExternalPassword(w.getWorkerExternalPassword())
                     .workCity(w.getWorkCity())
                     .workSsid(w.getWorkSsid())
-                    .checkRegistrationRequestPhase(CheckRegistrationRequestPhaseBuilder.copyAndBuild(w.getCheckRegistrationRequestPhase())))
+                    .checkRegistrationRequestPhase(CheckRegistrationRequestPhaseBuilder.copyAndBuild(w.getCheckRegistrationRequestPhase()))
+                    .checkWorkerCredentialsPhase(CheckWorkerCredentialsPhaseBuilder.copyAndBuild(w.getCheckWorkerCredentialsPhase()))
+                    .validateRegistrationRequestPhase(ValidateRegistrationRequestPhaseBuilder.copyAndBuild(worker.getValidateRegistrationRequestPhase())))
                 .orElse(null);
     }
 
@@ -50,6 +56,11 @@ public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMe
         return this;
     }
 
+    public WorkerRegistrationRequestBuilder workerExternalPassword(final String workerExternalPassword) {
+        this.workerExternalPassword = workerExternalPassword;
+        return this;
+    }
+
     public WorkerRegistrationRequestBuilder workCity(final String workCity) {
         this.workCity = workCity;
         return this;
@@ -65,13 +76,26 @@ public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMe
         return this;
     }
 
+    public WorkerRegistrationRequestBuilder checkWorkerCredentialsPhase(final CheckWorkerCredentialsPhase checkWorkerCredentialsPhase) {
+        this.checkWorkerCredentialsPhase = checkWorkerCredentialsPhase;
+        return this;
+    }
+
+    public WorkerRegistrationRequestBuilder validateRegistrationRequestPhase(final ValidateRegistrationRequestPhase validateRegistrationRequestPhase) {
+        this.validateRegistrationRequestPhase = validateRegistrationRequestPhase;
+        return this;
+    }
+
     public WorkerRegistrationRequest build() {
         final WorkerRegistrationRequest result = new WorkerRegistrationRequest(generated, workerInternalId);
         result.setCompany(company);
         result.setWorkerExternalId(workerExternalId);
+        result.setWorkerExternalPassword(workerExternalPassword);
         result.setWorkCity(workCity);
         result.setWorkSsid(workSsid);
         result.setCheckRegistrationRequestPhase(checkRegistrationRequestPhase);
+        result.setCheckWorkerCredentialsPhase(checkWorkerCredentialsPhase);
+        result.setValidateRegistrationRequestPhase(validateRegistrationRequestPhase);
 
         return result;
     }
