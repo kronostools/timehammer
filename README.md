@@ -6,6 +6,11 @@
         * Core > Web > ChatbotNotifier
             - Implementar validaciones
             - Guardar worker, worker_preferences y worker_chat en una unica transaccion con reactive psql
+                - Crear capa Service antes del Dao para dar de alta un worker
+                - Anotar Service con @Transactional
+                - Probar que hace rollback
+                - Aplicar la capa service para todos los Dao existentes
+                - Poner @Transactional en todas las modificaciones en bdd
             - Crear un resumen del registro para enviarlo al ChatbotNotifier
         - Web
             - Página de registro
