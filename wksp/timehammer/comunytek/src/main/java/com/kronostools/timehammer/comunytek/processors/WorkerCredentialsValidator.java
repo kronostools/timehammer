@@ -33,7 +33,7 @@ public class WorkerCredentialsValidator {
     public Uni<Message<WorkerRegistrationRequest>> checkCredentials(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
-        return comunytekClient.login(registrationRequest.getWorkerExternalId(), registrationRequest.getWorkerExternalPassword())
+        return comunytekClient.login(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
                 .onFailure(Exception.class)
                     .recoverWithItem((e) -> new ComunytekLoginResponseBuilder()
                             .result(ComunytekLoginResult.UNEXPECTED_ERROR)

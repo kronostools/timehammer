@@ -44,6 +44,10 @@ public final class CommonDateTimeUtils {
         return parseTime(time, FORMAT_HHMM_TSEP);
     }
 
+    public static LocalTime parseTimeFromForm(final String time) {
+        return parseTime(time, FORMAT_HHMM_TSEP);
+    }
+
     public static LocalTime getTimeWithOffset(final LocalTime time, final ZoneOffset offset) {
         return Optional.ofNullable(time)
                 .map(t -> t.atOffset(offset)

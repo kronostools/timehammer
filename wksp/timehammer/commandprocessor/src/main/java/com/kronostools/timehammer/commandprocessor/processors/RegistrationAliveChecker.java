@@ -32,12 +32,12 @@ public class RegistrationAliveChecker {
     public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest inputMessage = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Checking if registration request '{}' is still alive ...", inputMessage.getWorkerInternalId());
+        LOG.info("Checking if registration request '{}' is still alive ...", inputMessage.getRegistrationRequestForm().getWorkerInternalId());
 
-        final ChatbotRegistrationRequest existingRegistrationRequest = registrationRequestService.getRegistrationRequest(inputMessage.getWorkerInternalId());
+        final ChatbotRegistrationRequest existingRegistrationRequest = registrationRequestService.getRegistrationRequest(inputMessage.getRegistrationRequestForm().getWorkerInternalId());
 
         if (existingRegistrationRequest == null) {
-            final String errorMessage = CommonUtils.stringFormat("Registration request '{}' is already expired", inputMessage.getWorkerInternalId());
+            final String errorMessage = CommonUtils.stringFormat("Registration request '{}' is already expired", inputMessage.getRegistrationRequestForm().getWorkerInternalId());
 
             LOG.warn(errorMessage);
 
@@ -46,7 +46,7 @@ public class RegistrationAliveChecker {
                     .errorMessage(errorMessage)
                     .build());
         } else {
-            LOG.debug("Registration request '{}' was found and is associated to chat '{}'", inputMessage.getWorkerInternalId(), existingRegistrationRequest.getChatId());
+            LOG.debug("Registration request '{}' was found and is associated to chat '{}'", inputMessage.getRegistrationRequestForm().getWorkerInternalId(), existingRegistrationRequest.getChatId());
 
             inputMessage.setCheckRegistrationRequestPhase(new CheckRegistrationRequestPhaseBuilder()
                     .result(SimpleResult.OK)

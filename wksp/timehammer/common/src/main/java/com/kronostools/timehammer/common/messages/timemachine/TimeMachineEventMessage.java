@@ -11,8 +11,8 @@ public class TimeMachineEventMessage extends PlatformMessage {
     private LocalDateTime newTimestamp;
     private SupportedTimezone timezone;
 
-    TimeMachineEventMessage(final LocalDateTime timestamp) {
-        super(timestamp);
+    TimeMachineEventMessage(final LocalDateTime generated) {
+        super(generated);
     }
 
     public LocalDateTime getNewTimestamp() {

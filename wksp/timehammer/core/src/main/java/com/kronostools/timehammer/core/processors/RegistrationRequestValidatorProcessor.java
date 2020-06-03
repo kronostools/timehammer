@@ -1,7 +1,7 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.constants.SimpleResult;
+import com.kronostools.timehammer.common.messages.constants.SimpleValidateResult;
 import com.kronostools.timehammer.common.messages.registration.ValidateRegistrationRequestPhase;
 import com.kronostools.timehammer.common.messages.registration.ValidateRegistrationRequestPhaseBuilder;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequest;
@@ -24,16 +24,17 @@ public class RegistrationRequestValidatorProcessor {
     public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Validating registration request '{}' ...", registrationRequest.getWorkerInternalId());
-
-        final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
-                .result(SimpleResult.OK)
-                .build();
+        LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestForm().getWorkerInternalId());
 
         // TODO: implement real validations
+        final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
+                .result(SimpleValidateResult.VALID)
+                //TODO: fill validatedForm and validationErrors
+                .build();
+
         registrationRequest.setValidateRegistrationRequestPhase(validationResult);
 
-        LOG.info("Validated registration request '{}' with result: {}", registrationRequest.getWorkerInternalId(), validationResult.getResult().name());
+        LOG.info("Validated registration request '{}' with result: {}", registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), validationResult.getResult().name());
 
         return Uni.createFrom().item(Message.of(registrationRequest, message::ack));
     }

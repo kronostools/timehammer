@@ -28,7 +28,7 @@ public class WorkerHolidaysDao {
     public Uni<UpsertResult> upsertHoliday(final String workerInternalId, final LocalDate holidayCandidate) {
         return client
                 .preparedQuery(
-                        "INSERT INTO worker_holiday (worker_internal_id, day) " +
+                        "INSERT INTO worker_holiday(worker_internal_id, day) " +
                             "VALUES ($1, $2) " +
                             "ON CONFLICT DO NOTHING", Tuple.of(workerInternalId, holidayCandidate))
                 .map((pgRowSet) -> new UpsertResultBuilder()

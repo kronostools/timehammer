@@ -1,13 +1,14 @@
 package com.kronostools.timehammer.common.messages.registration;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.kronostools.timehammer.common.messages.PhaseBuilder;
-import com.kronostools.timehammer.common.messages.constants.SimpleResult;
+import com.kronostools.timehammer.common.messages.ValidatePhaseBuilder;
+import com.kronostools.timehammer.common.messages.constants.SimpleValidateResult;
+import com.kronostools.timehammer.common.messages.registration.forms.RegistrationRequestFormValidated;
 
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class ValidateRegistrationRequestPhaseBuilder extends PhaseBuilder<SimpleResult, ValidateRegistrationRequestPhaseBuilder> {
+public class ValidateRegistrationRequestPhaseBuilder extends ValidatePhaseBuilder<SimpleValidateResult, RegistrationRequestFormValidated, ValidateRegistrationRequestPhaseBuilder, ValidateRegistrationRequestPhase> {
 
     public static ValidateRegistrationRequestPhase copyAndBuild(final ValidateRegistrationRequestPhase validateRegistrationRequestPhase) {
         return Optional.ofNullable(validateRegistrationRequestPhase)
@@ -19,11 +20,13 @@ public class ValidateRegistrationRequestPhaseBuilder extends PhaseBuilder<Simple
         return Optional.ofNullable(validateRegistrationRequestPhase)
                 .map(vrrp -> new ValidateRegistrationRequestPhaseBuilder()
                         .result(vrrp.getResult())
-                        .errorMessage(vrrp.getErrorMessage()))
+                        .validatedForm(vrrp.getValidatedForm())
+                        .validationErrors(vrrp.getValidationErrors()))
                 .orElse(null);
     }
 
+    @Override
     public ValidateRegistrationRequestPhase build() {
-        return new ValidateRegistrationRequestPhase(result, errorMessage);
+        return new ValidateRegistrationRequestPhase(result, validatedForm, validationErrors);
     }
 }

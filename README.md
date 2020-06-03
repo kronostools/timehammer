@@ -4,12 +4,11 @@
     - Registro
         - Flujo: 
         * Core > Web > ChatbotNotifier
+            - Mover validación al principio, justo después de comprobar que la petición de registro está en la cache
+            - En Integration si la petición no es válida encaminar a la siguiente fase, la de persistir
             - Implementar validaciones
             - Guardar worker, worker_preferences y worker_chat en una unica transaccion con reactive psql
-                - Crear capa Service antes del Dao para dar de alta un worker
-                - Anotar Service con @Transactional
                 - Probar que hace rollback
-                - Aplicar la capa service para todos los Dao existentes
                 - Poner @Transactional en todas las modificaciones en bdd
             - Crear un resumen del registro para enviarlo al ChatbotNotifier
         - Web
