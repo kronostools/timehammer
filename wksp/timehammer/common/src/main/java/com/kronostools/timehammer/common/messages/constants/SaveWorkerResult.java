@@ -2,7 +2,7 @@ package com.kronostools.timehammer.common.messages.constants;
 
 public enum SaveWorkerResult implements PhaseResult {
     OK(true, null),
-    INVALID(false,"Invalid input data"),
+    INVALID_CREDENTIALS(false,"Invalid credentials"),
     KO(false,"Error");
 
     private final boolean successful;

@@ -17,9 +17,9 @@ mp:
         topic: holidays-worker-update
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      worker-register-validate:
+      worker-register-persist:
         connector: smallrye-kafka
-        topic: worker-register-validate
+        topic: worker-register-persist
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 

@@ -1,7 +1,8 @@
 package com.kronostools.timehammer.core.dao;
 
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.registration.forms.Timetable;
+import com.kronostools.timehammer.common.messages.registration.forms.RawTimetable;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.model.InsertResult;
 import com.kronostools.timehammer.core.model.InsertResultBuilder;
 import io.smallrye.mutiny.Uni;
@@ -24,30 +25,30 @@ public class WorkerPreferencesDao {
         this.client = client;
     }
 
-    public Uni<InsertResult> insertWorkerPreferences(final String workerInternalId, final String workerExternalId, final Timetable defaultTimetable, final Company company, final String workSsid, final String workCityCode) {
+    public Uni<InsertResult> insertWorkerPreferences(final String workerInternalId, final String workerExternalId, final RawTimetable defaultTimetable, final Company company, final String workSsid, final String workCityCode) {
         final List<Object> params = new ArrayList<>() {{
             add(workerInternalId);
             add(workerExternalId);
-            add(defaultTimetable.getWorkStartMon());
-            add(defaultTimetable.getWorkEndMon());
-            add(defaultTimetable.getLunchStartMon());
-            add(defaultTimetable.getLunchEndMon());
-            add(defaultTimetable.getWorkStartMon());
-            add(defaultTimetable.getWorkEndMon());
-            add(defaultTimetable.getLunchStartMon());
-            add(defaultTimetable.getLunchEndMon());
-            add(defaultTimetable.getWorkStartMon());
-            add(defaultTimetable.getWorkEndMon());
-            add(defaultTimetable.getLunchStartMon());
-            add(defaultTimetable.getLunchEndMon());
-            add(defaultTimetable.getWorkStartMon());
-            add(defaultTimetable.getWorkEndMon());
-            add(defaultTimetable.getLunchStartMon());
-            add(defaultTimetable.getLunchEndMon());
-            add(defaultTimetable.getWorkStartMon());
-            add(defaultTimetable.getWorkEndMon());
-            add(defaultTimetable.getLunchStartMon());
-            add(defaultTimetable.getLunchEndMon());
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
+            add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
             add(company);
             add(workSsid);
             add(workCityCode);

@@ -25,14 +25,14 @@ public class WorkerSaverProcessor {
         this.workerService = workerService;
     }
 
-    @Incoming(Channels.WORKER_REGISTER_PERSIST_IN)
+    @Incoming(Channels.WORKER_REGISTER_PERSIST)
     @Outgoing(Channels.WORKER_REGISTER_NOTIFY_OUT)
     public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
         LOG.info("Trying to save new worker '{}' ...", registrationRequest.getRegistrationRequestForm().getWorkerInternalId());
 
-        if (registrationRequest.getValidateRegistrationRequestPhase().isSuccessful()) {
+        if (registrationRequest.getCheckWorkerCredentialsPhase().isSuccessful()) {
             return workerService.saveWorker(registrationRequest)
                     .onFailure()
                     .recoverWithItem(new SaveWorkerPhaseBuilder()
@@ -48,8 +48,8 @@ public class WorkerSaverProcessor {
             return Uni.createFrom().item(Message.of(WorkerRegistrationRequestBuilder
                     .copy(registrationRequest)
                     .saveWorkerPhase(new SaveWorkerPhaseBuilder()
-                            .result(SaveWorkerResult.INVALID)
-                            .errorMessage("No worker was saved because registration request is invalid")
+                            .result(SaveWorkerResult.INVALID_CREDENTIALS)
+                            .errorMessage("No worker was saved because its credentials are invalid")
                             .build())
                     .build(), message::ack));
         }

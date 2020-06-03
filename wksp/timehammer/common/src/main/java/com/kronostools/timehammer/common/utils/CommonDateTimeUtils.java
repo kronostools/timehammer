@@ -4,6 +4,7 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.Optional;
@@ -109,6 +110,14 @@ public final class CommonDateTimeUtils {
         return formatTime(time, FORMAT_HHMM_TSEP);
     }
 
+    public static boolean isValidTimeFromForm(final String time) {
+        return isValidTime(time, FORMATTER_HHMM_TSEP);
+    }
+
+    public static boolean isValidTimeIntervalFromForm(final String start, final String end) {
+        return isValidTimeInterval(start, end, FORMATTER_HHMM_TSEP);
+    }
+
     public static boolean isWeekend(final LocalDate date) {
         return date.getDayOfWeek() == DayOfWeek.SATURDAY
                 || date.getDayOfWeek() == DayOfWeek.SUNDAY;
@@ -154,5 +163,26 @@ public final class CommonDateTimeUtils {
 
     private static LocalDateTime parseDateTime(final String dateTime, final String dateTimeFormat) {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
+    }
+
+    private static boolean isValidTime(final String time, final DateTimeFormatter timeFormat) {
+        try {
+            LocalTime.parse(time, timeFormat);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static boolean isValidTimeInterval(String start, String end, DateTimeFormatter formatterHhmmTsep) {
+        try {
+            final LocalTime startTime = LocalTime.parse(start, FORMATTER_HHMM_TSEP);
+            final LocalTime endTime = LocalTime.parse(end, FORMATTER_HHMM_TSEP);
+
+            return startTime.isBefore(endTime);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 }

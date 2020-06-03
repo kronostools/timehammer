@@ -1,16 +1,15 @@
 package com.kronostools.timehammer.common.messages.constants;
 
-public enum SimpleValidateResult implements ValidatePhaseResult {
+public enum ValidateResult {
     VALID(true),
     INVALID(false);
 
     private final boolean successful;
 
-    SimpleValidateResult(final boolean successful) {
+    ValidateResult(final boolean successful) {
         this.successful = successful;
     }
 
-    @Override
     public boolean isSuccessful() {
         return successful;
     }

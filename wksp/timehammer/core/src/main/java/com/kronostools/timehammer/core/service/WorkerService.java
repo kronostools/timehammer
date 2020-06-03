@@ -34,16 +34,16 @@ public class WorkerService {
     public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequest registrationRequest) {
         return Uni.createFrom().item(registrationRequest)
                 .onItem()
-                    .invoke(wrr -> workerDao.insertWorker(wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkerInternalId(), wrr.getCheckWorkerCredentialsPhase().getFullname()))
+                    .invoke(wrr -> workerDao.insertWorker(wrr.getRegistrationRequestForm().getWorkerInternalId(), wrr.getCheckWorkerCredentialsPhase().getFullname()))
                 .onItem()
-                    .invoke(wrr -> workerChatDao.insertWorkerChat(wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkerInternalId(), wrr.getCheckRegistrationRequestPhase().getChatId()))
+                    .invoke(wrr -> workerChatDao.insertWorkerChat(wrr.getRegistrationRequestForm().getWorkerInternalId(), wrr.getCheckRegistrationRequestPhase().getChatId()))
                 .onItem()
-                    .invoke(wrr -> workerPreferencesDao.insertWorkerPreferences(wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkerInternalId(),
-                                                                                wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkerExternalId(),
-                                                                                wrr.getValidateRegistrationRequestPhase().getValidatedForm().getDefaultTimetable(),
-                                                                                wrr.getValidateRegistrationRequestPhase().getValidatedForm().getCompany(),
-                                                                                wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkSsid(),
-                                                                                wrr.getValidateRegistrationRequestPhase().getValidatedForm().getWorkCityCode()))
+                    .invoke(wrr -> workerPreferencesDao.insertWorkerPreferences(wrr.getRegistrationRequestForm().getWorkerInternalId(),
+                                                                                wrr.getRegistrationRequestForm().getWorkerExternalId(),
+                                                                                wrr.getRegistrationRequestForm().getDefaultTimetable(),
+                                                                                wrr.getRegistrationRequestForm().getCompany(),
+                                                                                wrr.getRegistrationRequestForm().getWorkSsid(),
+                                                                                wrr.getRegistrationRequestForm().getWorkCity()))
                 .map(ir -> new SaveWorkerPhaseBuilder()
                                 .result(SaveWorkerResult.OK)
                                 .build());

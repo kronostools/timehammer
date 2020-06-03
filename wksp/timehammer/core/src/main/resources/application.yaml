@@ -44,7 +44,7 @@ mp:
         topic: worker-register-validate
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
-      worker-register-persist-in:
+      worker-register-persist:
         connector: smallrye-kafka
         topic: worker-register-persist
         value:
@@ -75,9 +75,9 @@ mp:
         topic: command-process
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      worker-register-persist-out:
+      worker-register-route:
         connector: smallrye-kafka
-        topic: worker-register-persist
+        topic: worker-register-route
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       worker-register-notify-out:

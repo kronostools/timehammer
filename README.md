@@ -3,10 +3,9 @@
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
         - Flujo: 
-        * Core > Web > ChatbotNotifier
-            - Mover validación al principio, justo después de comprobar que la petición de registro está en la cache
-            - En Integration si la petición no es válida encaminar a la siguiente fase, la de persistir
-            - Implementar validaciones
+        * Core > Web
+               > Core > ChatbotNotifier
+            - Implementar validacion de la ciudad
             - Guardar worker, worker_preferences y worker_chat en una unica transaccion con reactive psql
                 - Probar que hace rollback
                 - Poner @Transactional en todas las modificaciones en bdd

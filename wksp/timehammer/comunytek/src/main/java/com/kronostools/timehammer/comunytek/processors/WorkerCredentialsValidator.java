@@ -29,7 +29,7 @@ public class WorkerCredentialsValidator {
     }
 
     @Incoming(Channels.COMUNYTEK_WORKER_REGISTER)
-    @Outgoing(Channels.WORKER_REGISTER_VALIDATE)
+    @Outgoing(Channels.WORKER_REGISTER_PERSIST)
     public Uni<Message<WorkerRegistrationRequest>> checkCredentials(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 

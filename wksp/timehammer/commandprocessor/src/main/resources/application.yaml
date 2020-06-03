@@ -17,9 +17,9 @@ mp:
         topic: notification-telegram
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      worker-register-route:
+      worker-register-validate:
         connector: smallrye-kafka
-        topic: worker-register-route
+        topic: worker-register-validate
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 

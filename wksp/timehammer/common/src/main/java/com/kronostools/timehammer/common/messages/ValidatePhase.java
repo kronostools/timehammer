@@ -1,20 +1,18 @@
 package com.kronostools.timehammer.common.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.kronostools.timehammer.common.messages.constants.ValidatePhaseResult;
+import com.kronostools.timehammer.common.messages.constants.ValidateResult;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class ValidatePhase<R extends Enum<R> & ValidatePhaseResult, V> {
-    protected final R result;
-    protected final V validatedForm;
+public abstract class ValidatePhase {
+    protected final ValidateResult result;
     protected final List<ValidationError> validationErrors;
 
-    protected ValidatePhase(final R result, final V validatedForm, final List<ValidationError> validationErrors) {
+    protected ValidatePhase(final ValidateResult result, final List<ValidationError> validationErrors) {
         this.result = result;
-        this.validatedForm = validatedForm;
         this.validationErrors = validationErrors != null ? validationErrors : Collections.emptyList();
     }
 
@@ -42,12 +40,8 @@ public abstract class ValidatePhase<R extends Enum<R> & ValidatePhaseResult, V> 
                 .collect(Collectors.toList());
     }
 
-    public R getResult() {
+    public ValidateResult getResult() {
         return result;
-    }
-
-    public V getValidatedForm() {
-        return validatedForm;
     }
 
     public List<ValidationError> getValidationErrors() {

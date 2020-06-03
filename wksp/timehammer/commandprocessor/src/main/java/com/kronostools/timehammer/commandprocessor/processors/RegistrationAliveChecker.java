@@ -28,7 +28,7 @@ public class RegistrationAliveChecker {
     }
 
     @Incoming(Channels.WORKER_REGISTER_INIT)
-    @Outgoing(Channels.WORKER_REGISTER_ROUTE)
+    @Outgoing(Channels.WORKER_REGISTER_VALIDATE)
     public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest inputMessage = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 

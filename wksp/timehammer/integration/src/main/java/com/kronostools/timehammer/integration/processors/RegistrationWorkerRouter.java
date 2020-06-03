@@ -27,7 +27,7 @@ public class RegistrationWorkerRouter {
         this.comunytekWorkerRegisterChannel = comunytekWorkerRegisterChannel;
     }
 
-    @Incoming(Channels.HOLIDAYS_WORKER_GET)
+    @Incoming(Channels.WORKER_REGISTER_ROUTE)
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequest> message) {
         final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
 
