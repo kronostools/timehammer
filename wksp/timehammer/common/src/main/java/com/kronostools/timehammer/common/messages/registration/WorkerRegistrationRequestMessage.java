@@ -6,15 +6,15 @@ import com.kronostools.timehammer.common.messages.registration.forms.Registratio
 
 import java.time.LocalDateTime;
 
-@JsonDeserialize(builder = WorkerRegistrationRequestBuilder.class)
-public class WorkerRegistrationRequest extends PlatformMessage {
+@JsonDeserialize(builder = WorkerRegistrationRequestMessageBuilder.class)
+public class WorkerRegistrationRequestMessage extends PlatformMessage {
     private RegistrationRequestForm registrationRequestForm;
     private CheckRegistrationRequestPhase checkRegistrationRequestPhase;
     private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
     private ValidateRegistrationRequestPhase validateRegistrationRequestPhase;
     private SaveWorkerPhase saveWorkerPhase;
 
-    WorkerRegistrationRequest(final LocalDateTime generated, final RegistrationRequestForm registrationRequestForm) {
+    WorkerRegistrationRequestMessage(final LocalDateTime generated, final RegistrationRequestForm registrationRequestForm) {
         super(generated);
         this.registrationRequestForm = registrationRequestForm;
     }

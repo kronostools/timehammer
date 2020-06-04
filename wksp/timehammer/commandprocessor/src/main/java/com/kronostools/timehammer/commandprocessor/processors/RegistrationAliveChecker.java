@@ -5,8 +5,8 @@ import com.kronostools.timehammer.commandprocessor.service.RegistrationRequestSe
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.registration.CheckRegistrationRequestPhaseBuilder;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequest;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestBuilder;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -29,8 +29,8 @@ public class RegistrationAliveChecker {
 
     @Incoming(Channels.WORKER_REGISTER_INIT)
     @Outgoing(Channels.WORKER_REGISTER_VALIDATE)
-    public Uni<Message<WorkerRegistrationRequest>> process(final Message<WorkerRegistrationRequest> message) {
-        final WorkerRegistrationRequest inputMessage = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
+    public Uni<Message<WorkerRegistrationRequestMessage>> process(final Message<WorkerRegistrationRequestMessage> message) {
+        final WorkerRegistrationRequestMessage inputMessage = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
         LOG.info("Checking if registration request '{}' is still alive ...", inputMessage.getRegistrationRequestForm().getWorkerInternalId());
 

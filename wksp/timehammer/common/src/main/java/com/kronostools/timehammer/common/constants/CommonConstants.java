@@ -27,5 +27,6 @@ public class CommonConstants {
         public static final String WORKER_REGISTER_VALIDATE = "worker-register-validate";
         public static final String WORKER_REGISTER_PERSIST = "worker-register-persist";
         public static final String WORKER_REGISTER_NOTIFY_OUT = "worker-register-notify-out";
+        public static final String WORKER_REGISTER_NOTIFY_IN = "worker-register-notify-in";
     }
 }

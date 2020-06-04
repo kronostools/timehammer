@@ -3,7 +3,7 @@ package com.kronostools.timehammer.core.service;
 import com.kronostools.timehammer.common.messages.constants.SaveWorkerResult;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhase;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhaseBuilder;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequest;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
 import com.kronostools.timehammer.core.dao.WorkerChatDao;
 import com.kronostools.timehammer.core.dao.WorkerDao;
 import com.kronostools.timehammer.core.dao.WorkerPreferencesDao;
@@ -31,7 +31,7 @@ public class WorkerService {
     }
 
     @Transactional
-    public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequest registrationRequest) {
+    public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequestMessage registrationRequest) {
         return Uni.createFrom().item(registrationRequest)
                 .onItem()
                     .invoke(wrr -> workerDao.insertWorker(wrr.getRegistrationRequestForm().getWorkerInternalId(), wrr.getCheckWorkerCredentialsPhase().getFullname()))

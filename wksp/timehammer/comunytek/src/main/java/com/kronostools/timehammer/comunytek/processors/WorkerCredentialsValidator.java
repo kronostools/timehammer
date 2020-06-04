@@ -4,8 +4,8 @@ import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.constants.WorkerCredentialsResult;
 import com.kronostools.timehammer.common.messages.registration.CheckWorkerCredentialsPhase;
 import com.kronostools.timehammer.common.messages.registration.CheckWorkerCredentialsPhaseBuilder;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequest;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestBuilder;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
 import com.kronostools.timehammer.comunytek.client.ComunytekClient;
 import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
 import com.kronostools.timehammer.comunytek.model.ComunytekLoginResponseBuilder;
@@ -30,8 +30,8 @@ public class WorkerCredentialsValidator {
 
     @Incoming(Channels.COMUNYTEK_WORKER_REGISTER)
     @Outgoing(Channels.WORKER_REGISTER_PERSIST)
-    public Uni<Message<WorkerRegistrationRequest>> checkCredentials(final Message<WorkerRegistrationRequest> message) {
-        final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
+    public Uni<Message<WorkerRegistrationRequestMessage>> checkCredentials(final Message<WorkerRegistrationRequestMessage> message) {
+        final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
         return comunytekClient.login(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
                 .onFailure(Exception.class)

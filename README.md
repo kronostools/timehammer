@@ -3,16 +3,21 @@
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
         - Flujo: 
-        * Core > Web
-               > Core > ChatbotNotifier
-            - Implementar validacion de la ciudad
-            - Guardar worker, worker_preferences y worker_chat en una unica transaccion con reactive psql
-                - Probar que hace rollback
-                - Poner @Transactional en todas las modificaciones en bdd
+        * > Web
+          > Core > ChatbotNotifier
+            - Mover el workerInternalId del registrationRequestForm al RegistrationRequestMessage y renombrarlo a registrationRequestId y además que sea un dato obligatorio para el RegistrationRequestMessage
+            - Procesar la respuesta en la web para
+                - Mostrar errores de validación si los hubiera
+                - Mostrar errores inesperados durante el flujo
+                - Mostrar el éxito
             - Crear un resumen del registro para enviarlo al ChatbotNotifier
         - Web
             - Página de registro
                 - Cambiar el componente Slider por inputs de html5 de tipo time
+        - Pruebas
+            - Probar flujo en general
+            - Probar validaciones
+            - Probar @Transactional y rollback
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays

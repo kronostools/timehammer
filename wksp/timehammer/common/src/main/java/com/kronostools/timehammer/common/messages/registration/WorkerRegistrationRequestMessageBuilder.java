@@ -7,22 +7,22 @@ import com.kronostools.timehammer.common.messages.schedules.ProcessableBatchSche
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMessageBuilder<WorkerRegistrationRequestBuilder> {
+public class WorkerRegistrationRequestMessageBuilder extends ProcessableBatchScheduleMessageBuilder<WorkerRegistrationRequestMessageBuilder> {
     private RegistrationRequestForm registrationRequestForm;
     private CheckRegistrationRequestPhase checkRegistrationRequestPhase;
     private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
     private ValidateRegistrationRequestPhase validateRegistrationRequestPhase;
     private SaveWorkerPhase saveWorkerPhase;
 
-    public static WorkerRegistrationRequest copyAndBuild(final WorkerRegistrationRequest registrationRequest) {
+    public static WorkerRegistrationRequestMessage copyAndBuild(final WorkerRegistrationRequestMessage registrationRequest) {
         return Optional.ofNullable(registrationRequest)
-                .map(w -> WorkerRegistrationRequestBuilder.copy(w).build())
+                .map(w -> WorkerRegistrationRequestMessageBuilder.copy(w).build())
                 .orElse(null);
     }
 
-    public static WorkerRegistrationRequestBuilder copy(final WorkerRegistrationRequest registrationRequest) {
+    public static WorkerRegistrationRequestMessageBuilder copy(final WorkerRegistrationRequestMessage registrationRequest) {
         return Optional.ofNullable(registrationRequest)
-                .map(w -> new WorkerRegistrationRequestBuilder()
+                .map(w -> new WorkerRegistrationRequestMessageBuilder()
                     .generated(w.getGenerated())
                     // TODO: deep copy
                     .registrationRequestForm(w.getRegistrationRequestForm())
@@ -33,33 +33,33 @@ public class WorkerRegistrationRequestBuilder extends ProcessableBatchScheduleMe
                 .orElse(null);
     }
 
-    public WorkerRegistrationRequestBuilder registrationRequestForm(final RegistrationRequestForm registrationRequestForm) {
+    public WorkerRegistrationRequestMessageBuilder registrationRequestForm(final RegistrationRequestForm registrationRequestForm) {
         this.registrationRequestForm = registrationRequestForm;
         return this;
     }
 
-    public WorkerRegistrationRequestBuilder checkRegistrationRequestPhase(final CheckRegistrationRequestPhase checkRegistrationRequestPhase) {
+    public WorkerRegistrationRequestMessageBuilder checkRegistrationRequestPhase(final CheckRegistrationRequestPhase checkRegistrationRequestPhase) {
         this.checkRegistrationRequestPhase = checkRegistrationRequestPhase;
         return this;
     }
 
-    public WorkerRegistrationRequestBuilder checkWorkerCredentialsPhase(final CheckWorkerCredentialsPhase checkWorkerCredentialsPhase) {
+    public WorkerRegistrationRequestMessageBuilder checkWorkerCredentialsPhase(final CheckWorkerCredentialsPhase checkWorkerCredentialsPhase) {
         this.checkWorkerCredentialsPhase = checkWorkerCredentialsPhase;
         return this;
     }
 
-    public WorkerRegistrationRequestBuilder validateRegistrationRequestPhase(final ValidateRegistrationRequestPhase validateRegistrationRequestPhase) {
+    public WorkerRegistrationRequestMessageBuilder validateRegistrationRequestPhase(final ValidateRegistrationRequestPhase validateRegistrationRequestPhase) {
         this.validateRegistrationRequestPhase = validateRegistrationRequestPhase;
         return this;
     }
 
-    public WorkerRegistrationRequestBuilder saveWorkerPhase(final SaveWorkerPhase saveWorkerPhase) {
+    public WorkerRegistrationRequestMessageBuilder saveWorkerPhase(final SaveWorkerPhase saveWorkerPhase) {
         this.saveWorkerPhase = saveWorkerPhase;
         return this;
     }
 
-    public WorkerRegistrationRequest build() {
-        final WorkerRegistrationRequest result = new WorkerRegistrationRequest(generated, registrationRequestForm);
+    public WorkerRegistrationRequestMessage build() {
+        final WorkerRegistrationRequestMessage result = new WorkerRegistrationRequestMessage(generated, registrationRequestForm);
         result.setCheckRegistrationRequestPhase(checkRegistrationRequestPhase);
         result.setCheckWorkerCredentialsPhase(checkWorkerCredentialsPhase);
         result.setValidateRegistrationRequestPhase(validateRegistrationRequestPhase);

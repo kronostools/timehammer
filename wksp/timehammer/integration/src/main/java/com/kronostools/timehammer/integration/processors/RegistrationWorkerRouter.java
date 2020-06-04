@@ -2,8 +2,8 @@ package com.kronostools.timehammer.integration.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequest;
-import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestBuilder;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
+import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -21,15 +21,15 @@ import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 public class RegistrationWorkerRouter {
     private static final Logger LOG = LoggerFactory.getLogger(RegistrationWorkerRouter.class);
 
-    private final Emitter<WorkerRegistrationRequest> comunytekWorkerRegisterChannel;
+    private final Emitter<WorkerRegistrationRequestMessage> comunytekWorkerRegisterChannel;
 
-    public RegistrationWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_REGISTER) final Emitter<WorkerRegistrationRequest> comunytekWorkerRegisterChannel) {
+    public RegistrationWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_REGISTER) final Emitter<WorkerRegistrationRequestMessage> comunytekWorkerRegisterChannel) {
         this.comunytekWorkerRegisterChannel = comunytekWorkerRegisterChannel;
     }
 
     @Incoming(Channels.WORKER_REGISTER_ROUTE)
-    public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequest> message) {
-        final WorkerRegistrationRequest registrationRequest = WorkerRegistrationRequestBuilder.copy(message.getPayload()).build();
+    public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
+        final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
         LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestForm().getWorkerInternalId(), registrationRequest.getRegistrationRequestForm().getCompany().getCode());
 
