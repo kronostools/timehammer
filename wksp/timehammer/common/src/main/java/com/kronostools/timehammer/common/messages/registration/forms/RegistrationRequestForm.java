@@ -5,7 +5,6 @@ import com.kronostools.timehammer.common.constants.Company;
 import java.util.List;
 
 public class RegistrationRequestForm {
-    private String workerInternalId;
     private Company company;
     private String workerExternalId;
     private String workerExternalPassword;
@@ -13,14 +12,6 @@ public class RegistrationRequestForm {
     private String workSsid;
     private RawTimetable defaultTimetable;
     private List<RawTimetableRange> customTimetables;
-
-    public String getWorkerInternalId() {
-        return workerInternalId;
-    }
-
-    public void setWorkerInternalId(String workerInternalId) {
-        this.workerInternalId = workerInternalId;
-    }
 
     public Company getCompany() {
         return company;

@@ -8,7 +8,7 @@ import com.kronostools.timehammer.common.messages.constants.ValidateResult;
 import java.util.List;
 
 @JsonDeserialize(builder = CheckRegistrationRequestPhaseBuilder.class)
-public class ValidateRegistrationRequestPhase extends ValidatePhase<ValidateResult> {
+public class ValidateRegistrationRequestPhase extends ValidatePhase {
     ValidateRegistrationRequestPhase(final ValidateResult result, final List<ValidationError> validationErrors) {
         super(result, validationErrors);
     }

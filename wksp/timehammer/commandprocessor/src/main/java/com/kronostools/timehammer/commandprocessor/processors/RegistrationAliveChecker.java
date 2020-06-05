@@ -32,12 +32,12 @@ public class RegistrationAliveChecker {
     public Uni<Message<WorkerRegistrationRequestMessage>> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage inputMessage = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Checking if registration request '{}' is still alive ...", inputMessage.getRegistrationRequestForm().getWorkerInternalId());
+        LOG.info("Checking if registration request '{}' is still alive ...", inputMessage.getRegistrationRequestId());
 
-        final ChatbotRegistrationRequest existingRegistrationRequest = registrationRequestService.getRegistrationRequest(inputMessage.getRegistrationRequestForm().getWorkerInternalId());
+        final ChatbotRegistrationRequest existingRegistrationRequest = registrationRequestService.getRegistrationRequest(inputMessage.getRegistrationRequestId());
 
         if (existingRegistrationRequest == null) {
-            final String errorMessage = CommonUtils.stringFormat("Registration request '{}' is already expired", inputMessage.getRegistrationRequestForm().getWorkerInternalId());
+            final String errorMessage = CommonUtils.stringFormat("Registration request '{}' is already expired", inputMessage.getRegistrationRequestId());
 
             LOG.warn(errorMessage);
 
@@ -46,7 +46,7 @@ public class RegistrationAliveChecker {
                     .errorMessage(errorMessage)
                     .build());
         } else {
-            LOG.debug("Registration request '{}' was found and is associated to chat '{}'", inputMessage.getRegistrationRequestForm().getWorkerInternalId(), existingRegistrationRequest.getChatId());
+            LOG.debug("Registration request '{}' was found and is associated to chat '{}'", inputMessage.getRegistrationRequestId(), existingRegistrationRequest.getChatId());
 
             inputMessage.setCheckRegistrationRequestPhase(new CheckRegistrationRequestPhaseBuilder()
                     .result(SimpleResult.OK)

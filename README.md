@@ -3,17 +3,20 @@
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
         - Flujo: 
-        * > Web
-          > Core > ChatbotNotifier
-            - Mover el workerInternalId del registrationRequestForm al RegistrationRequestMessage y renombrarlo a registrationRequestId y además que sea un dato obligatorio para el RegistrationRequestMessage
-            - Procesar la respuesta en la web para
-                - Mostrar errores de validación si los hubiera
-                - Mostrar errores inesperados durante el flujo
-                - Mostrar el éxito
-            - Crear un resumen del registro para enviarlo al ChatbotNotifier
-        - Web
+        * Web
             - Página de registro
+                - Al cargar el html suscribirse al stream registrationSummary usando el registrationRequestId como identificador
+                    - Mostrar errores de validación si los hubiera
+                    - Mostrar errores inesperados durante el flujo
+                    - Mostrar el éxito
                 - Cambiar el componente Slider por inputs de html5 de tipo time
+                - Iniciar el registro enviando los datos del formulario
+                - Al cargar el html suscribirse al stream de recuperación de datos maestros
+                    - Cargar las ciudades en el combo
+                - Al cargar el html iniciar flujo para obtener la lista de ciudades
+                - Componente para poner toda la página en cargando
+                    - mientras se cargan la lista de ciudades en el combo
+                    - mientras se está procesando la solicitud
         - Pruebas
             - Probar flujo en general
             - Probar validaciones

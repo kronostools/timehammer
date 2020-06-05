@@ -46,7 +46,7 @@ public class RegistrationRequestValidatorProcessor {
     public CompletionStage<Void> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestForm().getWorkerInternalId());
+        LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestId());
 
         final List<ValidationError> validationErrors = validateForm(registrationRequest.getRegistrationRequestForm());
 
@@ -60,12 +60,12 @@ public class RegistrationRequestValidatorProcessor {
             LOG.info("Registration request '{}' is valid -> routing it to the next step in registration flow: '{}'", registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), Channels.WORKER_REGISTER_ROUTE);
 
             return workerRegisterRouteChannel.send(registrationRequest)
-                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getWorkerInternalId()));
+                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
         } else {
             LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}'", registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), Channels.WORKER_REGISTER_NOTIFY_OUT);
 
             return workerRegisterNotifyChannel.send(registrationRequest)
-                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getWorkerInternalId()));
+                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
         }
     }
 
@@ -111,7 +111,7 @@ public class RegistrationRequestValidatorProcessor {
                         if (cityMultipleResult.isNotSuccessful()) {
                             validationErrors.add(new ValidationErrorBuilder()
                                     .fieldName("workCity")
-                                    .errorMessage("Hubo un error inesperado durante la validación de los datos. Por favor, reinténtelo de nuevo, y si el error persiste contacte con el administrador del sitio.")
+                                    .errorMessage("Ha ocurrido un error inesperado durante la validación de los datos. Por favor, reinténtelo de nuevo, y si el error persiste contacte con el administrador del sitio.")
                                     .build());
                         } else {
                             boolean cityExists = cityMultipleResult.getResult().stream()

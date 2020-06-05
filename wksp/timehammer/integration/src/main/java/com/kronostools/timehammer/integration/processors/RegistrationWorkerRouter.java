@@ -31,7 +31,7 @@ public class RegistrationWorkerRouter {
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestForm().getWorkerInternalId(), registrationRequest.getRegistrationRequestForm().getCompany().getCode());
+        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestId(), registrationRequest.getRegistrationRequestForm().getCompany().getCode());
 
         if (registrationRequest.getRegistrationRequestForm().getCompany() == Company.COMUNYTEK) {
             return comunytekWorkerRegisterChannel.send(registrationRequest).handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getCompany()));

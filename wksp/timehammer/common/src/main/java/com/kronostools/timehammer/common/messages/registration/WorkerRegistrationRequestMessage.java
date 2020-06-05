@@ -8,26 +8,22 @@ import java.time.LocalDateTime;
 
 @JsonDeserialize(builder = WorkerRegistrationRequestMessageBuilder.class)
 public class WorkerRegistrationRequestMessage extends PlatformMessage {
+    private final String registrationRequestId;
     private RegistrationRequestForm registrationRequestForm;
     private CheckRegistrationRequestPhase checkRegistrationRequestPhase;
     private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
     private ValidateRegistrationRequestPhase validateRegistrationRequestPhase;
     private SaveWorkerPhase saveWorkerPhase;
 
-    WorkerRegistrationRequestMessage(final LocalDateTime generated, final RegistrationRequestForm registrationRequestForm) {
+    WorkerRegistrationRequestMessage(final LocalDateTime generated, final String registrationRequestId, final RegistrationRequestForm registrationRequestForm) {
         super(generated);
+        this.registrationRequestId = registrationRequestId;
         this.registrationRequestForm = registrationRequestForm;
     }
 
-    // TODO: revisar si hace falta este método
-    // TODO: evaluar si crear otra clase que extienda de PlatformMessage y obligue a tener este método
-    /*
-    public boolean processedSuccessfully() {
-        return Optional.ofNullable(saveHolidayPhase)
-                .map(SaveHolidayPhase::isSuccessful)
-                .orElse(false);
+    public String getRegistrationRequestId() {
+        return registrationRequestId;
     }
-    */
 
     public RegistrationRequestForm getRegistrationRequestForm() {
         return registrationRequestForm;

@@ -34,11 +34,11 @@ public class WorkerService {
     public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequestMessage registrationRequest) {
         return Uni.createFrom().item(registrationRequest)
                 .onItem()
-                    .invoke(wrr -> workerDao.insertWorker(wrr.getRegistrationRequestForm().getWorkerInternalId(), wrr.getCheckWorkerCredentialsPhase().getFullname()))
+                    .invoke(wrr -> workerDao.insertWorker(wrr.getRegistrationRequestId(), wrr.getCheckWorkerCredentialsPhase().getFullname()))
                 .onItem()
-                    .invoke(wrr -> workerChatDao.insertWorkerChat(wrr.getRegistrationRequestForm().getWorkerInternalId(), wrr.getCheckRegistrationRequestPhase().getChatId()))
+                    .invoke(wrr -> workerChatDao.insertWorkerChat(wrr.getRegistrationRequestId(), wrr.getCheckRegistrationRequestPhase().getChatId()))
                 .onItem()
-                    .invoke(wrr -> workerPreferencesDao.insertWorkerPreferences(wrr.getRegistrationRequestForm().getWorkerInternalId(),
+                    .invoke(wrr -> workerPreferencesDao.insertWorkerPreferences(wrr.getRegistrationRequestId(),
                                                                                 wrr.getRegistrationRequestForm().getWorkerExternalId(),
                                                                                 wrr.getRegistrationRequestForm().getDefaultTimetable(),
                                                                                 wrr.getRegistrationRequestForm().getCompany(),

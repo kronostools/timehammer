@@ -49,6 +49,11 @@ mp:
         topic: worker-register-persist
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-register-notify-in:
+        connector: smallrye-kafka
+        topic: worker-register-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
     outgoing:
       holidays-worker-get:
         connector: smallrye-kafka

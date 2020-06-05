@@ -7,6 +7,7 @@ import com.kronostools.timehammer.common.messages.registration.WorkerRegistratio
 import com.kronostools.timehammer.web.dto.Dto;
 import com.kronostools.timehammer.web.dto.RegistrationRequestSummaryDto;
 import com.kronostools.timehammer.web.dto.RegistrationRequestSummaryDtoBuilder;
+import com.kronostools.timehammer.web.dto.ValidationErrorDtoBuilder;
 import com.kronostools.timehammer.web.model.StreamSubscriber;
 import com.kronostools.timehammer.web.model.StreamSubscriberBuilder;
 import io.smallrye.mutiny.Multi;
@@ -37,22 +38,41 @@ public class RegistrationSummaryResource {
 
     @Incoming(Channels.WORKER_REGISTER_NOTIFY_IN)
     public void processBatchScheduleEvent(final WorkerRegistrationRequestMessage workerRegistrationRequest) {
-        final RegistrationRequestSummaryDto registrationRequestSummaryDto = new RegistrationRequestSummaryDtoBuilder()
-                .workerInternalId(workerRegistrationRequest.getRegistrationRequestForm().getWorkerInternalId())
-                .build();
+        final RegistrationRequestSummaryDtoBuilder registrationRequestSummaryDto = new RegistrationRequestSummaryDtoBuilder()
+                .registrationRequestId(workerRegistrationRequest.getRegistrationRequestId());
 
-        publishScheduleEvent(registrationRequestSummaryDto);
+        workerRegistrationRequest.getValidateRegistrationRequestPhase().getValidationErrors().stream()
+                .map(ValidationErrorDtoBuilder::copyAndBuild)
+                .forEach(registrationRequestSummaryDto::addValidationError);
+
+        if (workerRegistrationRequest.getSaveWorkerPhase().isNotSuccessful()) {
+            switch (workerRegistrationRequest.getSaveWorkerPhase().getResult()) {
+                case INVALID_CREDENTIALS:
+                    registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                            .fieldName("workerExternalPassword")
+                            .errorMessage("La contraseña introducida no es correcta")
+                            .build());
+                    break;
+                case KO:
+                    registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                            .errorMessage("Ha ocurrido un error inesperado y no se ha podido realizar el registro. Por favor, inténtelo de nuevo, y si el error persiste, contacte con el administrador del sitio")
+                            .build());
+                    break;
+            }
+        }
+
+        publishScheduleEvent(registrationRequestSummaryDto.build());
     }
 
     private void publishScheduleEvent(final RegistrationRequestSummaryDto registrationRequestSummaryDto) {
-        final StreamSubscriber streamSubscriber = cache.getIfPresent(registrationRequestSummaryDto.getWorkerInternalId());
+        final StreamSubscriber streamSubscriber = cache.getIfPresent(registrationRequestSummaryDto.getRegistrationRequestId());
 
         if (streamSubscriber != null) {
             LOG.debug("Emitting registration summary to subscriber '{}'", streamSubscriber.getSubscriberId());
 
             streamSubscriber.getEmitter().emit(registrationRequestSummaryDto);
         } else {
-            LOG.warn("No subscriber was found for registration request '{}'", registrationRequestSummaryDto.getWorkerInternalId());
+            LOG.warn("No subscriber was found for registration request '{}'", registrationRequestSummaryDto.getRegistrationRequestId());
         }
     }
 
