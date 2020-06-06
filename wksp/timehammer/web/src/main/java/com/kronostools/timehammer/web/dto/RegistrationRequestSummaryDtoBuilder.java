@@ -23,6 +23,7 @@ public class RegistrationRequestSummaryDtoBuilder {
     public RegistrationRequestSummaryDto build() {
         final RegistrationRequestSummaryDto rrsd = new RegistrationRequestSummaryDto();
         rrsd.setRegistrationRequestId(registrationRequestId);
+        rrsd.setValidationErrors(validationErrors);
 
         return rrsd;
     }

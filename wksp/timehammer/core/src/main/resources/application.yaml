@@ -85,7 +85,12 @@ mp:
         topic: worker-register-route
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      worker-register-notify-out:
+      worker-register-save-notify-out:
+        connector: smallrye-kafka
+        topic: worker-register-notify
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-register-validate-notify-out:
         connector: smallrye-kafka
         topic: worker-register-notify
         value:

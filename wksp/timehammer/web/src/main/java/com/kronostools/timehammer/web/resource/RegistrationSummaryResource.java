@@ -37,27 +37,42 @@ public class RegistrationSummaryResource {
     }
 
     @Incoming(Channels.WORKER_REGISTER_NOTIFY_IN)
-    public void processBatchScheduleEvent(final WorkerRegistrationRequestMessage workerRegistrationRequest) {
+    public void processBatchScheduleEvent(final WorkerRegistrationRequestMessage registrationRequest) {
         final RegistrationRequestSummaryDtoBuilder registrationRequestSummaryDto = new RegistrationRequestSummaryDtoBuilder()
-                .registrationRequestId(workerRegistrationRequest.getRegistrationRequestId());
+                .registrationRequestId(registrationRequest.getRegistrationRequestId());
 
-        workerRegistrationRequest.getValidateRegistrationRequestPhase().getValidationErrors().stream()
-                .map(ValidationErrorDtoBuilder::copyAndBuild)
-                .forEach(registrationRequestSummaryDto::addValidationError);
-
-        if (workerRegistrationRequest.getSaveWorkerPhase().isNotSuccessful()) {
-            switch (workerRegistrationRequest.getSaveWorkerPhase().getResult()) {
-                case INVALID_CREDENTIALS:
-                    registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
-                            .fieldName("workerExternalPassword")
-                            .errorMessage("La contraseña introducida no es correcta")
-                            .build());
-                    break;
-                case KO:
-                    registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
-                            .errorMessage("Ha ocurrido un error inesperado y no se ha podido realizar el registro. Por favor, inténtelo de nuevo, y si el error persiste, contacte con el administrador del sitio")
-                            .build());
-                    break;
+        if (registrationRequest.getCheckRegistrationRequestPhase().isNotSuccessful()) {
+            registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                    .errorMessage("La solicitud de registro ha expirado, por favor, vuelva a iniciar otra desde Telegram")
+                    .errorCode(500)
+                    .build());
+        } else {
+            if (registrationRequest.getValidateRegistrationRequestPhase().isNotSuccessful()) {
+                registrationRequest.getValidateRegistrationRequestPhase().getValidationErrors().stream()
+                        .map(ValidationErrorDtoBuilder::copyAndBuild)
+                        .forEach(registrationRequestSummaryDto::addValidationError);
+            } else {
+                if (registrationRequest.getCheckWorkerCredentialsPhase().isNotSuccessful()) {
+                    switch (registrationRequest.getCheckWorkerCredentialsPhase().getResult()) {
+                        case INVALID:
+                            registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                                    .fieldName("workerExternalPassword")
+                                    .errorMessage("La contraseña introducida no es correcta")
+                                    .build());
+                            break;
+                        case KO:
+                            registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                                    .errorMessage("Ha ocurrido un error inesperado y no se ha podido realizar el registro. Por favor, inténtelo de nuevo, y si el error persiste, contacte con el administrador del sitio")
+                                    .build());
+                            break;
+                    }
+                } else {
+                    if (registrationRequest.getSaveWorkerPhase().isNotSuccessful()) {
+                        registrationRequestSummaryDto.addValidationError(new ValidationErrorDtoBuilder()
+                                .errorMessage("Ha ocurrido un error inesperado y no se ha podido realizar el registro. Por favor, inténtelo de nuevo, y si el error persiste, contacte con el administrador del sitio")
+                                .build());
+                    }
+                }
             }
         }
 

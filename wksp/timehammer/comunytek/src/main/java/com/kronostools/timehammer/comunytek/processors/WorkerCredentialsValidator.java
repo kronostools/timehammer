@@ -55,7 +55,7 @@ public class WorkerCredentialsValidator {
                             break;
                         default:
                             result = new CheckWorkerCredentialsPhaseBuilder()
-                                    .result(WorkerCredentialsResult.UNEXPECTED_ERROR)
+                                    .result(WorkerCredentialsResult.KO)
                                     .build();
                             break;
                     }

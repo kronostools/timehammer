@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.core.service;
 
-import com.kronostools.timehammer.common.messages.constants.SaveWorkerResult;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhase;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhaseBuilder;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
@@ -41,11 +41,11 @@ public class WorkerService {
                     .invoke(wrr -> workerPreferencesDao.insertWorkerPreferences(wrr.getRegistrationRequestId(),
                                                                                 wrr.getRegistrationRequestForm().getWorkerExternalId(),
                                                                                 wrr.getRegistrationRequestForm().getDefaultTimetable(),
-                                                                                wrr.getRegistrationRequestForm().getCompany(),
+                                                                                wrr.getRegistrationRequestForm().getCompanyCode(),
                                                                                 wrr.getRegistrationRequestForm().getWorkSsid(),
                                                                                 wrr.getRegistrationRequestForm().getWorkCity()))
                 .map(ir -> new SaveWorkerPhaseBuilder()
-                                .result(SaveWorkerResult.OK)
+                                .result(SimpleResult.OK)
                                 .build());
     }
 }

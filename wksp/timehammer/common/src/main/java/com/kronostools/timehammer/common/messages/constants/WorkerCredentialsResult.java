@@ -3,7 +3,7 @@ package com.kronostools.timehammer.common.messages.constants;
 public enum WorkerCredentialsResult implements PhaseResult {
     OK(true, null),
     INVALID(false,"Credentials are invalid"),
-    UNEXPECTED_ERROR(false,"Unexpected error");
+    KO(false,"Error");
 
     private final boolean successful;
     private final String defaultErrorMessage;

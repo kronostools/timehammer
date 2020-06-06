@@ -1,6 +1,5 @@
 package com.kronostools.timehammer.core.dao;
 
-import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.registration.forms.RawTimetable;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.model.InsertResult;
@@ -25,7 +24,7 @@ public class WorkerPreferencesDao {
         this.client = client;
     }
 
-    public Uni<InsertResult> insertWorkerPreferences(final String workerInternalId, final String workerExternalId, final RawTimetable defaultTimetable, final Company company, final String workSsid, final String workCityCode) {
+    public Uni<InsertResult> insertWorkerPreferences(final String workerInternalId, final String workerExternalId, final RawTimetable defaultTimetable, final String companyCode, final String workSsid, final String workCityCode) {
         final List<Object> params = new ArrayList<>() {{
             add(workerInternalId);
             add(workerExternalId);
@@ -49,7 +48,7 @@ public class WorkerPreferencesDao {
             add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getWorkEndMon()));
             add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchStartMon()));
             add(CommonDateTimeUtils.parseTimeFromForm(defaultTimetable.getLunchEndMon()));
-            add(company);
+            add(companyCode);
             add(workSsid);
             add(workCityCode);
         }};

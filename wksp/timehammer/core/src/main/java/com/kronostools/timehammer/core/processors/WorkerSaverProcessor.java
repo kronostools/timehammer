@@ -1,8 +1,7 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
-import com.kronostools.timehammer.common.messages.constants.SaveWorkerResult;
-import com.kronostools.timehammer.common.messages.constants.WorkerCredentialsResult;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhaseBuilder;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
@@ -27,17 +26,18 @@ public class WorkerSaverProcessor {
     }
 
     @Incoming(Channels.WORKER_REGISTER_PERSIST)
-    @Outgoing(Channels.WORKER_REGISTER_NOTIFY_OUT)
+    @Outgoing(Channels.WORKER_REGISTER_SAVE_NOTIFY_OUT)
     public Uni<Message<WorkerRegistrationRequestMessage>> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Trying to save new worker '{}' ...", registrationRequest.getRegistrationRequestId());
 
         if (registrationRequest.getCheckWorkerCredentialsPhase().isSuccessful()) {
+            LOG.info("Trying to save new worker '{}' ...", registrationRequest.getRegistrationRequestId());
+
             return workerService.saveWorker(registrationRequest)
                     .onFailure()
                     .recoverWithItem(new SaveWorkerPhaseBuilder()
-                            .result(SaveWorkerResult.KO)
+                            .result(SimpleResult.KO)
                             .errorMessage("There was an error while saving worker")
                             .build())
                     .flatMap(swp -> Uni.createFrom()
@@ -46,23 +46,9 @@ public class WorkerSaverProcessor {
                                     .saveWorkerPhase(swp)
                                     .build(), message::ack)));
         } else {
-            if (registrationRequest.getCheckWorkerCredentialsPhase().getResult() == WorkerCredentialsResult.INVALID) {
-                return Uni.createFrom().item(Message.of(WorkerRegistrationRequestMessageBuilder
-                        .copy(registrationRequest)
-                        .saveWorkerPhase(new SaveWorkerPhaseBuilder()
-                                .result(SaveWorkerResult.INVALID_CREDENTIALS)
-                                .errorMessage("No worker was saved because its credentials are invalid")
-                                .build())
-                        .build(), message::ack));
-            } else {
-                return Uni.createFrom().item(Message.of(WorkerRegistrationRequestMessageBuilder
-                        .copy(registrationRequest)
-                        .saveWorkerPhase(new SaveWorkerPhaseBuilder()
-                                .result(SaveWorkerResult.KO)
-                                .errorMessage("No worker was saved because its credentials are invalid")
-                                .build())
-                        .build(), message::ack));
-            }
+            LOG.info("Nothing to save because worker credentials are invalid");
+
+            return Uni.createFrom().item(Message.of(registrationRequest, message::ack));
         }
     }
 }

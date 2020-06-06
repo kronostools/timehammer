@@ -32,7 +32,8 @@ public class RegistrationRequestNotifierProcessor {
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        if (registrationRequest.getSaveWorkerPhase().isNotSuccessful()) {
+        if (registrationRequest.getSaveWorkerPhase() == null
+                || registrationRequest.getSaveWorkerPhase().isNotSuccessful()) {
             LOG.warn("Unsuccessful registration request, nothing to notify");
             return message.ack();
         } else {

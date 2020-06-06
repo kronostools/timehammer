@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.ValidationError;
 import com.kronostools.timehammer.common.messages.ValidationErrorBuilder;
 import com.kronostools.timehammer.common.messages.registration.ValidateRegistrationRequestPhase;
@@ -34,8 +35,8 @@ public class RegistrationRequestValidatorProcessor {
     private final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel;
     private final CityDao cityDao;
 
-    public RegistrationRequestValidatorProcessor(@Channel(Channels.WORKER_REGISTER_ROUTE) final Emitter<WorkerRegistrationRequestMessage> workerRegisterRouteChannel,
-                                                 @Channel(Channels.WORKER_REGISTER_NOTIFY_OUT) final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel,
+    public RegistrationRequestValidatorProcessor(@Channel(Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT) final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel,
+                                                 @Channel(Channels.WORKER_REGISTER_ROUTE) final Emitter<WorkerRegistrationRequestMessage> workerRegisterRouteChannel,
                                                  final CityDao cityDao) {
         this.workerRegisterRouteChannel = workerRegisterRouteChannel;
         this.workerRegisterNotifyChannel = workerRegisterNotifyChannel;
@@ -46,26 +47,33 @@ public class RegistrationRequestValidatorProcessor {
     public CompletionStage<Void> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestId());
-
-        final List<ValidationError> validationErrors = validateForm(registrationRequest.getRegistrationRequestForm());
-
-        final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
-                .validationErrors(validationErrors)
-                .build();
-
-        registrationRequest.setValidateRegistrationRequestPhase(validationResult);
-
-        if (validationResult.isSuccessful()) {
-            LOG.info("Registration request '{}' is valid -> routing it to the next step in registration flow: '{}'", registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), Channels.WORKER_REGISTER_ROUTE);
-
-            return workerRegisterRouteChannel.send(registrationRequest)
-                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
-        } else {
-            LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}'", registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), Channels.WORKER_REGISTER_NOTIFY_OUT);
+        if (registrationRequest.getCheckRegistrationRequestPhase().isNotSuccessful()) {
+            LOG.info("Nothing to validate because registration request '{}' is expired -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT);
 
             return workerRegisterNotifyChannel.send(registrationRequest)
                     .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
+        } else {
+            LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestId());
+
+            final List<ValidationError> validationErrors = validateForm(registrationRequest.getRegistrationRequestForm());
+
+            final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
+                    .validationErrors(validationErrors)
+                    .build();
+
+            registrationRequest.setValidateRegistrationRequestPhase(validationResult);
+
+            if (validationResult.isSuccessful()) {
+                LOG.info("Registration request '{}' is valid -> routing it to the next step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_ROUTE);
+
+                return workerRegisterRouteChannel.send(registrationRequest)
+                        .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
+            } else {
+                LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT);
+
+                return workerRegisterNotifyChannel.send(registrationRequest)
+                        .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
+            }
         }
     }
 
@@ -120,12 +128,26 @@ public class RegistrationRequestValidatorProcessor {
                             if (!cityExists) {
                                 validationErrors.add(new ValidationErrorBuilder()
                                         .fieldName("workCity")
-                                        .errorMessage("La ciudad seleccionada no está registrada.")
+                                        .errorMessage("La ciudad seleccionada no es válida.")
                                         .build());
                             }
                         }
                     })
                     .await().indefinitely();
+        }
+
+        if (StringUtils.isBlank(registrationRequestForm.getCompanyCode())) {
+            validationErrors.add(new ValidationErrorBuilder()
+                    .fieldName("companyCode")
+                    .errorMessage("La compañía es obligatoria")
+                    .build());
+        } else {
+            if (Company.fromCode(registrationRequestForm.getCompanyCode()) == Company.UNKNOWN) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName("companyCode")
+                        .errorMessage("La compañía seleccionada no es válida")
+                        .build());
+            }
         }
 
         validationErrors
@@ -221,6 +243,8 @@ public class RegistrationRequestValidatorProcessor {
                     .errorMessage("La hora de inicio de la comida tiene que ser anterior a la de fin")
                     .build());
         }
+
+        // TODO: validate lunch is within work
 
         return validationErrors;
     }

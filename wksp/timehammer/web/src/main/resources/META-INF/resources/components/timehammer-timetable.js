@@ -76,8 +76,8 @@ $.widget('timehammer.timetable', {
 
         const $workRowColRow = $('<div>', { id: `work${idSuffix}`, 'class': 'row align-items-center work' })
         $workRowColRow.append($('<div>', { 'class': 'col-2 col-sm-2 col-md-2 px-0 text-center toolbar work-toolbar' }))
-        $workRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 start', id: `${this.options.id}WorkStart${idSuffix}`, name: `workStart${idSuffix}`, value: this.options.minWorkTime, step: this.options.timeStep, min: this.options.minWorkTime, max: this.options.maxWorkTime })))
-        $workRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 end', id: `${this.options.id}WorkEnd${idSuffix}`, name: `workEnd${idSuffix}`, value: this.options.maxWorkTime, step: this.options.timeStep, min: this.options.minWorkTime, max: this.options.maxWorkTime })))
+        $workRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 start', id: `${this.options.id}WorkStart${idSuffix}`, name: `${this.options.id}WorkStart${idSuffix}`, value: this.options.minWorkTime, step: this.options.timeStep, min: this.options.minWorkTime, max: this.options.maxWorkTime })))
+        $workRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 end', id: `${this.options.id}WorkEnd${idSuffix}`, name: `${this.options.id}WorkEnd${idSuffix}`, value: this.options.maxWorkTime, step: this.options.timeStep, min: this.options.minWorkTime, max: this.options.maxWorkTime })))
 
         $workRowCol.append($workRowColRow)
 
@@ -112,8 +112,8 @@ $.widget('timehammer.timetable', {
 
         const $lunchRowColRow = $('<div>', { id: `lunch${idSuffix}`, 'class': 'row align-items-center lunch' })
         $lunchRowColRow.append($('<div>', { 'class': 'col-2 col-sm-2 col-md-2 px-0 text-center toolbar lunch-toolbar' }))
-        $lunchRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 start', id: `${this.options.id}LunchStart${idSuffix}`, name: `lunchStart${idSuffix}`, value: this.options.initialLunchStart, step: this.options.timeStep, min: this.options.minLunchTime, max: this.options.maxLunchTime })))
-        $lunchRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 end', id: `${this.options.id}LunchEnd${idSuffix}`, name: `lunchEnd${idSuffix}`, value: this.options.initialLunchEnd, step: this.options.timeStep, min: this.options.minLunchTime, max: this.options.maxLunchTime })))
+        $lunchRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 start', id: `${this.options.id}LunchStart${idSuffix}`, name: `${this.options.id}LunchStart${idSuffix}`, value: this.options.initialLunchStart, step: this.options.timeStep, min: this.options.minLunchTime, max: this.options.maxLunchTime })))
+        $lunchRowColRow.append($('<div>', { 'class': 'col' }).append($('<input>', { type: 'time', 'class': 'form-control-sm col-12 end', id: `${this.options.id}LunchEnd${idSuffix}`, name: `${this.options.id}LunchEnd${idSuffix}`, value: this.options.initialLunchEnd, step: this.options.timeStep, min: this.options.minLunchTime, max: this.options.maxLunchTime })))
 
         $lunchRowCol.append($lunchRowColRow)
 

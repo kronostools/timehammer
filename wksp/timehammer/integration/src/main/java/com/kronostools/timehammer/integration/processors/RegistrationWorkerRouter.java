@@ -31,12 +31,12 @@ public class RegistrationWorkerRouter {
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestId(), registrationRequest.getRegistrationRequestForm().getCompany().getCode());
+        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestId(), registrationRequest.getRegistrationRequestForm().getCompanyCode().getCode());
 
-        if (registrationRequest.getRegistrationRequestForm().getCompany() == Company.COMUNYTEK) {
-            return comunytekWorkerRegisterChannel.send(registrationRequest).handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getCompany()));
+        if (registrationRequest.getRegistrationRequestForm().getCompanyCode() == Company.COMUNYTEK) {
+            return comunytekWorkerRegisterChannel.send(registrationRequest).handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getCompanyCode()));
         } else {
-            LOG.warn("Ignored registration request message because there is no channel for company '{}'", registrationRequest.getRegistrationRequestForm().getCompany().getCode());
+            LOG.warn("Ignored registration request message because there is no channel for company '{}'", registrationRequest.getRegistrationRequestForm().getCompanyCode().getCode());
             return message.ack();
         }
     }

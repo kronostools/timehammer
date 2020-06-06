@@ -29,16 +29,13 @@
             <div class="col-md-10">
                 <h4 class="mb-3">Formulario de registro</h4>
                 <form class="needs-validation" novalidate="novalidate" action="register" method="POST">
-                    <input type="hidden" name="internalId" value="{internalId}" />
+                    <input type="hidden" id="registrationRequestId" name="registrationRequestId" value="" />
 
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <label for="company">Empresa (*)</label>
-                            <select class="form-control custom-select custom-select-sm d-block w-100" id="company" name="company" aria-describedby="companyHelp">
-                                <option value=""></option>
-                                {#each companies}
-                                <option value="{it.code}">{it.name}</option>
-                                {/each}
+                            <label for="companyCode">Empresa (*)</label>
+                            <select class="form-control custom-select custom-select-sm d-block w-100" id="companyCode" name="companyCode" aria-describedby="companyHelp">
+                                <option value="COMUNYTEK">Comunytek</option>
                             </select>
                             <small id="companyHelp" class="form-text text-muted">Necesitamos saber la compañía en la que trabajas para poder autenticarte</small>
                             <div id="companyInvalidFeedback" class="invalid-feedback"></div>
@@ -46,16 +43,16 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="internalId">Usuario (*)</label>
-                            <input type="text" class="form-control form-control-sm" id="internalId" name="internalId" placeholder="" value="" aria-describedby="internalIdHelp">
-                            <small id="internalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa.</small>
-                            <div id="internalIdInvalidFeedback" class="invalid-feedback"></div>
+                            <label for="workerExternalId">Usuario (*)</label>
+                            <input type="text" class="form-control form-control-sm" id="workerExternalId" name="workerExternalId" placeholder="" value="" aria-describedby="workerExternalIdHelp">
+                            <small id="workerExternalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa.</small>
+                            <div id="workerExternalIdInvalidFeedback" class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="externalPassword">Contraseña (*)</label>
-                            <input type="password" class="form-control form-control-sm" id="externalPassword" name="externalPassword" placeholder="" value="" aria-describedby="externalPasswordHelp">
-                            <small id="externalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
-                            <div id="externalPasswordInvalidFeedback" class="invalid-feedback"></div>
+                            <label for="workerExternalPassword">Contraseña (*)</label>
+                            <input type="password" class="form-control form-control-sm" id="workerExternalPassword" name="workerExternalPassword" placeholder="" value="" aria-describedby="workerExternalPasswordHelp">
+                            <small id="workerExternalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
+                            <div id="workerExternalPasswordInvalidFeedback" class="invalid-feedback"></div>
                         </div>
                     </div>
 

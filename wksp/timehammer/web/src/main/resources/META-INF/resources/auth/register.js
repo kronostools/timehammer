@@ -1,20 +1,23 @@
 $(document).ready(function() {
     // begin-copy [https://stackoverflow.com/a/21152762/1979915]
-    var queryParams = {};
-    if (location.search) location.search.substr(1).split("&").forEach(function(item) {
-        var s = item.split("="),
-            k = s[0],
-            v = s[1] && decodeURIComponent(s[1]); //  null-coalescing / short-circuit
-        //(k in queryParams) ? queryParams[k].push(v) : queryParams[k] = [v]
-        (queryParams[k] = queryParams[k] || []).push(v) // null-coalescing / short-circuit
-    })
+    var queryParams = {}
+    if (location.search) {
+        location.search.substr(1).split("&").forEach(function(item) {
+            var s = item.split("="),
+                k = s[0],
+                v = s[1] && decodeURIComponent(s[1]); //  null-coalescing / short-circuit
+
+            (queryParams[k] = queryParams[k] || []).push(v) // null-coalescing / short-circuit
+        })
+    }
     // end-copy
 
-    const loadingElem = $('#loading').loading()
+    const registrationRequestId = queryParams.internalId[0]
 
+    const loadingElem = $('#loading').loading()
     const loading = loadingElem.loading('instance')
 
-    loading.show()
+    $('#registrationRequestId').val(registrationRequestId)
 
     const timetableId = 'timetable'
 
@@ -30,12 +33,12 @@ $(document).ready(function() {
         $('.form-control').removeClass('is-invalid')
 
         // Classify errors
-        const globalErrors = formErrors.filter(formError => formError.fieldId === '')
-        const fieldErrors = formErrors.filter(formError => formError.fieldId !== '')
+        const globalErrors = formErrors.filter(formError => formError.fieldName === '')
+        const fieldErrors = formErrors.filter(formError => formError.fieldName !== '')
 
         // Process global errors
         if (globalErrors.length > 0) {
-            const $globalErrorsDiv = $('<div>', { 'id': 'globalErrors', 'class': 'alert alert-danger' });
+            const $globalErrorsDiv = $('<div>', { 'id': 'globalErrors', 'class': 'alert alert-danger' })
             $globalErrorsDiv.append($('<h4>', { 'text': 'Error' }))
             let $globalErrors
 
@@ -54,56 +57,112 @@ $(document).ready(function() {
         // Process field errors
         if (fieldErrors.length > 0) {
             fieldErrors.forEach(e => {
-                $('#' + e.fieldId).addClass('is-invalid')
-                $('#' + e.fieldId + 'InvalidFeedback').text(e.errorMessage)
+                $('#' + e.fieldName).addClass('is-invalid')
+                $('#' + e.fieldName + 'InvalidFeedback').text(e.errorMessage)
             })
         }
 
         $('html').scrollTop($('form').offset().top - 20)
     }
 
+    //loading.show()
+    
+    // BEGIN REGISTRATION SUMMARY STREAM
+    const registrationRequestSummarySource = new EventSource(`/registrationSummary/stream/${registrationRequestId}`)
+
+    registrationRequestSummarySource.addEventListener('open', (event) => {
+        console.info(`Connected to registrationRequestSummary stream! (subscriber id: ${registrationRequestId})`)
+    })
+
+    registrationRequestSummarySource.addEventListener('error', (event) => {
+        console.error('Error connecting to registrationRequestSummary stream, closing it ...')
+        registrationRequestSummarySource.close()
+        console.info('Closed registrationRequestStream stream')
+    })
+
+    registrationRequestSummarySource.addEventListener('message', (event) => {
+        const registrationRequestSummaryEvent = JSON.parse(event.data)
+
+        console.debug(`Received registrationRequestSummary event: ${event.data}`)
+
+        loading.hide()
+
+        if (isRegistrationRequestExpired(registrationRequestSummaryEvent)) {
+            window.location = 'registrationExpired.html'
+        } else if (isRegistrationRequestSuccessful(registrationRequestSummaryEvent)) {
+            window.location = 'registrationSuccessful.html'
+        } else {
+            showFormErrors(registrationRequestSummaryEvent.validationErrors)
+        }
+    })
+
+    const isRegistrationRequestExpired = function(registrationRequest) {
+        return registrationRequest.validationErrors.some((n, i) => n.errorCode === 500)
+    }
+
+    const isRegistrationRequestSuccessful = function(registrationRequest) {
+        return registrationRequest.validationErrors.length === 0
+    }
+    // END TIME MACHINE STREAM
+
+    // BEGIN CATALOGUE STREAM
+    // TODO: call to get cities and fill select options in html
+    // END CATALOGUE STREAM
+
     $('.needs-validation').on('submit', function(event) {
         event.preventDefault()
         event.stopPropagation()
 
-        const $loginForm = $(event.currentTarget)
-        const loginFormData = {}
+        const $form = $(event.currentTarget)
+        const formData = {
+            registrationRequest: {
+                defaultTimetable: {}
+            }
+        }
 
-        $loginForm.serializeArray().map((n, i) => {
+        $form.serializeArray().map((n, i) => {
             if (n['name'].startsWith(timetableId)) {
-                if (!loginFormData.timetables) {
-                    loginFormData['timetables'] = [{}]
-                }
-
                 const fieldName = n['name']
                     .substring(n['name'].indexOf(timetableId) + timetableId.length)
                     .replace(/^(.)/, ($1) => $1.toLowerCase())
 
-                loginFormData.timetables[0][fieldName] = n['value']
+                formData.registrationRequest.defaultTimetable[fieldName] = n['value']
             } else {
-                loginFormData[n['name']] = n['value']
+                if (n['name'] === 'registrationRequestId') {
+                    formData[n['name']] = n['value']
+                } else {
+                    formData.registrationRequest[n['name']] = n['value']
+                }
             }
         })
 
-        console.log(`Sending data: ${JSON.stringify(loginFormData)}`)
+        console.debug(`Sending data: ${JSON.stringify(formData)}`)
+
+        loading.show()
 
         $.ajax({
-            url: $loginForm.attr('action'),
-            method: $loginForm.attr('method'),
+            url: $form.attr('action'),
+            method: $form.attr('method'),
             contentType: 'application/json',
-            data: JSON.stringify(loginFormData),
+            data: JSON.stringify(formData),
             dataType: 'json'
         }).done(function(data, textStatus, jqXHR) {
-            if (data.processedSuccessfully) {
-                window.location = 'registrationSuccessful'
+            if (data.result) {
+                console.debug('Registration request sent successfully!')
             } else {
-                showFormErrors(data.formErrors)
+                unexpectedError()
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            showFormErrors([{
-                fieldId: '',
-                errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario de registro, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
-            }])
+            unexpectedError()
         })
     })
+
+    function unexpectedError() {
+        loading.hide()
+
+        showFormErrors([{
+            fieldId: '',
+            errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario de registro, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
+        }])
+    }
 })

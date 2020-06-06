@@ -32,3 +32,8 @@ mp:
         topic: holidays-worker-update
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-register-init:
+        connector: smallrye-kafka
+        topic: worker-register-init
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

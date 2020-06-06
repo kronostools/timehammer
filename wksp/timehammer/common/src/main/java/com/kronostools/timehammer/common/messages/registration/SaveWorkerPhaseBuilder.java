@@ -2,12 +2,12 @@ package com.kronostools.timehammer.common.messages.registration;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.messages.PhaseBuilder;
-import com.kronostools.timehammer.common.messages.constants.SaveWorkerResult;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class SaveWorkerPhaseBuilder extends PhaseBuilder<SaveWorkerResult, SaveWorkerPhaseBuilder> {
+public class SaveWorkerPhaseBuilder extends PhaseBuilder<SimpleResult, SaveWorkerPhaseBuilder> {
     public static SaveWorkerPhase copyAndBuild(final SaveWorkerPhase saveWorkerPhase) {
         return Optional.ofNullable(saveWorkerPhase)
                 .map(swp -> SaveWorkerPhaseBuilder.copy(swp).build())

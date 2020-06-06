@@ -7,6 +7,7 @@ import java.util.Optional;
 public class ValidationErrorDtoBuilder {
     private String fieldName;
     private String errorMessage;
+    private int errorCode;
 
     public static ValidationErrorDto copyAndBuild(final ValidationError validationError) {
         return Optional.ofNullable(validationError)
@@ -32,10 +33,16 @@ public class ValidationErrorDtoBuilder {
         return this;
     }
 
+    public ValidationErrorDtoBuilder errorCode(final int errorCode) {
+        this.errorCode = errorCode;
+        return this;
+    }
+
     public ValidationErrorDto build() {
         final ValidationErrorDto ve = new ValidationErrorDto();
         ve.setFieldName(fieldName);
         ve.setErrorMessage(errorMessage);
+        ve.setErrorCode(errorCode);
 
         return ve;
     }

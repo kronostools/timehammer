@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.messages.Phase;
 import com.kronostools.timehammer.common.messages.constants.WorkerCredentialsResult;
 
-@JsonDeserialize(builder = CheckRegistrationRequestPhaseBuilder.class)
+@JsonDeserialize(builder = CheckWorkerCredentialsPhaseBuilder.class)
 public class CheckWorkerCredentialsPhase extends Phase<WorkerCredentialsResult> {
     private String fullname;
 

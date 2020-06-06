@@ -1,11 +1,9 @@
 package com.kronostools.timehammer.common.messages.registration.forms;
 
-import com.kronostools.timehammer.common.constants.Company;
-
 import java.util.List;
 
 public class RegistrationRequestForm {
-    private Company company;
+    private String companyCode;
     private String workerExternalId;
     private String workerExternalPassword;
     private String workCity;
@@ -13,12 +11,12 @@ public class RegistrationRequestForm {
     private RawTimetable defaultTimetable;
     private List<RawTimetableRange> customTimetables;
 
-    public Company getCompany() {
-        return company;
+    public String getCompanyCode() {
+        return companyCode;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyCode(String companyCode) {
+        this.companyCode = companyCode;
     }
 
     public String getWorkerExternalId() {
