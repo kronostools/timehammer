@@ -2,14 +2,16 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
-        - Flujo: 
+        - Flujo:
+        * command-processor
+            - Si el registration request no existe saltar a notify
+            - En el Web y Core, tener en cuenta el caso de registration request expirada 
         * Web
             - Página de registro
                 - Al cargar el html suscribirse al stream registrationSummary usando el registrationRequestId como identificador
                     - Mostrar errores de validación si los hubiera
                     - Mostrar errores inesperados durante el flujo
                     - Mostrar el éxito
-                - Cambiar el componente Slider por inputs de html5 de tipo time
                 - Iniciar el registro enviando los datos del formulario
                 - Al cargar el html suscribirse al stream de recuperación de datos maestros
                     - Cargar las ciudades en el combo
@@ -17,6 +19,9 @@
                 - Componente para poner toda la página en cargando
                     - mientras se cargan la lista de ciudades en el combo
                     - mientras se está procesando la solicitud
+                - Al obtener mensaje de petición expirada redirigir a pagina registro expirado
+                - Al no obtener mensajes de error redirigir a pagina de registro satisfactorio
+                - Al obtener otro tipo de mensajes mostrarlos en la misma página de registro
         - Pruebas
             - Probar flujo en general
             - Probar validaciones

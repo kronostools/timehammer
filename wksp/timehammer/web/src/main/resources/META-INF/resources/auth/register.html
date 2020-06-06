@@ -4,96 +4,122 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.15.0/dist/bootstrap-vue.min.css" integrity="sha256-e4HOoF20aWN7tP3c3B+XjQLqx8C0l3sdrLEiyF27BJM=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha256-aAr2Zpq8MZ+YA/D6JtRD3xtrwpEz2IqOS+pWD/7XKIw=" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="../components/timehammer-loading.css" />
+    <link rel="stylesheet" href="../components/timehammer-timetable.css" />
+    <link rel="stylesheet" href="register.css" />
 
     <title>Timehammer: Registro</title>
 </head>
-<body>
-    <div id="app">
-        <b-container>
-            <div class="py-5 text-center">
-                <img class="d-block mx-auto mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-                <h2>Bienvenido a Timehammer!</h2>
-                <p class="lead">En esta página podrás registrarte en Timehammer y así podrás olvidarte del engorro de fichar.</p>
+<body class="bg-light">
+    <div id="loading"></div>
 
-                <h3>¿Cómo funciona esto?</h3>
-                <p class="lead">Pendiente de redactar</p>
+    <div class="container">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <h2>Bienvenido a Timehammer!</h2>
+            <p class="lead">En esta página podrás registrarte en Timehammer y así podrás olvidarte del engorro de fichar.</p>
+
+            <h3>¿Cómo funciona esto?</h3>
+            <p class="lead">Pendiente de redactar</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <h4 class="mb-3">Formulario de registro</h4>
+                <form class="needs-validation" novalidate="novalidate" action="register" method="POST">
+                    <input type="hidden" name="internalId" value="{internalId}" />
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="company">Empresa (*)</label>
+                            <select class="form-control custom-select custom-select-sm d-block w-100" id="company" name="company" aria-describedby="companyHelp">
+                                <option value=""></option>
+                                {#each companies}
+                                <option value="{it.code}">{it.name}</option>
+                                {/each}
+                            </select>
+                            <small id="companyHelp" class="form-text text-muted">Necesitamos saber la compañía en la que trabajas para poder autenticarte</small>
+                            <div id="companyInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="internalId">Usuario (*)</label>
+                            <input type="text" class="form-control form-control-sm" id="internalId" name="internalId" placeholder="" value="" aria-describedby="internalIdHelp">
+                            <small id="internalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa.</small>
+                            <div id="internalIdInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="externalPassword">Contraseña (*)</label>
+                            <input type="password" class="form-control form-control-sm" id="externalPassword" name="externalPassword" placeholder="" value="" aria-describedby="externalPasswordHelp">
+                            <small id="externalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
+                            <div id="externalPasswordInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="workCity">Ciudad de trabajo (*)</label>
+                            <select class="form-control custom-select custom-select-sm d-block w-100" id="workCity" name="workCity" aria-describedby="workCityHelp">
+                                <option value=""></option>
+                                {#each cities}
+                                <option value="{it.code}">{it.name}</option>
+                                {/each}
+                            </select>
+                            <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
+                            <div id="workCityInvalidFeedback" class="invalid-feedback"></div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="workSsid">SSID de la WiFi del trabajo</label>
+                            <input type="text" class="form-control form-control-sm" id="workSsid" name="workSsid" value="" placeholder="" aria-describedby="workSsidHelp">
+                            <small id="workSsidHelp" class="form-text text-muted">Necesario si se quiere automatizar el proceso de fichaje</small>
+                            <div id="invalidFeedbackWorkSsid" class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+
+                    <div class="timetable"></div>
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Enviar</button>
+                </form>
             </div>
+        </div>
 
-            <b-row class="justify-content-center">
-                <b-col md="10">
-                    <h4 class="mb-3">Formulario de registro</h4>
-
-                    <b-form @submit.prevent="onSubmit" novalidate="novalidate">
-                        <b-row>
-                            <b-col>
-                                <b-form-group id="companyGroup" label="Empresa (*):" label-for="company">
-                                    <b-form-select id="company" size="sm" v-model="form.company" :options="companies"></b-form-select>
-                                    <small id="companyHelp" class="form-text text-muted">Necesitamos saber la compañía en la que trabajas para poder autenticarte</small>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-
-                        <b-row>
-                            <b-col md="6">
-                                <b-form-group id="externalIdGroup" label="Usuario (*):" label-for="externalId">
-                                    <b-form-input id="externalId" type="text" size="sm" v-model="form.externalId"></b-form-input>
-                                    <small id="externalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa</small>
-                                </b-form-group>
-                            </b-col>
-                            <b-col md="6">
-                                <b-form-group id="externalPasswordGroup" label="Contraseña (*):" label-for="externalPassword">
-                                    <b-form-input id="externalPassword" type="password" size="sm" v-model="form.externalPassword"></b-form-input>
-                                    <small id="externalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-
-                        <b-row>
-                            <b-col md="6">
-                                <b-form-group id="workCityGroup" label="Ciudad de trabajo (*):" label-for="workCity">
-                                    <b-form-select id="workCity" size="sm" v-model="form.workCity" :options="cities"></b-form-select>
-                                    <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
-                                </b-form-group>
-                            </b-col>
-                            <b-col md="6">
-                                <b-form-group id="workSsidGroup" label="SSID de la WiFi del trabajo:" label-for="workSsid">
-                                    <b-form-input id="workSsid" type="text" size="sm" v-model="form.externalPassword"></b-form-input>
-                                    <small id="workSsidHelp" class="form-text text-muted">Necesario si se quiere automatizar el proceso de fichaje</small>
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
-
-                        <hr class="mb-4">
-
-                        <timehammer-timetable v-model="form.startWorkMon"></timehammer-timetable>
-
-                        <hr class="mb-4">
-
-                        <b-button type="submit" variant="primary">Enviar</b-button>
-                    </b-form>
-                </b-col>
-            </b-row>
-        </b-container>
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">© 2019-2020 Timehammer</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
     </div>
 
     <!-- Fontawesome -->
     <script src="https://kit.fontawesome.com/ebff2e60d9.js" crossorigin="anonymous"></script>
 
-    <!-- VueBootstrap prerequisite: required for dropdowns -->
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+    <!-- JQuery UI -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap prerequisite: required for dropdowns -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha256-/ijcOLwFf26xEYAjW75FizKVo5tnTYiQddPZoLUHHZ8=" crossorigin="anonymous"></script>
 
-    <!-- Load polyfills to support older browsers -->
-    <script src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver" crossorigin="anonymous"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha256-OFRAJNoaD8L3Br5lglV7VyLRf0itmoBzWUoM+Sji4/8=" crossorigin="anonymous"></script>
 
-    <!-- Vue.js -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
-    <!-- VueBootstrap prerequisite: required by toasts -->
-    <script src="https://cdn.jsdelivr.net/npm/portal-vue@2.1.7/dist/portal-vue.umd.min.js" integrity="sha256-hpvN0uXcWg/hXFoIk7TfFKLWKV0HMa5WOICSKiyxxn4=" crossorigin="anonymous"></script>
-    <!-- VueBootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.15.0/dist/bootstrap-vue.min.js" integrity="sha256-y9Vp8fMtXILjsWZ2gqOIjf7cJBQ60GEplO+bhzXrXJg=" crossorigin="anonymous"></script>
+    <!-- MomentJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment-with-locales.min.js" integrity="sha256-4HOrwHz9ACPZBxAav7mYYlbeMiAL0h6+lZ36cLNpR+E=" crossorigin="anonymous"></script>
 
+    <!-- ion rangeslider -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ion-rangeslider/2.3.1/js/ion.rangeSlider.min.js" integrity="sha256-Z639rJO57BiZzQDlWsGyF+EJ3Fs3nD4pQPkfimTy3S8=" crossorigin="anonymous"></script>
+
+    <script src="../components/timehammer-loading.js"></script>
     <script src="../components/timehammer-timetable.js"></script>
     <script src="register.js"></script>
 </body>
