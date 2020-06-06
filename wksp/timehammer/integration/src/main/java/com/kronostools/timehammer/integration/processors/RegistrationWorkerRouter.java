@@ -31,23 +31,23 @@ public class RegistrationWorkerRouter {
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestId(), registrationRequest.getRegistrationRequestForm().getCompanyCode().getCode());
+        LOG.info("Routing registration request message '{}' to company '{}'", registrationRequest.getRegistrationRequestId(), registrationRequest.getRegistrationRequestForm().getCompanyCode());
 
-        if (registrationRequest.getRegistrationRequestForm().getCompanyCode() == Company.COMUNYTEK) {
+        if (Company.fromCode(registrationRequest.getRegistrationRequestForm().getCompanyCode()) == Company.COMUNYTEK) {
             return comunytekWorkerRegisterChannel.send(registrationRequest).handle(getMessageHandler(message, registrationRequest.getRegistrationRequestForm().getCompanyCode()));
         } else {
-            LOG.warn("Ignored registration request message because there is no channel for company '{}'", registrationRequest.getRegistrationRequestForm().getCompanyCode().getCode());
+            LOG.warn("Ignored registration request message because there is no channel for company '{}'", registrationRequest.getRegistrationRequestForm().getCompanyCode());
             return message.ack();
         }
     }
 
-    private BiFunction<? super Void, Throwable, Void> getMessageHandler(final Message<?> message, final Company company) {
+    private BiFunction<? super Void, Throwable, Void> getMessageHandler(final Message<?> message, final String companyCode) {
         return (Void, e) -> {
             if (e != null) {
-                LOG.error(stringFormat("Exception while routing registration request message to '{}' channel", company.getCode()), e);
+                LOG.error(stringFormat("Exception while routing registration request message to '{}' channel", companyCode), e);
             } else {
                 message.ack();
-                LOG.debug("Routed registration request message to '{}' channel", company.getCode());
+                LOG.debug("Routed registration request message to '{}' channel", companyCode);
             }
 
             return null;
