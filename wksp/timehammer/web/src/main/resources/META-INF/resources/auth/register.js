@@ -33,8 +33,8 @@ $(document).ready(function() {
         $('.form-control').removeClass('is-invalid')
 
         // Classify errors
-        const globalErrors = formErrors.filter(formError => formError.fieldName === '')
-        const fieldErrors = formErrors.filter(formError => formError.fieldName !== '')
+        const globalErrors = formErrors.filter(formError => formError.fieldName === '' || formError.fieldName === null)
+        const fieldErrors = formErrors.filter(formError => formError.fieldName !== '' && formError.fieldName !== null)
 
         // Process global errors
         if (globalErrors.length > 0) {

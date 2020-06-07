@@ -5,7 +5,7 @@ mp:
         connector: smallrye-kafka
         topic: holidays-worker-get
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidaysWorkerDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidayWorkerJacksonDeserializer
       worker-register-route:
         connector: smallrye-kafka
         topic: worker-register-route

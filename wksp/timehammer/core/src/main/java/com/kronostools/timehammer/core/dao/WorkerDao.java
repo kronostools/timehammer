@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 @ApplicationScoped
 public class WorkerDao {
@@ -21,13 +23,19 @@ public class WorkerDao {
         this.client = client;
     }
 
+    @Transactional(TxType.MANDATORY)
     public Uni<InsertResult> insertWorker(final String workerInternalId, final String fullname) {
         return client
                 .preparedQuery(
                         "INSERT INTO worker(internal_id, full_name, profile) " +
-                            "VALUES ($1, $2, $3)", Tuple.of(workerInternalId, fullname, WorkerProfile.WORKER.name()))
-                .map((pgRowSet) -> new InsertResultBuilder()
-                        .inserted(pgRowSet.rowCount())
-                        .build());
+                            "VALUES ($1, $2, $3)")
+                .execute(Tuple.of(workerInternalId, fullname, WorkerProfile.WORKER.name()))
+                .flatMap(pgRowSet -> {
+                    LOG.debug("Inserted {} worker with internal_id '{}'", pgRowSet.rowCount(), workerInternalId);
+
+                    return Uni.createFrom().item(new InsertResultBuilder()
+                            .inserted(pgRowSet.rowCount())
+                            .build());
+                });
     }
 }

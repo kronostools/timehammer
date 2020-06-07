@@ -60,10 +60,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="workCity">Ciudad de trabajo (*)</label>
                             <select class="form-control custom-select custom-select-sm d-block w-100" id="workCity" name="workCity" aria-describedby="workCityHelp">
-                                <option value=""></option>
-                                {#each cities}
-                                <option value="{it.code}">{it.name}</option>
-                                {/each}
+                                <option value="MAD">Madrid</option>
                             </select>
                             <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
                             <div id="workCityInvalidFeedback" class="invalid-feedback"></div>

@@ -11,8 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 
 @ApplicationScoped
 public class WorkerPreferencesDao {
@@ -24,6 +28,7 @@ public class WorkerPreferencesDao {
         this.client = client;
     }
 
+    @Transactional(TxType.MANDATORY)
     public Uni<InsertResult> insertWorkerPreferences(final String workerInternalId, final String workerExternalId, final RawTimetable defaultTimetable, final String companyCode, final String workSsid, final String workCityCode) {
         final List<Object> params = new ArrayList<>() {{
             add(workerInternalId);
@@ -64,10 +69,24 @@ public class WorkerPreferencesDao {
                             "    work_start_fri, work_end_fri, lunch_start_fri, lunch_end_fri, " +
                             "    company_code, work_ssid, work_city_code" +
                             ") " +
-                            "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)",
-                            Tuple.of(params))
-                .map((pgRowSet) -> new InsertResultBuilder()
-                        .inserted(pgRowSet.rowCount())
-                        .build());
+                            "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)")
+                .execute(Tuple.of(params))
+                .flatMap(pgRowSet -> {
+                    LOG.debug("Inserted {} preferences of worker '{}'", pgRowSet.rowCount(), workerInternalId);
+
+                    return Uni.createFrom().item(new InsertResultBuilder()
+                            .inserted(pgRowSet.rowCount())
+                            .build());
+                })
+                .onFailure()
+                    .recoverWithItem(e -> {
+                        final String errorMessage = stringFormat("Unexpected error saving preferences of worker '{}'", workerInternalId);
+
+                        LOG.error(errorMessage, e);
+
+                        return new InsertResultBuilder()
+                                .errorMessage(errorMessage)
+                                .build();
+                    });
     }
 }

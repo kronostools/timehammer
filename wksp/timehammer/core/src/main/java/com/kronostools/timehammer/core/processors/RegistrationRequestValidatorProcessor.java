@@ -154,35 +154,35 @@ public class RegistrationRequestValidatorProcessor {
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartMon(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndMon(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartMon(),
-                        registrationRequestForm.getDefaultTimetable().getLunchStartMon(),
+                        registrationRequestForm.getDefaultTimetable().getLunchEndMon(),
                         "defaultTimetable", "lunes", "Mon"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartTue(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndTue(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartTue(),
-                        registrationRequestForm.getDefaultTimetable().getLunchStartTue(),
+                        registrationRequestForm.getDefaultTimetable().getLunchEndTue(),
                         "defaultTimetable", "martes", "Tue"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartWed(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndWed(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartWed(),
-                        registrationRequestForm.getDefaultTimetable().getLunchStartWed(),
+                        registrationRequestForm.getDefaultTimetable().getLunchEndWed(),
                         "defaultTimetable", "miércoles", "Wed"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartThu(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndThu(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartThu(),
-                        registrationRequestForm.getDefaultTimetable().getLunchStartThu(),
+                        registrationRequestForm.getDefaultTimetable().getLunchEndThu(),
                         "defaultTimetable", "jueves", "Thu"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartFri(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndFri(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartFri(),
-                        registrationRequestForm.getDefaultTimetable().getLunchStartFri(),
+                        registrationRequestForm.getDefaultTimetable().getLunchEndFri(),
                         "defaultTimetable", "viernes", "Fri"));
 
         return validationErrors;

@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 @ApplicationScoped
 public class WorkerChatDao {
@@ -20,13 +22,19 @@ public class WorkerChatDao {
         this.client = client;
     }
 
+    @Transactional(TxType.MANDATORY)
     public Uni<InsertResult> insertWorkerChat(final String workerInternalId, final String chatId) {
         return client
                 .preparedQuery(
                         "INSERT INTO worker_chat(internal_id, chat_id) " +
-                            "VALUES ($1, $2)", Tuple.of(workerInternalId, chatId))
-                .map((pgRowSet) -> new InsertResultBuilder()
-                        .inserted(pgRowSet.rowCount())
-                        .build());
+                            "VALUES ($1, $2)")
+                .execute(Tuple.of(workerInternalId, chatId))
+                .flatMap(pgRowSet -> {
+                    LOG.debug("Inserted {} chat '{}' of worker '{}'", pgRowSet.rowCount(), chatId, workerInternalId);
+
+                    return Uni.createFrom().item(new InsertResultBuilder()
+                            .inserted(pgRowSet.rowCount())
+                            .build());
+                });
     }
 }

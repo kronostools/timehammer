@@ -3,7 +3,7 @@ package com.kronostools.timehammer.core.model;
 import java.util.Optional;
 
 public class InsertResultBuilder extends DbResultBuilder<InsertResultBuilder> {
-    private Integer inserted;
+    private int inserted;
 
     public static InsertResult copyAndBuild(final InsertResult insertResult) {
         return Optional.ofNullable(insertResult)
@@ -19,7 +19,7 @@ public class InsertResultBuilder extends DbResultBuilder<InsertResultBuilder> {
                 .orElse(null);
     }
 
-    public InsertResultBuilder inserted(final Integer inserted) {
+    public InsertResultBuilder inserted(final int inserted) {
         this.inserted = inserted;
         return this;
     }

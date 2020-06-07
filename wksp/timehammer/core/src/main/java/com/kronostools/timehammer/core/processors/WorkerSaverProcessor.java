@@ -36,10 +36,15 @@ public class WorkerSaverProcessor {
 
             return workerService.saveWorker(registrationRequest)
                     .onFailure()
-                    .recoverWithItem(new SaveWorkerPhaseBuilder()
-                            .result(SimpleResult.KO)
-                            .errorMessage("There was an error while saving worker")
-                            .build())
+                    .recoverWithItem(e -> {
+                        final String errorMessage = "There was an unexpected error while saving worker";
+                        LOG.error(errorMessage, e);
+
+                        return new SaveWorkerPhaseBuilder()
+                                .result(SimpleResult.KO)
+                                .errorMessage(errorMessage)
+                                .build();
+                    })
                     .flatMap(swp -> Uni.createFrom()
                             .item(Message.of(WorkerRegistrationRequestMessageBuilder
                                     .copy(registrationRequest)

@@ -47,12 +47,19 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
 
     @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
-        return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
-                .result(ComunytekLoginResult.OK)
-                .fullname(username)
-                .username(username)
-                .sessionId(ComunytekLoginForm.FAKE_SESSIONID)
-                .build());
+        if ("demo".equals(password)) {
+            return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
+                    .result(ComunytekLoginResult.OK)
+                    .fullname(username)
+                    .username(username)
+                    .sessionId(ComunytekLoginForm.FAKE_SESSIONID)
+                    .build());
+        } else {
+            return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
+                    .result(ComunytekLoginResult.INVALID)
+                    .errorMessage("Incorrect password. In demo mode, the password must be: demo")
+                    .build());
+        }
     }
 
     @Override

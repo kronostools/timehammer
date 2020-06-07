@@ -9,8 +9,8 @@ public class CityBuilder {
     private SupportedTimezone timezone;
 
     public static CityBuilder from(final Row row) {
-        final String code = row.getString("worker_internal_id");
-        final String name = row.getString("worker_external_id");
+        final String code = row.getString("code");
+        final String name = row.getString("name");
 
         final SupportedTimezone timezone = SupportedTimezone.fromTimezoneName(row.getString("timezone"));
 

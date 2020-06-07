@@ -40,6 +40,7 @@ public abstract class ValidatePhase {
                 .collect(Collectors.toList());
     }
 
+    @JsonIgnore
     public ValidateResult getResult() {
         return result;
     }

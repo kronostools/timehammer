@@ -30,8 +30,9 @@ public class WorkerHolidaysDao {
                 .preparedQuery(
                         "INSERT INTO worker_holiday(worker_internal_id, day) " +
                             "VALUES ($1, $2) " +
-                            "ON CONFLICT DO NOTHING", Tuple.of(workerInternalId, holidayCandidate))
-                .map((pgRowSet) -> new UpsertResultBuilder()
+                            "ON CONFLICT DO NOTHING")
+                .execute(Tuple.of(workerInternalId, holidayCandidate))
+                .map(pgRowSet -> new UpsertResultBuilder()
                             .inserted(pgRowSet.rowCount())
                             .build())
                 .onFailure()
@@ -50,8 +51,9 @@ public class WorkerHolidaysDao {
         return client
                 .preparedQuery(
                         "DELETE FROM worker_holiday " +
-                            "WHERE day < $1", Tuple.of(refDate))
-                .map((pgRowSet) -> new DeleteResultBuilder()
+                            "WHERE day < $1")
+                .execute(Tuple.of(refDate))
+                .map(pgRowSet -> new DeleteResultBuilder()
                         .deleted(pgRowSet.rowCount())
                         .build())
                 .onFailure()

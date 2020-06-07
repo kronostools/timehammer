@@ -46,6 +46,7 @@ public class WorkerCredentialsValidator {
                         case OK:
                             result = new CheckWorkerCredentialsPhaseBuilder()
                                     .result(WorkerCredentialsResult.OK)
+                                    .fullname(comunytekLoginResponse.getFullname())
                                     .build();
                             break;
                         case INVALID:

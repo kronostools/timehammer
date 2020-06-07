@@ -1,17 +1,17 @@
 package com.kronostools.timehammer.core.model;
 
 public class InsertResult extends DbResult {
-    private Integer inserted;
+    private int inserted;
 
     InsertResult(final String errorMessage) {
         super(errorMessage);
     }
 
-    public Integer getInserted() {
+    public int getInserted() {
         return inserted;
     }
 
-    public void setInserted(Integer inserted) {
+    public void setInserted(int inserted) {
         this.inserted = inserted;
     }
 }

@@ -109,7 +109,7 @@ public class CommandProcessor {
                         } else {
                             final ChatbotRegistrationRequest chatbotRegistrationRequest = registrationRequestService.newRegistrationRequest(chatId);
 
-                            final String registerUrl = timehammerDomainConfig.getUpdatePasswordUrl(chatbotRegistrationRequest.getWorkerInternalId());
+                            final String registerUrl = timehammerDomainConfig.getRegisterUrl(chatbotRegistrationRequest.getWorkerInternalId());
 
                             notificationMessage = TelegramChatbotNotificationMessageBuilder
                                     .copy(inputMessage)

@@ -43,9 +43,8 @@ public class WorkerCurrentPreferencesDao {
                     "LEFT OUTER JOIN city_holiday ch ON ch.city_code = p.work_city_code AND ch.day = $2 " +
                     "LEFT OUTER JOIN worker_holiday wh ON wh.worker_internal_id = p.worker_internal_id AND wh.day = $2 " +
                     "LEFT OUTER JOIN worker_chat wc ON wc.worker_internal_id = p.worker_internal_id " +
-                    "ORDER BY p.worker_internal_id, wc.chat_id",
-                    Tuple.of(dayOfWeek, refDate)
-                )
+                    "ORDER BY p.worker_internal_id, wc.chat_id")
+                .execute(Tuple.of(dayOfWeek, refDate))
                 .map(pgRowSet -> {
                     final List<WorkerCurrentPreferences> list = new ArrayList<>(pgRowSet.size());
 
@@ -96,9 +95,8 @@ public class WorkerCurrentPreferencesDao {
                     "LEFT OUTER JOIN city_holiday ch ON ch.city_code = p.work_city_code AND ch.day = $2 " +
                     "LEFT OUTER JOIN worker_holiday wh ON wh.worker_internal_id = p.worker_internal_id AND wh.day = $2 " +
                     "LEFT OUTER JOIN worker_chat wcs ON wcs.worker_internal_id = wc.worker_internal_id " +
-                    "WHERE wc.chat_id = $3",
-                    Tuple.of(dayOfWeek, refDate, chatId)
-                )
+                    "WHERE wc.chat_id = $3")
+                .execute(Tuple.of(dayOfWeek, refDate, chatId))
                 .map(pgRowSet -> {
                     WorkerCurrentPreferencesBuilder worker = null;
 

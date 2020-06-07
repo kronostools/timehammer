@@ -30,10 +30,12 @@ public class CityDao {
                     "FROM city c " +
                     "ORDER BY c.name"
                 )
+                .mapping(row -> CityBuilder.from(row).build())
+                .execute()
                 .map(pgRowSet -> {
-                    final List<City> list = new ArrayList<>(pgRowSet.size());
+                    final List<City> list = new ArrayList<>(pgRowSet.rowCount());
 
-                    pgRowSet.forEach(r -> CityBuilder.from(r).build());
+                    pgRowSet.forEach(list::add);
 
                     return CityMultipleResultBuilder.buildFromResult(list);
                 })

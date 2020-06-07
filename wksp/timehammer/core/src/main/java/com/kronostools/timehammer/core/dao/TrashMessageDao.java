@@ -28,8 +28,9 @@ public class TrashMessageDao {
                 .preparedQuery(
                         "INSERT INTO trash_message (chat_id, timestamp, status, text) " +
                             "VALUES ($1, $2, $3, $4) " +
-                            "ON CONFLICT DO NOTHING", Tuple.of(chatId, timestamp, TrashMessageStatus.UNCHECKED.name(), text))
-                .map((pgRowSet) -> new UpsertResultBuilder()
+                            "ON CONFLICT DO NOTHING")
+                .execute(Tuple.of(chatId, timestamp, TrashMessageStatus.UNCHECKED.name(), text))
+                .map(pgRowSet -> new UpsertResultBuilder()
                             .inserted(pgRowSet.rowCount())
                             .build())
                 .onFailure()
