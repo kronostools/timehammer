@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.core.dao;
 
+import com.kronostools.timehammer.common.messages.registration.forms.RegistrationRequestForm;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.constants.WorkerProfile;
 import com.kronostools.timehammer.core.model.InsertResult;
 import com.kronostools.timehammer.core.model.InsertResultBuilder;
@@ -10,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 
 @ApplicationScoped
 public class WorkerDao {
@@ -23,19 +27,76 @@ public class WorkerDao {
         this.client = client;
     }
 
-    @Transactional(TxType.MANDATORY)
-    public Uni<InsertResult> insertWorker(final String workerInternalId, final String fullname) {
-        return client
-                .preparedQuery(
+    public Uni<InsertResult> newWorker(final String registrationId, final String fullname, final String chatId, final RegistrationRequestForm registrationRequestForm) {
+        return client.begin()
+                .flatMap(tx ->
+                    tx.preparedQuery(
                         "INSERT INTO worker(internal_id, full_name, profile) " +
                             "VALUES ($1, $2, $3)")
-                .execute(Tuple.of(workerInternalId, fullname, WorkerProfile.WORKER.name()))
-                .flatMap(pgRowSet -> {
-                    LOG.debug("Inserted {} worker with internal_id '{}'", pgRowSet.rowCount(), workerInternalId);
+                        .execute(Tuple.of(registrationId, fullname, WorkerProfile.WORKER.name()))
+                            .onItem().produceUni(rs -> tx.preparedQuery(
+                                        "INSERT INTO worker_chat(worker_internal_id, chat_id) " +
+                                            "VALUES ($1, $2)")
+                                        .execute(Tuple.of(registrationId, chatId)))
+                            .onItem().produceUni(rs -> {
+                                final List<Object> preferencesParams = new ArrayList<>() {{
+                                    add(registrationId);
+                                    add(registrationRequestForm.getWorkerExternalId());
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getWorkEndMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchStartMon()));
+                                    add(CommonDateTimeUtils.parseTimeFromForm(registrationRequestForm.getDefaultTimetable().getLunchEndMon()));
+                                    add(registrationRequestForm.getCompanyCode());
+                                    add(registrationRequestForm.getWorkSsid());
+                                    add(registrationRequestForm.getWorkCity());
+                                }};
 
-                    return Uni.createFrom().item(new InsertResultBuilder()
-                            .inserted(pgRowSet.rowCount())
-                            .build());
-                });
+                                return tx.preparedQuery(
+                                        "INSERT INTO worker_preferences(" +
+                                            "    worker_internal_id, worker_external_id, " +
+                                            "    work_start_mon, work_end_mon, lunch_start_mon, lunch_end_mon, " +
+                                            "    work_start_tue, work_end_tue, lunch_start_tue, lunch_end_tue, " +
+                                            "    work_start_wed, work_end_wed, lunch_start_wed, lunch_end_wed, " +
+                                            "    work_start_thu, work_end_thu, lunch_start_thu, lunch_end_thu, " +
+                                            "    work_start_fri, work_end_fri, lunch_start_fri, lunch_end_fri, " +
+                                            "    company_code, work_ssid, work_city_code" +
+                                            ") " +
+                                            "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)")
+                                        .execute(Tuple.wrap(preferencesParams));
+                            })
+                            // on success, commit
+                            .onItem()
+                                .produceUni(x -> tx.commit())
+                            // on failure rollback
+                            .onFailure()
+                                .recoverWithUni(e -> {
+                                    final String errorMessage = stringFormat("Unexpected error while registering worker '{}'", registrationId);
+                                    LOG.error(errorMessage, e);
+
+                                    return tx.rollback();
+                                })
+            )
+            .flatMap(v -> {
+                LOG.debug("Registered new worker '{}' with chat '{}' and its preferences", registrationId, chatId);
+                return Uni.createFrom().item(new InsertResultBuilder().build());
+            })
+            .onFailure()
+                .recoverWithItem(e -> new InsertResultBuilder().errorMessage("Worker could not be registered").build());
     }
 }

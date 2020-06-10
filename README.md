@@ -2,25 +2,16 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Registro
-        - Flujo:
-        * Web
-            - Página de registro
-                - Al cargar el html suscribirse al stream registrationSummary usando el registrationRequestId como identificador
-                    - Mostrar errores de validación si los hubiera
-                    - Mostrar errores inesperados durante el flujo
-                    - Mostrar el éxito
-                - Al cargar el html suscribirse al stream de recuperación de datos maestros
-                    - Cargar las ciudades en el combo
-                - Al cargar el html iniciar flujo para obtener la lista de ciudades
-                - Componente para poner toda la página en cargando
-                    - mientras se cargan la lista de ciudades en el combo
-                    - mientras se está procesando la solicitud
-                - Al no obtener mensajes de error redirigir a pagina de registro satisfactorio
-                - Al obtener otro tipo de mensajes mostrarlos en la misma página de registro
-        - Pruebas
-            - Probar flujo en general
-            - Probar validaciones
-            - Probar @Transactional y rollback
+        - Página de registro
+            - Al cargar el html suscribirse al stream de recuperación de datos maestros
+                - Cargar las ciudades en el combo
+            - Al cargar el html iniciar flujo para obtener la lista de ciudades
+            - Componente para poner toda la página en cargando
+                - mientras se cargan la lista de ciudades en el combo
+        - Validationes
+            - Que el intervalo de la comida esté comprendido dentro del de trabajo
+    - Core
+        - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays
