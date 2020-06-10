@@ -110,12 +110,16 @@ public final class CommonDateTimeUtils {
         return formatTime(time, FORMAT_HHMM_TSEP);
     }
 
-    public static boolean isValidTimeFromForm(final String time) {
-        return isValidTime(time, FORMATTER_HHMM_TSEP);
+    public static boolean isTimeFromFormValid(final String time) {
+        return isTimeValid(time, FORMATTER_HHMM_TSEP);
     }
 
-    public static boolean isValidTimeIntervalFromForm(final String start, final String end) {
-        return isValidTimeInterval(start, end, FORMATTER_HHMM_TSEP);
+    public static boolean isTimeIntervalFromFormValid(final String start, final String end) {
+        return isTimeIntervalValid(start, end, FORMATTER_HHMM_TSEP);
+    }
+
+    public static boolean isTimeIntervalFromFormWithin(final String innerStart, final String innerEnd, final String outerStart, final String outerEnd) {
+        return isValidTimeIntervalWithin(innerStart, innerEnd, outerStart, outerEnd, FORMATTER_HHMM_TSEP);
     }
 
     public static boolean isWeekend(final LocalDate date) {
@@ -165,7 +169,7 @@ public final class CommonDateTimeUtils {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(dateTimeFormat));
     }
 
-    private static boolean isValidTime(final String time, final DateTimeFormatter timeFormat) {
+    private static boolean isTimeValid(final String time, final DateTimeFormatter timeFormat) {
         try {
             LocalTime.parse(time, timeFormat);
         } catch (DateTimeParseException e) {
@@ -175,12 +179,25 @@ public final class CommonDateTimeUtils {
         return true;
     }
 
-    private static boolean isValidTimeInterval(String start, String end, DateTimeFormatter formatterHhmmTsep) {
+    private static boolean isTimeIntervalValid(String start, String end, DateTimeFormatter formatter) {
         try {
             final LocalTime startTime = LocalTime.parse(start, FORMATTER_HHMM_TSEP);
             final LocalTime endTime = LocalTime.parse(end, FORMATTER_HHMM_TSEP);
 
             return startTime.isBefore(endTime);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    private static boolean isValidTimeIntervalWithin(String innerStart, String innerEnd, String outerStart, String outerEnd, DateTimeFormatter formatter) {
+        try {
+            final LocalTime innerStartTime = LocalTime.parse(innerStart, formatter);
+            final LocalTime innerEndTime = LocalTime.parse(innerEnd, formatter);
+            final LocalTime outerStartTime = LocalTime.parse(outerStart, formatter);
+            final LocalTime outerEndTime = LocalTime.parse(outerEnd, formatter);
+
+            return outerStartTime.isBefore(innerStartTime) && outerEndTime.isAfter(innerEndTime);
         } catch (DateTimeParseException e) {
             return false;
         }

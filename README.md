@@ -1,6 +1,10 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Catalog
+        - Nuevo módulo, también con acceso a la base de datos, que servirá para obtener datos de tablas maestras, por ejemplo: ciudades disponibles
+        - Unicamente escuchará una cola de kafka y en el mensaje de entrada recibirá el catálogo maestro del cual recuperar los datos
+        - Devolverá los resultados en una única cola que tendrá los elementos del catalogo que se vayan solicitando
     - Registro
         - Página de registro
             - Al cargar el html suscribirse al stream de recuperación de datos maestros
@@ -8,10 +12,13 @@
             - Al cargar el html iniciar flujo para obtener la lista de ciudades
             - Componente para poner toda la página en cargando
                 - mientras se cargan la lista de ciudades en el combo
-        - Validationes
-            - Que el intervalo de la comida esté comprendido dentro del de trabajo
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
+    - Web - Registro
+        - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
+    - Preferencias
+        - Extraer las preferencias a una tabla separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
+        - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
     - Test
         - schedule update workers holiday
         - schedule clean past workers holidays

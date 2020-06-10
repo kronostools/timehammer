@@ -192,8 +192,8 @@ public class RegistrationRequestValidatorProcessor {
                                                        final String timetableName, final String day, final String dayShort) {
         final List<ValidationError> validationErrors = new ArrayList<>();
 
-        final boolean validWorkStartMon = CommonDateTimeUtils.isValidTimeFromForm(workStart);
-        final boolean validWorkEndMon = CommonDateTimeUtils.isValidTimeFromForm(workEnd);
+        final boolean validWorkStartMon = CommonDateTimeUtils.isTimeFromFormValid(workStart);
+        final boolean validWorkEndMon = CommonDateTimeUtils.isTimeFromFormValid(workEnd);
 
         if (!validWorkStartMon) {
             validationErrors.add(new ValidationErrorBuilder()
@@ -209,17 +209,19 @@ public class RegistrationRequestValidatorProcessor {
                     .build());
         }
 
+        final boolean validWorkInterval = CommonDateTimeUtils.isTimeIntervalFromFormValid(workStart, workEnd);
+
         if (validWorkStartMon
                 && validWorkEndMon
-                && !CommonDateTimeUtils.isValidTimeIntervalFromForm(workStart, workEnd)) {
+                && !validWorkInterval) {
             validationErrors.add(new ValidationErrorBuilder()
                     .fieldName(timetableName + ".work" + dayShort)
                     .errorMessage("La hora de inicio de trabajo tiene que ser anterior a la de fin")
                     .build());
         }
 
-        final boolean validLunchStartMon = CommonDateTimeUtils.isValidTimeFromForm(lunchStart);
-        final boolean validLunchEndMon = CommonDateTimeUtils.isValidTimeFromForm(lunchEnd);
+        final boolean validLunchStartMon = CommonDateTimeUtils.isTimeFromFormValid(lunchStart);
+        final boolean validLunchEndMon = CommonDateTimeUtils.isTimeFromFormValid(lunchEnd);
 
         if (!validLunchStartMon) {
             validationErrors.add(new ValidationErrorBuilder()
@@ -235,16 +237,25 @@ public class RegistrationRequestValidatorProcessor {
                     .build());
         }
 
+        final boolean validLunchInterval = CommonDateTimeUtils.isTimeIntervalFromFormValid(lunchStart, lunchEnd);
+
         if (validLunchStartMon
                 && validLunchEndMon
-                && !CommonDateTimeUtils.isValidTimeIntervalFromForm(lunchStart, lunchEnd)) {
+                && !validLunchInterval) {
             validationErrors.add(new ValidationErrorBuilder()
                     .fieldName(timetableName + ".lunch" + dayShort)
                     .errorMessage("La hora de inicio de la comida tiene que ser anterior a la de fin")
                     .build());
         }
 
-        // TODO: validate lunch is within work
+        if (validWorkInterval
+                && validLunchInterval
+                && !CommonDateTimeUtils.isTimeIntervalFromFormWithin(lunchStart, lunchEnd, workStart, workEnd)) {
+            validationErrors.add(new ValidationErrorBuilder()
+                    .fieldName(timetableName + ".lunch" + dayShort)
+                    .errorMessage("La hora de la comida tiene que estar comprendida dentro del horario de trabajo")
+                    .build());
+        }
 
         return validationErrors;
     }

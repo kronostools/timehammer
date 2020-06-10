@@ -43,8 +43,8 @@ public class ChatbotMessages {
 
     public static final String COMMAND_START_UNREGISTERED = "¡Bienvenido! Este chatbot te facilitará la vida para cumplimentar los fichajes. Será necesario un registro para poder usarlo, por favor, envíe /register para registrarse. Para obtener más información sobre cómo funciona este chatbot, envíe /help.";
     public static final String COMMAND_START_REGISTERED = "Hola de nuevo. ¿Te acuerdas de mi? Para obtener más información sobre cómo funciona este chatbot, envíe /help.";
-    private static final String COMMAND_UNREGISTER_INIT = "Para cancelar el registro accede [aquí]({}). Envía /register para volver a registrarse de nuevo.";
-    private static final String COMMAND_REGISTER_INIT = "Para continuar con el registro accede [aquí]({})";
+    private static final String COMMAND_UNREGISTER_INIT = "Para confirmar la cancelación del registro accede [aquí]({}).";
+    private static final String COMMAND_REGISTER_INIT = "Para continuar con el registro accede [aquí]({}).";
     private static final String COMMAND_REGISTER_REGISTERED = "Ya se ha hecho un registro para el usuario {}. Para registrarse con otro usurio, primero envía /unregister para cancelar el registro y a continuación, envía /register para registrarse de nuevo.";
     private static final String COMMAND_HELP = "Para conocer cómo funciona este chatbot accede al [FAQ]({}).";
     private static final String COMMAND_UPDATE_SETTINGS_INIT = "Para actualizar tus preferencias accede [aquí]({})";
