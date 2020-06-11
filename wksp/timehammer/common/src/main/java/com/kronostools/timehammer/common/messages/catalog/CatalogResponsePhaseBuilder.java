@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.messages.PhaseBuilder;
 import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @JsonPOJOBuilder(withPrefix = "")
 public class CatalogResponsePhaseBuilder extends PhaseBuilder<SimpleResult, CatalogResponsePhaseBuilder> {
-    private Set<CatalogElement> elements;
+    private List<CatalogElement> elements;
 
     public static CatalogResponsePhase copyAndBuild(final CatalogResponsePhase catalogResponsePhase) {
         return Optional.ofNullable(catalogResponsePhase)
@@ -26,7 +26,7 @@ public class CatalogResponsePhaseBuilder extends PhaseBuilder<SimpleResult, Cata
                 .orElse(null);
     }
 
-    public CatalogResponsePhaseBuilder elements(final Set<CatalogElement> elements) {
+    public CatalogResponsePhaseBuilder elements(final List<CatalogElement> elements) {
         this.elements = elements;
         return this;
     }

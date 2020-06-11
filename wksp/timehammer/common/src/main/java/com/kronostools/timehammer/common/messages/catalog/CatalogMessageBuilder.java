@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.CatalogType;
 import com.kronostools.timehammer.common.messages.PlatformMessageBuilder;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @JsonPOJOBuilder(withPrefix = "")
 public class CatalogMessageBuilder extends PlatformMessageBuilder<CatalogMessageBuilder> {
@@ -27,6 +24,14 @@ public class CatalogMessageBuilder extends PlatformMessageBuilder<CatalogMessage
 
     public CatalogMessageBuilder requesterId(final String requesterId) {
         this.requesterId = requesterId;
+        return this;
+    }
+
+    public CatalogMessageBuilder requestedCatalogs(final List<CatalogType> requestedCatalogs) {
+        this.requestedCatalogs = new LinkedList<CatalogType>() {{
+            addAll(requestedCatalogs);
+        }};
+        
         return this;
     }
 

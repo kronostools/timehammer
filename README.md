@@ -2,9 +2,7 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Catalog
-        - Nuevo módulo, también con acceso a la base de datos, que servirá para obtener datos de tablas maestras, por ejemplo: ciudades disponibles
-        - Unicamente escuchará una cola de kafka y en el mensaje de entrada recibirá el catálogo maestro del cual recuperar los datos
-        - Devolverá los resultados en una única cola que tendrá los elementos del catalogo que se vayan solicitando
+        - probar
     - Registro
         - Página de registro
             - Al cargar el html suscribirse al stream de recuperación de datos maestros
