@@ -23,8 +23,6 @@ public class WorkerService {
     }
 
     public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequestMessage registrationRequest) {
-        //final SaveWorkerPhase initialSaveWorkerPhase = new SaveWorkerPhaseBuilder().result(SimpleResult.OK).build();
-
         return workerDao.newWorker(registrationRequest.getRegistrationRequestId(),
                 registrationRequest.getCheckWorkerCredentialsPhase().getFullname(),
                 registrationRequest.getCheckRegistrationRequestPhase().getChatId(),

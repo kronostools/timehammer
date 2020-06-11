@@ -32,6 +32,7 @@
   </dependencies>
 
   <modules>
+    <module>../catalog</module>
     <module>../commandprocessor</module>
     <module>../core</module>
     <module>../comunytek</module>

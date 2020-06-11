@@ -94,6 +94,22 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+  catalog:
+    image: maven:3.6.3-jdk-11-slim
+    container_name: timehammer-catalog
+    environment:
+      TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+    volumes:
+      - ./wksp/timehammer:/root/wksp/timehammer
+      - ${HOME}/.m2/repository:/root/.m2/repository
+    working_dir: /root/wksp/timehammer/catalog
+    command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
+    depends_on:
+      - db
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
   core:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-core

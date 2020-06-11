@@ -1,29 +1,29 @@
 package com.kronostools.timehammer.common.messages.registration.forms;
 
 public class RawTimetable {
-    String workStartMon;
-    String workStartTue;
-    String workStartWed;
-    String workStartThu;
-    String workStartFri;
+    private String workStartMon;
+    private String workStartTue;
+    private String workStartWed;
+    private String workStartThu;
+    private String workStartFri;
 
-    String workEndMon;
-    String workEndTue;
-    String workEndWed;
-    String workEndThu;
-    String workEndFri;
+    private String workEndMon;
+    private String workEndTue;
+    private String workEndWed;
+    private String workEndThu;
+    private String workEndFri;
 
-    String lunchStartMon;
-    String lunchStartTue;
-    String lunchStartWed;
-    String lunchStartThu;
-    String lunchStartFri;
+    private String lunchStartMon;
+    private String lunchStartTue;
+    private String lunchStartWed;
+    private String lunchStartThu;
+    private String lunchStartFri;
 
-    String lunchEndMon;
-    String lunchEndTue;
-    String lunchEndWed;
-    String lunchEndThu;
-    String lunchEndFri;
+    private String lunchEndMon;
+    private String lunchEndTue;
+    private String lunchEndWed;
+    private String lunchEndThu;
+    private String lunchEndFri;
 
     public String getWorkStartMon() {
         return workStartMon;

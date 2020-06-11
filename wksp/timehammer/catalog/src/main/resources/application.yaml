@@ -1,0 +1,29 @@
+quarkus:
+  datasource:
+    db-kind: postgresql
+    username: timehammer
+    password: ${TIMEHAMMER_DB_PASSWORD}
+    jdbc:
+      url: jdbc:postgresql://db:5432/timehammer
+    reactive:
+      url: postgresql://db:5432/timehammer
+
+mp:
+  messaging:
+    incoming:
+      catalog-request:
+        connector: smallrye-kafka
+        topic: catalog-request
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.catalog.deserializers.CatalogMessageJacksonDeserializer
+      catalog-rerequest:
+        connector: smallrye-kafka
+        topic: catalog-request
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.catalog.deserializers.CatalogMessageJacksonDeserializer
+    outgoing:
+      catalog-response:
+        connector: smallrye-kafka
+        topic: catalog-response
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

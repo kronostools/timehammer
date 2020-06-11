@@ -77,6 +77,7 @@ $(document).ready(function() {
     registrationRequestSummarySource.addEventListener('error', (event) => {
         console.error('Error connecting to registrationRequestSummary stream, closing it ...')
         registrationRequestSummarySource.close()
+        // TODO: hide loading, disable submit button, show form error suggesting reloading the page
         console.info('Closed registrationRequestStream stream')
     })
 
@@ -103,7 +104,7 @@ $(document).ready(function() {
     const isRegistrationRequestSuccessful = function(registrationRequest) {
         return registrationRequest.validationErrors.length === 0
     }
-    // END TIME MACHINE STREAM
+    // END REGISTRATION SUMMARY STREAM
 
     // BEGIN CATALOGUE STREAM
     // TODO: call to get cities and fill select options in html
