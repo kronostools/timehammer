@@ -29,13 +29,13 @@ public class CatalogRequestProcessor {
     public CatalogRequestProcessor(@Channel(Channels.CATALOG_REREQUEST) final Emitter<CatalogMessage> catalogRerequestChannel,
                                    @Channel(Channels.CATALOG_RESPONSE) final Emitter<CatalogMessage> catalogResponseChannel,
                                    final CatalogService catalogService) {
-        this.catalogRerequestChannel = catalogResponseChannel;
-        this.catalogResponseChannel = catalogRerequestChannel;
+        this.catalogRerequestChannel = catalogRerequestChannel;
+        this.catalogResponseChannel = catalogResponseChannel;
         this.catalogService = catalogService;
     }
 
     @Incoming(Channels.CATALOG_REQUEST)
-    public CompletionStage<Void> process(final Message<CatalogMessage> message) {
+    public CompletionStage<Void> processRequest(final Message<CatalogMessage> message) {
         final CatalogMessage catalogMessage = CatalogMessageBuilder.copy(message.getPayload()).build();
 
         final CatalogType catalogType = catalogMessage.getRequestedCatalogs().pop();

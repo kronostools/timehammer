@@ -16,12 +16,12 @@ mp:
         topic: catalog-request
         value:
           deserializer: com.kronostools.timehammer.common.messages.catalog.deserializers.CatalogMessageJacksonDeserializer
+    outgoing:
       catalog-rerequest:
         connector: smallrye-kafka
         topic: catalog-request
         value:
-          deserializer: com.kronostools.timehammer.common.messages.catalog.deserializers.CatalogMessageJacksonDeserializer
-    outgoing:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       catalog-response:
         connector: smallrye-kafka
         topic: catalog-response

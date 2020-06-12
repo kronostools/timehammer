@@ -65,13 +65,15 @@ $(document).ready(function() {
         $('html').scrollTop($('form').offset().top - 20)
     }
 
-    //loading.show()
+    loading.show()
     
     // BEGIN REGISTRATION SUMMARY STREAM
     const registrationRequestSummarySource = new EventSource(`/registrationSummary/stream/${registrationRequestId}`)
 
     registrationRequestSummarySource.addEventListener('open', (event) => {
         console.info(`Connected to registrationRequestSummary stream! (subscriber id: ${registrationRequestId})`)
+
+        catalogRegistration()
     })
 
     registrationRequestSummarySource.addEventListener('error', (event) => {
@@ -107,8 +109,81 @@ $(document).ready(function() {
     // END REGISTRATION SUMMARY STREAM
 
     // BEGIN CATALOGUE STREAM
-    // TODO: call to get cities and fill select options in html
+    const catalogRegistration = function() {
+        const catalogSource = new EventSource(`/catalog/stream/${registrationRequestId}`)
+
+        catalogSource.addEventListener('open', (event) => {
+            console.info(`Connected to catalog stream! (subscriber id: ${registrationRequestId})`)
+
+            requestCatalogs()
+        })
+
+        catalogSource.addEventListener('error', (event) => {
+            console.error('Error connecting to catalog stream, closing it ...')
+            catalogSource.close()
+            // TODO: hide loading, disable submit button, show form error suggesting reloading the page
+            console.info('Closed catalog stream')
+        })
+
+        catalogSource.addEventListener('message', (event) => {
+            const catalogSourceEvent = JSON.parse(event.data)
+
+            console.debug(`Received catalog event: ${event.data}`)
+
+            var allCatalogsRecovered = true
+
+            if (catalogSourceEvent.catalogResponses.COMPANY.result === 'OK') {
+                loadCombo('companyCode', catalogSourceEvent.catalogResponses.COMPANY.elements)
+            } else {
+                allCatalogsRecovered = false
+            }
+
+            if (catalogSourceEvent.catalogResponses.CITY.result === 'OK') {
+                loadCombo('workCity', catalogSourceEvent.catalogResponses.CITY.elements)
+            } else {
+                allCatalogsRecovered = false
+            }
+
+            if (allCatalogsRecovered) {
+                loading.hide()
+            } else {
+                unexpectedErrorRequestingCatalogs()
+            }
+
+            catalogSource.close()
+            console.info('Closed catalog stream')
+        })
+
+        const loadCombo = function(comboId, comboElements) {
+            comboElements.forEach(ce => $(`#${comboId}`).append($('<option>', { 'value': ce.code, 'text': ce.label })))
+        }
+    }
     // END CATALOGUE STREAM
+
+    const requestCatalogs = function() {
+        const formData = {
+            requesterId: registrationRequestId,
+            requestedCatalogs: [
+                'COMPANY', 'CITY'
+            ]
+        }
+
+        $.ajax({
+            url: '/catalog/request',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            dataType: 'json'
+        }).done(function(data, textStatus, jqXHR) {
+            if (data.result) {
+                console.debug('Catalog request sent successfully!')
+            } else {
+                unexpectedErrorRequestingCatalogs()
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            unexpectedErrorRequestingCatalogs()
+        })
+    }
 
     $('.needs-validation').on('submit', function(event) {
         event.preventDefault()
@@ -151,19 +226,28 @@ $(document).ready(function() {
             if (data.result) {
                 console.debug('Registration request sent successfully!')
             } else {
-                unexpectedError()
+                unexpectedErrorSendingRegistrationForm()
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            unexpectedError()
+            unexpectedErrorSendingRegistrationForm()
         })
     })
 
-    function unexpectedError() {
+    function unexpectedErrorSendingRegistrationForm() {
         loading.hide()
 
         showFormErrors([{
             fieldId: '',
             errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario de registro, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
+        }])
+    }
+
+    function unexpectedErrorRequestingCatalogs() {
+        loading.hide()
+
+        showFormErrors([{
+            fieldId: '',
+            errorMessage: 'Ha ocurrido un error inesperado durante la recuperación de datos para el formulario, por favor, refresque la página. Si el error persite, espere unos minutos antes de reintentarlo.'
         }])
     }
 })

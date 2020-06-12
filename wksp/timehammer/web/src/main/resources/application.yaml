@@ -21,6 +21,11 @@ mp:
         topic: worker-register-notify
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      catalog-response:
+        connector: smallrye-kafka
+        topic: catalog-response
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.catalog.deserializers.CatalogMessageJacksonDeserializer
     outgoing:
       timemachine-out:
         connector: smallrye-kafka
@@ -35,5 +40,10 @@ mp:
       worker-register-init:
         connector: smallrye-kafka
         topic: worker-register-init
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      catalog-request:
+        connector: smallrye-kafka
+        topic: catalog-request
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

@@ -35,7 +35,6 @@
                         <div class="col-md-12 mb-3">
                             <label for="companyCode">Empresa (*)</label>
                             <select class="form-control custom-select custom-select-sm d-block w-100" id="companyCode" name="companyCode" aria-describedby="companyHelp">
-                                <option value="COMUNYTEK">Comunytek</option>
                             </select>
                             <small id="companyHelp" class="form-text text-muted">Necesitamos saber la compañía en la que trabajas para poder autenticarte</small>
                             <div id="companyInvalidFeedback" class="invalid-feedback"></div>
@@ -44,13 +43,13 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="workerExternalId">Usuario (*)</label>
-                            <input type="text" class="form-control form-control-sm" id="workerExternalId" name="workerExternalId" placeholder="" value="" aria-describedby="workerExternalIdHelp">
+                            <input type="text" class="form-control form-control-sm" id="workerExternalId" name="workerExternalId" autocomplete="username" placeholder="" value="" aria-describedby="workerExternalIdHelp">
                             <small id="workerExternalIdHelp" class="form-text text-muted">El mismo usuario que en tu empresa.</small>
                             <div id="workerExternalIdInvalidFeedback" class="invalid-feedback"></div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="workerExternalPassword">Contraseña (*)</label>
-                            <input type="password" class="form-control form-control-sm" id="workerExternalPassword" name="workerExternalPassword" placeholder="" value="" aria-describedby="workerExternalPasswordHelp">
+                            <input type="password" class="form-control form-control-sm" id="workerExternalPassword" name="workerExternalPassword" autocomplete="new-password" placeholder="" value="" aria-describedby="workerExternalPasswordHelp">
                             <small id="workerExternalPasswordHelp" class="form-text text-muted">La misma contraseña que en tu empresa. Esta contraseña es necesaria para poder automatizar ciertas acciones.</small>
                             <div id="workerExternalPasswordInvalidFeedback" class="invalid-feedback"></div>
                         </div>
@@ -60,7 +59,6 @@
                         <div class="col-md-6 mb-3">
                             <label for="workCity">Ciudad de trabajo (*)</label>
                             <select class="form-control custom-select custom-select-sm d-block w-100" id="workCity" name="workCity" aria-describedby="workCityHelp">
-                                <option value="MAD">Madrid</option>
                             </select>
                             <small id="workCityHelp" class="form-text text-muted">Necesitamos saber tu ciudad de trabajo para saber los días festivos y así no molestarte en esos días</small>
                             <div id="workCityInvalidFeedback" class="invalid-feedback"></div>

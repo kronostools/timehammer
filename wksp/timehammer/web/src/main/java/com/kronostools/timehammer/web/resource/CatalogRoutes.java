@@ -32,7 +32,7 @@ public class CatalogRoutes {
         final CatalogMessage timeMachineEvent = new CatalogMessageBuilder()
                 .generated(timeMachineService.getNow())
                 .requesterId(catalogRequest.getRequesterId())
-                .requestedCatalogs(catalogRequest.getRequestedCatalogs())
+                .requestedCatalogsAsList(catalogRequest.getRequestedCatalogs())
                 .build();
 
         final HttpServerRequest request = rc.request();

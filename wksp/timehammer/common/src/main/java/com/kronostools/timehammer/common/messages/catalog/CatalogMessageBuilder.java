@@ -27,7 +27,7 @@ public class CatalogMessageBuilder extends PlatformMessageBuilder<CatalogMessage
         return this;
     }
 
-    public CatalogMessageBuilder requestedCatalogs(final List<CatalogType> requestedCatalogs) {
+    public CatalogMessageBuilder requestedCatalogsAsList(final List<CatalogType> requestedCatalogs) {
         this.requestedCatalogs = new LinkedList<CatalogType>() {{
             addAll(requestedCatalogs);
         }};
