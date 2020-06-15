@@ -1,15 +1,6 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Catalog
-        - probar
-    - Registro
-        - Página de registro
-            - Al cargar el html suscribirse al stream de recuperación de datos maestros
-                - Cargar las ciudades en el combo
-            - Al cargar el html iniciar flujo para obtener la lista de ciudades
-            - Componente para poner toda la página en cargando
-                - mientras se cargan la lista de ciudades en el combo
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro

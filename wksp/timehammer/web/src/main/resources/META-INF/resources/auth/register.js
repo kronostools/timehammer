@@ -26,7 +26,7 @@ $(document).ready(function() {
         title: 'Horario habitual'
     })
 
-    function showFormErrors(formErrors) {
+    function showFormErrors(formErrors, disable = false) {
         // Clean previous errors
         $('#globalErrors').remove()
         $('.invalid-feedback').text('')
@@ -52,6 +52,12 @@ $(document).ready(function() {
             $globalErrorsDiv.append($globalErrors)
 
             $('form').prepend($globalErrorsDiv)
+
+            if (disabled) {
+                $('#submitButton').attr('disabled', 'disabled')
+            } else {
+                $('#submitButton').removeAttr('disabled')
+            }
         }
 
         // Process field errors
@@ -79,7 +85,9 @@ $(document).ready(function() {
     registrationRequestSummarySource.addEventListener('error', (event) => {
         console.error('Error connecting to registrationRequestSummary stream, closing it ...')
         registrationRequestSummarySource.close()
-        // TODO: hide loading, disable submit button, show form error suggesting reloading the page
+
+        unexpectedErrorPreparingRegistrationForm()
+
         console.info('Closed registrationRequestStream stream')
     })
 
@@ -121,7 +129,9 @@ $(document).ready(function() {
         catalogSource.addEventListener('error', (event) => {
             console.error('Error connecting to catalog stream, closing it ...')
             catalogSource.close()
-            // TODO: hide loading, disable submit button, show form error suggesting reloading the page
+
+            unexpectedErrorPreparingRegistrationForm()
+
             console.info('Closed catalog stream')
         })
 
@@ -147,7 +157,7 @@ $(document).ready(function() {
             if (allCatalogsRecovered) {
                 loading.hide()
             } else {
-                unexpectedErrorRequestingCatalogs()
+                unexpectedErrorPreparingRegistrationForm()
             }
 
             catalogSource.close()
@@ -178,10 +188,10 @@ $(document).ready(function() {
             if (data.result) {
                 console.debug('Catalog request sent successfully!')
             } else {
-                unexpectedErrorRequestingCatalogs()
+                unexpectedErrorPreparingRegistrationForm()
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
-            unexpectedErrorRequestingCatalogs()
+            unexpectedErrorPreparingRegistrationForm()
         })
     }
 
@@ -242,12 +252,12 @@ $(document).ready(function() {
         }])
     }
 
-    function unexpectedErrorRequestingCatalogs() {
+    function unexpectedErrorPreparingRegistrationForm() {
         loading.hide()
 
         showFormErrors([{
             fieldId: '',
             errorMessage: 'Ha ocurrido un error inesperado durante la recuperación de datos para el formulario, por favor, refresque la página. Si el error persite, espere unos minutos antes de reintentarlo.'
-        }])
+        }], true)
     }
 })
