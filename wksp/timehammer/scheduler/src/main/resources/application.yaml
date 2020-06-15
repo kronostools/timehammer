@@ -17,6 +17,11 @@ mp:
         topic: schedule-clean-holidays
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-update-status:
+        connector: smallrye-kafka
+        topic: schedule-update-status
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       schedule-summary:
         connector: smallrye-kafka
         topic: schedule-summary

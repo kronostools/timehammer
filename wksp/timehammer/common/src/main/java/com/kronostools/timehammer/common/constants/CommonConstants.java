@@ -9,7 +9,9 @@ public class CommonConstants {
         public static final String TIMEMACHINE_STREAM = "timemachine-stream";
         public static final String SCHEDULE_UPDATE_HOLIDAYS = "schedule-update-holidays";
         public static final String SCHEDULE_CLEAN_HOLIDAYS = "schedule-clean-holidays";
+        public static final String SCHEDULE_UPDATE_STATUS = "schedule-update-status";
         public static final String HOLIDAYS_WORKER_GET = "holidays-worker-get";
+        public static final String STATUS_WORKER_GET = "status-worker-get";
         public static final String COMUNYTEK_WORKER_HOLIDAYS = "comunytek-worker-holidays";
         public static final String COMUNYTEK_WORKER_REGISTER = "comunytek-worker-register";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
