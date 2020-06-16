@@ -2,8 +2,8 @@ package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorkerBuilder;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorker;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorkerBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
 import com.kronostools.timehammer.core.model.WorkerCurrentPreferences;
@@ -31,12 +31,12 @@ public class UpdateWorkersStatusScheduleProcessor {
 
     @Incoming(Channels.SCHEDULE_UPDATE_STATUS)
     @Outgoing(Channels.STATUS_WORKER_GET)
-    public Multi<Message<UpdateWorkersHolidayWorker>> process(final Message<ScheduleTriggerMessage> message) {
+    public Multi<Message<UpdateWorkersStatusWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        final List<UpdateWorkersHolidayWorker> workers = new ArrayList<>();
+        final List<UpdateWorkersStatusWorker> workers = new ArrayList<>();
 
         workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
             .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
@@ -45,8 +45,9 @@ public class UpdateWorkersStatusScheduleProcessor {
 
                     final List<WorkerCurrentPreferences> wcpl = workerCurrentPreferencesMultipleResult.getResult();
 
-                    wcpl.forEach(wcp -> workers
-                            .add(new UpdateWorkersHolidayWorkerBuilder()
+                    wcpl.stream()
+                            .filter(WorkerCurrentPreferences::workToday)
+                            .forEach(wcp -> workers.add(new UpdateWorkersStatusWorkerBuilder()
                                     .generated(triggerMessage.getGenerated())
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())
@@ -54,7 +55,6 @@ public class UpdateWorkersStatusScheduleProcessor {
                                     .workerInternalId(wcp.getWorkerInternalId())
                                     .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
-                                    .holidayCandidate(triggerMessage.getGenerated().toLocalDate())
                                     .build()));
                 } else {
                     LOG.error("Status of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());

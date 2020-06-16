@@ -2,6 +2,7 @@ package com.kronostools.timehammer.core.model;
 
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,6 +23,12 @@ public class WorkerCurrentPreferences {
     private boolean workerHoliday;
     private boolean cityHoliday;
     private Set<String> chatIds;
+
+    public Boolean workToday() {
+        return !CommonDateTimeUtils.isWeekend(date)
+                && !workerHoliday
+                && !cityHoliday;
+    }
 
     public LocalDate getDate() {
         return date;
