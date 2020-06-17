@@ -1,5 +1,5 @@
 package com.kronostools.timehammer.common.constants;
 
 public enum WorkerStatusContext {
-    WORK, LUNCH
+    BEFORE_WORK, WORK, LUNCH, AFTER_WORK
 }

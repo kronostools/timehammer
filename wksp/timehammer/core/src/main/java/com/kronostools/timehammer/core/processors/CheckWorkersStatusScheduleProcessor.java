@@ -1,9 +1,9 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorker;
+import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorkerBuilder;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorker;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorkerBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
 import com.kronostools.timehammer.core.model.WorkerCurrentPreferences;
@@ -20,23 +20,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class UpdateWorkersStatusScheduleProcessor {
-    private static final Logger LOG = LoggerFactory.getLogger(UpdateWorkersStatusScheduleProcessor.class);
+public class CheckWorkersStatusScheduleProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(CheckWorkersStatusScheduleProcessor.class);
 
     private final WorkerCurrentPreferencesDao workerCurrentPreferencesDao;
 
-    public UpdateWorkersStatusScheduleProcessor(final WorkerCurrentPreferencesDao workerCurrentPreferencesDao) {
+    public CheckWorkersStatusScheduleProcessor(final WorkerCurrentPreferencesDao workerCurrentPreferencesDao) {
         this.workerCurrentPreferencesDao = workerCurrentPreferencesDao;
     }
 
     @Incoming(Channels.SCHEDULE_UPDATE_STATUS)
     @Outgoing(Channels.STATUS_WORKER_GET)
-    public Multi<Message<UpdateWorkersStatusWorker>> process(final Message<ScheduleTriggerMessage> message) {
+    public Multi<Message<CheckWorkersStatusWorker>> process(final Message<ScheduleTriggerMessage> message) {
         final ScheduleTriggerMessage triggerMessage = message.getPayload();
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        final List<UpdateWorkersStatusWorker> workers = new ArrayList<>();
+        final List<CheckWorkersStatusWorker> workers = new ArrayList<>();
 
         workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
             .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
@@ -47,7 +47,7 @@ public class UpdateWorkersStatusScheduleProcessor {
 
                     wcpl.stream()
                             .filter(WorkerCurrentPreferences::workToday)
-                            .forEach(wcp -> workers.add(new UpdateWorkersStatusWorkerBuilder()
+                            .forEach(wcp -> workers.add(new CheckWorkersStatusWorkerBuilder()
                                     .generated(triggerMessage.getGenerated())
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())
@@ -55,6 +55,7 @@ public class UpdateWorkersStatusScheduleProcessor {
                                     .workerInternalId(wcp.getWorkerInternalId())
                                     .company(wcp.getCompany())
                                     .workerExternalId(wcp.getWorkerExternalId())
+                                    .chats(wcp.getChatIds())
                                     .build()));
                 } else {
                     LOG.error("Status of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());

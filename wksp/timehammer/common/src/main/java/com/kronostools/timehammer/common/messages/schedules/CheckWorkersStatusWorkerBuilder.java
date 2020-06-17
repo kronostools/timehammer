@@ -4,24 +4,26 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.Company;
 
 import java.util.Optional;
+import java.util.Set;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class UpdateWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMessageBuilder<UpdateWorkersStatusWorkerBuilder> {
+public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMessageBuilder<CheckWorkersStatusWorkerBuilder> {
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
+    private Set<String> chats;
     private GetWorkerStatusPhase workerStatusPhase;
     private SaveWorkerStatusPhase saveWorkerStatusPhase;
 
-    public static UpdateWorkersStatusWorker copyAndBuild(final UpdateWorkersStatusWorker worker) {
+    public static CheckWorkersStatusWorker copyAndBuild(final CheckWorkersStatusWorker worker) {
         return Optional.ofNullable(worker)
-                .map(w -> UpdateWorkersStatusWorkerBuilder.copy(w).build())
+                .map(w -> CheckWorkersStatusWorkerBuilder.copy(w).build())
                 .orElse(null);
     }
 
-    public static UpdateWorkersStatusWorkerBuilder copy(final UpdateWorkersStatusWorker worker) {
+    public static CheckWorkersStatusWorkerBuilder copy(final CheckWorkersStatusWorker worker) {
         return Optional.ofNullable(worker)
-                .map(w -> new UpdateWorkersStatusWorkerBuilder()
+                .map(w -> new CheckWorkersStatusWorkerBuilder()
                     .generated(w.getGenerated())
                     .executionId(w.getExecutionId())
                     .name(w.getName())
@@ -29,41 +31,48 @@ public class UpdateWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMe
                     .workerInternalId(w.getWorkerInternalId())
                     .company(w.getCompany())
                     .workerExternalId(w.getWorkerExternalId())
+                    .chats(w.getChats())
                     .workerStatusPhase(GetWorkerStatusPhaseBuilder.copyAndBuild(w.getWorkerStatusPhase()))
                     .saveWorkerStatusPhase(SaveWorkerStatusPhaseBuilder.copyAndBuild(w.getSaveWorkerStatusPhase())))
                 .orElse(null);
     }
 
-    public UpdateWorkersStatusWorkerBuilder workerInternalId(final String workerInternalId) {
+    public CheckWorkersStatusWorkerBuilder workerInternalId(final String workerInternalId) {
         this.workerInternalId = workerInternalId;
         return this;
     }
 
-    public UpdateWorkersStatusWorkerBuilder company(final Company company) {
+    public CheckWorkersStatusWorkerBuilder company(final Company company) {
         this.company = company;
         return this;
     }
 
-    public UpdateWorkersStatusWorkerBuilder workerExternalId(final String workerExternalId) {
+    public CheckWorkersStatusWorkerBuilder workerExternalId(final String workerExternalId) {
         this.workerExternalId = workerExternalId;
         return this;
     }
 
-    public UpdateWorkersStatusWorkerBuilder workerStatusPhase(final GetWorkerStatusPhase workerStatusPhase) {
+    public CheckWorkersStatusWorkerBuilder chats(final Set<String> chats) {
+        this.chats = chats;
+        return this;
+    }
+
+    public CheckWorkersStatusWorkerBuilder workerStatusPhase(final GetWorkerStatusPhase workerStatusPhase) {
         this.workerStatusPhase = workerStatusPhase;
         return this;
     }
 
-    public UpdateWorkersStatusWorkerBuilder saveWorkerStatusPhase(final SaveWorkerStatusPhase saveWorkerStatusPhase) {
+    public CheckWorkersStatusWorkerBuilder saveWorkerStatusPhase(final SaveWorkerStatusPhase saveWorkerStatusPhase) {
         this.saveWorkerStatusPhase = saveWorkerStatusPhase;
         return this;
     }
 
-    public UpdateWorkersStatusWorker build() {
-        final UpdateWorkersStatusWorker result = new UpdateWorkersStatusWorker(generated, name, executionId, batchSize);
+    public CheckWorkersStatusWorker build() {
+        final CheckWorkersStatusWorker result = new CheckWorkersStatusWorker(generated, name, executionId, batchSize);
         result.setWorkerInternalId(workerInternalId);
         result.setCompany(company);
         result.setWorkerExternalId(workerExternalId);
+        result.setChats(chats);
         result.setWorkerStatusPhase(workerStatusPhase);
         result.setSaveWorkerStatusPhase(saveWorkerStatusPhase);
 

@@ -49,6 +49,10 @@ public final class CommonDateTimeUtils {
         return parseTime(time, FORMAT_HHMM_TSEP);
     }
 
+    public static LocalTime parseTimeFromComunytek(final String time) {
+        return parseTime(time, FORMAT_HHMMSSSSS_TSEP);
+    }
+
     public static LocalTime getTimeWithOffset(final LocalTime time, final ZoneOffset offset) {
         return Optional.ofNullable(time)
                 .map(t -> t.atOffset(offset)
@@ -92,6 +96,10 @@ public final class CommonDateTimeUtils {
 
     public static String formatDateTimeToJson(final LocalDateTime dateTime) {
         return formatDateTime(dateTime, FORMAT_YYYYMMDDTHHMMSSSSS);
+    }
+
+    public static String formatDateTimeToComunytek(final LocalDateTime dateTime) {
+        return formatDateTime(dateTime, FORMAT_YYYYMMDD);
     }
 
     public static String formatTimezoneToLog(final SupportedTimezone zone) {

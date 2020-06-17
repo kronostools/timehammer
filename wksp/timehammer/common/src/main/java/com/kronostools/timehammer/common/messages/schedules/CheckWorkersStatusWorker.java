@@ -5,17 +5,19 @@ import com.kronostools.timehammer.common.constants.Company;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
-@JsonDeserialize(builder = UpdateWorkersStatusWorkerBuilder.class)
-public class UpdateWorkersStatusWorker extends ProcessableBatchScheduleMessage {
+@JsonDeserialize(builder = CheckWorkersStatusWorkerBuilder.class)
+public class CheckWorkersStatusWorker extends ProcessableBatchScheduleMessage {
     private String workerInternalId;
     private Company company;
     private String workerExternalId;
+    private Set<String> chats;
     private GetWorkerStatusPhase workerStatusPhase;
     private SaveWorkerStatusPhase saveWorkerStatusPhase;
 
-    UpdateWorkersStatusWorker(final LocalDateTime timestamp, final String name, final UUID executionId, final Integer batchSize) {
+    CheckWorkersStatusWorker(final LocalDateTime timestamp, final String name, final UUID executionId, final Integer batchSize) {
         super(timestamp, name, executionId, batchSize);
     }
 
@@ -47,6 +49,14 @@ public class UpdateWorkersStatusWorker extends ProcessableBatchScheduleMessage {
 
     public void setWorkerExternalId(String workerExternalId) {
         this.workerExternalId = workerExternalId;
+    }
+
+    public Set<String> getChats() {
+        return chats;
+    }
+
+    public void setChats(Set<String> chats) {
+        this.chats = chats;
     }
 
     public GetWorkerStatusPhase getWorkerStatusPhase() {

@@ -11,6 +11,11 @@ mp:
         topic: comunytek-worker-register
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      comunytek-worker-status:
+        connector: smallrye-kafka
+        topic: comunytek-worker-status
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
     outgoing:
       holidays-worker-update:
         connector: smallrye-kafka
@@ -20,6 +25,11 @@ mp:
       worker-register-persist:
         connector: smallrye-kafka
         topic: worker-register-persist
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      status-worker-update:
+        connector: smallrye-kafka
+        topic: status-worker-update
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 

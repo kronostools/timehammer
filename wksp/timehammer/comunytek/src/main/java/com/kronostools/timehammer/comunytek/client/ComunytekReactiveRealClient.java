@@ -9,6 +9,7 @@ import com.kronostools.timehammer.comunytek.config.LoginCacheConfig;
 import com.kronostools.timehammer.comunytek.constants.ComunytekCachedLoginResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
 import com.kronostools.timehammer.comunytek.exception.ComunytekExpiredSessionException;
 import com.kronostools.timehammer.comunytek.exception.ComunytekUnexpectedException;
 import com.kronostools.timehammer.comunytek.model.*;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.stream.Stream;
 
 public class ComunytekReactiveRealClient implements ComunytekClient {
@@ -221,6 +224,100 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                     .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
                     } else {
                         return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
+                                .result(ComunytekSimpleResult.KO)
+                                .errorMessage(clr.getErrorMessage())
+                                .build());
+                    }
+                })
+                .onFailure(ComunytekExpiredSessionException.class)
+                    .retry()
+                    .atMost(EXPIRED_SESSION_MAX_RETRIES);
+    }
+
+    @Override
+    public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
+        LOG.debug("Getting status of user '{}' ...", username);
+
+        return cachedLogin(username)
+                .flatMap(clr -> {
+                    if (clr.isSuccessful()) {
+                        LOG.debug("Calling comunytek to get status ...");
+
+                        return client
+                                .post(getUrl("reghoras"))
+                                .putHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
+                                .sendBuffer(ComunytekStatusForm.Builder.builder()
+                                        .sessionId(clr.getSessionId())
+                                        .username(username)
+                                        .day(CommonDateTimeUtils.formatDateTimeToComunytek(timestamp))
+                                        .build()
+                                        .toBuffer())
+                                .map(response -> {
+                                    LOG.debug("Processing status response from comunytek - status: {}", response.statusCode());
+
+                                    final ComunytekStatusResponse result;
+
+                                    if (response.statusCode() == 200) {
+                                        if (ERROR_EXPIRED_SESSION.equals(response.bodyAsString())) {
+                                            invalidateSession(username);
+
+                                            final String message = CommonUtils.stringFormat("Session of user '{}' has expired and its status couldn't be retrieved", username);
+                                            LOG.warn(message);
+
+                                            throw new ComunytekExpiredSessionException(message);
+                                        } else {
+                                            LOG.debug("Status of user '{}' were retrieved successfully", username);
+
+                                            if (response.bodyAsString() != null && response.bodyAsString().length() > 0) {
+                                                final String[] hoursReportedParts = response.bodyAsString().split(LINE_BREAK);
+
+                                                result = Stream.of(hoursReportedParts)
+                                                        .skip(hoursReportedParts.length - 1)
+                                                        .findFirst()
+                                                        .map(rawReport -> rawReport.split(TAB))
+                                                        .map(hourReportParts -> {
+                                                            // 26/03/2020\t13:21:43.012\tP\tPausa\t05.76\tComida
+                                                            final LocalDate date = CommonDateTimeUtils.parseDateFromComunytek(hourReportParts[0]);
+                                                            final LocalTime time = CommonDateTimeUtils.parseTimeFromComunytek(hourReportParts[1]);
+                                                            final ComunytekStatusValue status = ComunytekStatusValue.fromCode(hourReportParts[2]);
+                                                            final String workedTime = hourReportParts[4];
+                                                            final String comment = hourReportParts[5];
+
+                                                            return new ComunytekStatusResponseBuilder()
+                                                                    .result(ComunytekSimpleResult.OK)
+                                                                    .date(date)
+                                                                    .time(time)
+                                                                    .status(status)
+                                                                    .workedTime(workedTime)
+                                                                    .comment(comment)
+                                                                    .build();
+                                                        })
+                                                        .get();
+                                            } else {
+                                                result = new ComunytekStatusResponseBuilder()
+                                                        .result(ComunytekSimpleResult.OK)
+                                                        .date(timestamp.toLocalDate())
+                                                        .status(ComunytekStatusValue.INITIAL)
+                                                        .build();
+                                            }
+
+                                            LOG.debug("User '{}' is in status '{}' ('{}')", username, result.getStatus().getCode(), result.getStatus().getText());
+                                        }
+                                    } else {
+                                        final String message = CommonUtils.stringFormat("There was an unexpected error trying to get status of user '{}'", username);
+                                        LOG.error(message);
+
+                                        throw new ComunytekUnexpectedException(message);
+                                    }
+
+                                    return result;
+                                })
+                                .onFailure(ComunytekUnexpectedException.class)
+                                    .retry()
+                                    .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
+                    } else {
+                        // TODO: differentiate betweeen unexpected error and missing/invalid credentials
+                        return Uni.createFrom().item(new ComunytekStatusResponseBuilder()
                                 .result(ComunytekSimpleResult.KO)
                                 .errorMessage(clr.getErrorMessage())
                                 .build());

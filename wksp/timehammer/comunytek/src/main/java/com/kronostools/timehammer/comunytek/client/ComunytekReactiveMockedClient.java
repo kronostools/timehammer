@@ -6,6 +6,7 @@ import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,6 +69,11 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
                 .result(ComunytekSimpleResult.OK)
                 .holiday(mockedHolidays.contains(holidayCandidate))
                 .build());
+    }
+
+    @Override
+    public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
+        return null;
     }
 
     @Override

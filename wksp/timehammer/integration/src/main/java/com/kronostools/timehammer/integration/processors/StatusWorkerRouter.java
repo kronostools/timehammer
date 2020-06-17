@@ -2,8 +2,8 @@ package com.kronostools.timehammer.integration.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorker;
-import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersStatusWorkerBuilder;
+import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorker;
+import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorkerBuilder;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -21,15 +21,15 @@ import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 public class StatusWorkerRouter {
     private static final Logger LOG = LoggerFactory.getLogger(StatusWorkerRouter.class);
 
-    private final Emitter<UpdateWorkersStatusWorker> comunytekWorkerStatusChannel;
+    private final Emitter<CheckWorkersStatusWorker> comunytekWorkerStatusChannel;
 
-    public StatusWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_STATUS) final Emitter<UpdateWorkersStatusWorker> comunytekWorkerStatusChannel) {
+    public StatusWorkerRouter(@Channel(Channels.COMUNYTEK_WORKER_STATUS) final Emitter<CheckWorkersStatusWorker> comunytekWorkerStatusChannel) {
         this.comunytekWorkerStatusChannel = comunytekWorkerStatusChannel;
     }
 
     @Incoming(Channels.STATUS_WORKER_GET)
-    public CompletionStage<Void> routeHolidays(final Message<UpdateWorkersStatusWorker> message) {
-        final UpdateWorkersStatusWorker worker = UpdateWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
+    public CompletionStage<Void> routeHolidays(final Message<CheckWorkersStatusWorker> message) {
+        final CheckWorkersStatusWorker worker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
         LOG.info("Routing update status message of worker '{}' to company '{}'", worker.getWorkerInternalId(), worker.getCompany().getCode());
 
