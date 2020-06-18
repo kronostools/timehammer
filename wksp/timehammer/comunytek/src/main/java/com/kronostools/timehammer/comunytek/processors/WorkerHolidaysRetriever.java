@@ -34,6 +34,8 @@ public class WorkerHolidaysRetriever {
     public Uni<Message<UpdateWorkersHolidayWorker>> retrieveHolidays(final Message<UpdateWorkersHolidayWorker> message) {
         final UpdateWorkersHolidayWorker worker = UpdateWorkersHolidayWorkerBuilder.copy(message.getPayload()).build();
 
+        LOG.info("Getting holidays of worker '{}' from Comunytek ...", worker.getWorkerInternalId());
+
         return comunytekClient
                 .isHoliday(worker.getWorkerExternalId(), worker.getHolidayCandidate())
                 .onFailure(Exception.class)

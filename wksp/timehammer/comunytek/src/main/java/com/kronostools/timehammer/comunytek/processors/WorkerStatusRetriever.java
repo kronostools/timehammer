@@ -30,8 +30,10 @@ public class WorkerStatusRetriever {
 
     @Incoming(Channels.COMUNYTEK_WORKER_STATUS)
     @Outgoing(Channels.STATUS_WORKER_PROCESS)
-    public Uni<Message<CheckWorkersStatusWorker>> retrieveHolidays(final Message<CheckWorkersStatusWorker> message) {
+    public Uni<Message<CheckWorkersStatusWorker>> retrieveStatus(final Message<CheckWorkersStatusWorker> message) {
         final CheckWorkersStatusWorker checkWorkersStatusWorker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
+
+        LOG.info("Getting status of worker '{}' from Comunytek ...", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
 
         return comunytekClient
                 .getStatus(checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerExternalId(), checkWorkersStatusWorker.getGenerated())

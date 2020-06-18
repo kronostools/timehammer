@@ -11,15 +11,15 @@ import java.util.UUID;
 public class CheckWorkersStatusWorker extends ProcessableBatchScheduleMessage {
     private WorkerCurrentPreferences workerCurrentPreferences;
     private GetWorkerStatusPhase workerStatusPhase;
-    private SaveWorkerStatusPhase saveWorkerStatusPhase;
+    private WorkerStatusActionPhase workerStatusActionPhase;
 
     CheckWorkersStatusWorker(final LocalDateTime timestamp, final String name, final UUID executionId, final Integer batchSize) {
         super(timestamp, name, executionId, batchSize);
     }
 
     public boolean processedSuccessfully() {
-        return Optional.ofNullable(saveWorkerStatusPhase)
-                .map(SaveWorkerStatusPhase::isSuccessful)
+        return Optional.ofNullable(workerStatusActionPhase)
+                .map(WorkerStatusActionPhase::isSuccessful)
                 .orElse(false);
     }
 
@@ -39,11 +39,11 @@ public class CheckWorkersStatusWorker extends ProcessableBatchScheduleMessage {
         this.workerStatusPhase = workerStatusPhase;
     }
 
-    public SaveWorkerStatusPhase getSaveWorkerStatusPhase() {
-        return saveWorkerStatusPhase;
+    public WorkerStatusActionPhase getWorkerStatusActionPhase() {
+        return workerStatusActionPhase;
     }
 
-    public void setSaveWorkerStatusPhase(SaveWorkerStatusPhase saveWorkerStatusPhase) {
-        this.saveWorkerStatusPhase = saveWorkerStatusPhase;
+    public void setWorkerStatusActionPhase(WorkerStatusActionPhase workerStatusActionPhase) {
+        this.workerStatusActionPhase = workerStatusActionPhase;
     }
 }

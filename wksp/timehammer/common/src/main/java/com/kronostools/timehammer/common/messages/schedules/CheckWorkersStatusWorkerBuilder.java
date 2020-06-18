@@ -2,6 +2,7 @@ package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferencesBuilder;
 
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import java.util.Optional;
 public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMessageBuilder<CheckWorkersStatusWorkerBuilder> {
     private WorkerCurrentPreferences workerCurrentPreferences;
     private GetWorkerStatusPhase workerStatusPhase;
-    private SaveWorkerStatusPhase saveWorkerStatusPhase;
+    private WorkerStatusActionPhase workerStatusActionPhase;
 
     public static CheckWorkersStatusWorker copyAndBuild(final CheckWorkersStatusWorker worker) {
         return Optional.ofNullable(worker)
@@ -24,9 +25,9 @@ public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMes
                     .executionId(w.getExecutionId())
                     .name(w.getName())
                     .batchSize(w.getBatchSize())
-                    .workerCurrentPreferences(w.getWorkerCurrentPreferences())
+                    .workerCurrentPreferences(WorkerCurrentPreferencesBuilder.copyAndBuild(w.getWorkerCurrentPreferences()))
                     .workerStatusPhase(GetWorkerStatusPhaseBuilder.copyAndBuild(w.getWorkerStatusPhase()))
-                    .saveWorkerStatusPhase(SaveWorkerStatusPhaseBuilder.copyAndBuild(w.getSaveWorkerStatusPhase())))
+                    .workerStatusActionPhase(WorkerStatusActionPhaseBuilder.copyAndBuild(w.getWorkerStatusActionPhase())))
                 .orElse(null);
     }
 
@@ -40,8 +41,8 @@ public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMes
         return this;
     }
 
-    public CheckWorkersStatusWorkerBuilder saveWorkerStatusPhase(final SaveWorkerStatusPhase saveWorkerStatusPhase) {
-        this.saveWorkerStatusPhase = saveWorkerStatusPhase;
+    public CheckWorkersStatusWorkerBuilder workerStatusActionPhase(final WorkerStatusActionPhase workerStatusActionPhase) {
+        this.workerStatusActionPhase = workerStatusActionPhase;
         return this;
     }
 
@@ -49,7 +50,7 @@ public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMes
         final CheckWorkersStatusWorker result = new CheckWorkersStatusWorker(generated, name, executionId, batchSize);
         result.setWorkerCurrentPreferences(workerCurrentPreferences);
         result.setWorkerStatusPhase(workerStatusPhase);
-        result.setSaveWorkerStatusPhase(saveWorkerStatusPhase);
+        result.setWorkerStatusActionPhase(workerStatusActionPhase);
 
         return result;
     }

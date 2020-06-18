@@ -1,0 +1,19 @@
+mp:
+  messaging:
+    incoming:
+      status-worker-process:
+        connector: smallrye-kafka
+        topic: status-worker-process
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
+      status-worker-notify-in:
+        connector: smallrye-kafka
+        topic: status-worker-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
+    outgoing:
+      status-worker-notify-out:
+        connector: smallrye-kafka
+        topic: status-worker-notify
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

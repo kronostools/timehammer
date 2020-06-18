@@ -7,6 +7,7 @@ import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @JsonPOJOBuilder(withPrefix = "")
@@ -28,6 +29,32 @@ public class WorkerCurrentPreferencesBuilder {
 
     public WorkerCurrentPreferencesBuilder() {
         this.chatIds = new HashSet<>();
+    }
+
+    public static WorkerCurrentPreferences copyAndBuild(final WorkerCurrentPreferences worker) {
+        return Optional.ofNullable(worker)
+                .map(w -> WorkerCurrentPreferencesBuilder.copy(w).build())
+                .orElse(null);
+    }
+
+    public static WorkerCurrentPreferencesBuilder copy(final WorkerCurrentPreferences worker) {
+        return Optional.ofNullable(worker)
+                .map(w -> new WorkerCurrentPreferencesBuilder()
+                        .date(w.getDate())
+                        .workerInternalId(w.getWorkerInternalId())
+                        .workerExternalId(w.getWorkerExternalId())
+                        .workSsid(w.getWorkSsid())
+                        .workStart(w.getWorkStart())
+                        .workEnd(w.getWorkEnd())
+                        .lunchStart(w.getLunchStart())
+                        .lunchEnd(w.getLunchEnd())
+                        .workCityCode(w.getWorkCityCode())
+                        .timezone(w.getTimezone())
+                        .company(w.getCompany())
+                        .workerHoliday(w.isWorkerHoliday())
+                        .cityHoliday(w.isCityHoliday())
+                        .chatIds(w.getChatIds()))
+                .orElse(null);
     }
 
     public WorkerCurrentPreferencesBuilder date(final LocalDate date) {
@@ -96,6 +123,11 @@ public class WorkerCurrentPreferencesBuilder {
 
     public WorkerCurrentPreferencesBuilder cityHoliday(final boolean cityHoliday) {
         this.cityHoliday = cityHoliday;
+        return this;
+    }
+
+    public WorkerCurrentPreferencesBuilder chatIds(final Set<String> chatIds) {
+        this.chatIds = chatIds;
         return this;
     }
 

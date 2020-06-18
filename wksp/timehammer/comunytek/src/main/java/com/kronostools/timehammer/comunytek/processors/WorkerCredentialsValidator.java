@@ -33,6 +33,8 @@ public class WorkerCredentialsValidator {
     public Uni<Message<WorkerRegistrationRequestMessage>> checkCredentials(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
+        LOG.info("Checking credentials of worker '{}' against Comunytek ...", registrationRequest.getRegistrationRequestForm().getWorkerExternalId());
+
         return comunytekClient.login(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
                 .onFailure(Exception.class)
                     .recoverWithItem((e) -> new ComunytekLoginResponseBuilder()
