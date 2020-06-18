@@ -1,12 +1,12 @@
 package com.kronostools.timehammer.comunytek.model;
 
-import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekStatusResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ComunytekStatusResponseBuilder extends ComunytekResponseBuilder<ComunytekSimpleResult, ComunytekStatusResponseBuilder> {
+public class ComunytekStatusResponseBuilder extends ComunytekResponseBuilder<ComunytekStatusResult, ComunytekStatusResponseBuilder> {
     private LocalDate date;
     private LocalTime time;
     private ComunytekStatusValue status;

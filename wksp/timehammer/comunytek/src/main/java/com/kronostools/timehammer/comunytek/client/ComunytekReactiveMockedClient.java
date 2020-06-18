@@ -2,16 +2,18 @@ package com.kronostools.timehammer.comunytek.client;
 
 import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekStatusResult;
+import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
 import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ComunytekReactiveMockedClient implements ComunytekClient {
 
+    private final Map<String, Map<LocalDate, List<ComunytekStatusResponse>>> mockedRegistry;
     private final Set<LocalDate> mockedHolidays;
     
     public ComunytekReactiveMockedClient() {
@@ -44,6 +46,8 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
             add(LocalDate.of(currentYear, 12, 5));
             add(LocalDate.of(currentYear, 1, 10));
         }};
+
+        this.mockedRegistry = new HashMap<>();
     }
 
     @Override
@@ -73,7 +77,28 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
 
     @Override
     public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
-        return null;
+        final ComunytekStatusResponse result;
+
+        if (mockedRegistry.containsKey(username) && mockedRegistry.get(username).containsKey(timestamp.toLocalDate())) {
+            final List<ComunytekStatusResponse> workerDayRegistry = mockedRegistry.get(username).get(timestamp.toLocalDate());
+
+            result = workerDayRegistry.stream()
+                    .skip(workerDayRegistry.size() - 1)
+                    .findFirst()
+                    .orElse(new ComunytekStatusResponseBuilder()
+                            .result(ComunytekStatusResult.OK)
+                            .date(timestamp.toLocalDate())
+                            .status(ComunytekStatusValue.INITIAL)
+                            .build());
+        } else {
+            result = new ComunytekStatusResponseBuilder()
+                    .result(ComunytekStatusResult.OK)
+                    .date(timestamp.toLocalDate())
+                    .status(ComunytekStatusValue.INITIAL)
+                    .build();
+        }
+
+        return Uni.createFrom().item(result);
     }
 
     @Override

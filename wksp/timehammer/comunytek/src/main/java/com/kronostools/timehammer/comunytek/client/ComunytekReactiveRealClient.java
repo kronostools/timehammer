@@ -6,10 +6,7 @@ import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.config.LoginCacheConfig;
-import com.kronostools.timehammer.comunytek.constants.ComunytekCachedLoginResult;
-import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
-import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
-import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
+import com.kronostools.timehammer.comunytek.constants.*;
 import com.kronostools.timehammer.comunytek.exception.ComunytekExpiredSessionException;
 import com.kronostools.timehammer.comunytek.exception.ComunytekUnexpectedException;
 import com.kronostools.timehammer.comunytek.model.*;
@@ -143,6 +140,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
                 return Uni.createFrom().item(new ComunytekCachedLoginResponseBuilder()
                         .result(ComunytekCachedLoginResult.MISSING)
+                        .errorMessage(errorMessage)
                         .build());
             } else if (cachedWorkerCredentials.isInvalid()) {
                 final String errorMessage = CommonUtils.stringFormat("Last login (on {}) with registered credentials of user '{}' was unsuccessful", CommonDateTimeUtils.formatDateTimeToLog(cachedWorkerCredentials.getInvalidSince()), username);
@@ -151,6 +149,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
                 return Uni.createFrom().item(new ComunytekCachedLoginResponseBuilder()
                         .result(ComunytekCachedLoginResult.INVALID)
+                        .errorMessage(errorMessage)
                         .build());
             } else {
                 LOG.debug("Calling comunytek to login ...");
@@ -158,7 +157,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                 return login(username, cachedWorkerCredentials.getExternalPassword())
                         .onFailure(Exception.class)
                             .recoverWithItem(e -> new ComunytekLoginResponseBuilder()
-                                    .result(ComunytekLoginResult.UNEXPECTED_ERROR)
+                                    .result(ComunytekLoginResult.KO)
                                     .errorMessage(e.getMessage())
                                     .build())
                         .map(ComunytekCachedLoginResponseBuilder::copyAndBuild);
@@ -284,7 +283,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                                             final String comment = hourReportParts[5];
 
                                                             return new ComunytekStatusResponseBuilder()
-                                                                    .result(ComunytekSimpleResult.OK)
+                                                                    .result(ComunytekStatusResult.OK)
                                                                     .date(date)
                                                                     .time(time)
                                                                     .status(status)
@@ -292,10 +291,14 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                                                     .comment(comment)
                                                                     .build();
                                                         })
-                                                        .get();
+                                                        .orElse(new ComunytekStatusResponseBuilder()
+                                                                .result(ComunytekStatusResult.OK)
+                                                                .date(timestamp.toLocalDate())
+                                                                .status(ComunytekStatusValue.INITIAL)
+                                                                .build());
                                             } else {
                                                 result = new ComunytekStatusResponseBuilder()
-                                                        .result(ComunytekSimpleResult.OK)
+                                                        .result(ComunytekStatusResult.OK)
                                                         .date(timestamp.toLocalDate())
                                                         .status(ComunytekStatusValue.INITIAL)
                                                         .build();
@@ -316,11 +319,18 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                     .retry()
                                     .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
                     } else {
-                        // TODO: differentiate betweeen unexpected error and missing/invalid credentials
-                        return Uni.createFrom().item(new ComunytekStatusResponseBuilder()
-                                .result(ComunytekSimpleResult.KO)
-                                .errorMessage(clr.getErrorMessage())
-                                .build());
+                        if (clr.getResult() == ComunytekCachedLoginResult.INVALID
+                                || clr.getResult() == ComunytekCachedLoginResult.MISSING) {
+                            return Uni.createFrom().item(new ComunytekStatusResponseBuilder()
+                                    .result(ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS)
+                                    .errorMessage(clr.getErrorMessage())
+                                    .build());
+                        } else {
+                            return Uni.createFrom().item(new ComunytekStatusResponseBuilder()
+                                    .result(ComunytekStatusResult.KO)
+                                    .errorMessage(clr.getErrorMessage())
+                                    .build());
+                        }
                     }
                 })
                 .onFailure(ComunytekExpiredSessionException.class)

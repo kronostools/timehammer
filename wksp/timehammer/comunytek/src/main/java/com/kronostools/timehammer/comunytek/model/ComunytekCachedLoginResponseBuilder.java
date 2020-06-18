@@ -33,7 +33,7 @@ public class ComunytekCachedLoginResponseBuilder extends ComunytekResponseBuilde
                         if (clr.getResult() == ComunytekLoginResult.INVALID) {
                             result = ComunytekCachedLoginResult.INVALID;
                         } else {
-                            result = ComunytekCachedLoginResult.UNEXPECTED_ERROR;
+                            result = ComunytekCachedLoginResult.KO;
                         }
 
                         cclrb = new ComunytekCachedLoginResponseBuilder()

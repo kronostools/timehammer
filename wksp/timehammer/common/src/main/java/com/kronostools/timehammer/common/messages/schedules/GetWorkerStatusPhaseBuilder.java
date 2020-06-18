@@ -1,14 +1,14 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.kronostools.timehammer.common.constants.WorkerStatusContext;
 import com.kronostools.timehammer.common.messages.PhaseBuilder;
-import com.kronostools.timehammer.common.messages.constants.SimpleResult;
+import com.kronostools.timehammer.common.messages.constants.WorkerStatusContext;
+import com.kronostools.timehammer.common.messages.constants.WorkerStatusResult;
 
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
-public class GetWorkerStatusPhaseBuilder extends PhaseBuilder<SimpleResult, GetWorkerStatusPhaseBuilder> {
+public class GetWorkerStatusPhaseBuilder extends PhaseBuilder<WorkerStatusResult, GetWorkerStatusPhaseBuilder> {
     private WorkerStatusContext statusContext;
 
     public static GetWorkerStatusPhase copyAndBuild(final GetWorkerStatusPhase getWorkerStatusPhase) {

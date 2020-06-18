@@ -36,7 +36,7 @@ public class WorkerCredentialsValidator {
         return comunytekClient.login(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
                 .onFailure(Exception.class)
                     .recoverWithItem((e) -> new ComunytekLoginResponseBuilder()
-                            .result(ComunytekLoginResult.UNEXPECTED_ERROR)
+                            .result(ComunytekLoginResult.KO)
                             .errorMessage(e.getMessage())
                             .build())
                 .flatMap(comunytekLoginResponse -> {

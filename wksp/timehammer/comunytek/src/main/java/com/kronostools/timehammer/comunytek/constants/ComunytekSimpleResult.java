@@ -2,7 +2,7 @@ package com.kronostools.timehammer.comunytek.constants;
 
 public enum ComunytekSimpleResult implements ComunytekResult {
     OK(true, null),
-    KO(true, "Error");
+    KO(false, "Error");
 
     private final boolean successful;
     private final String defaultErrorMessage;

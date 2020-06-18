@@ -27,9 +27,9 @@ mp:
         topic: worker-register-persist
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      status-worker-update:
+      status-worker-process:
         connector: smallrye-kafka
-        topic: status-worker-update
+        topic: status-worker-process
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
