@@ -1,5 +1,6 @@
-package com.kronostools.timehammer.core.model;
+package com.kronostools.timehammer.common.messages.schedules.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
+@JsonDeserialize(builder = WorkerCurrentPreferencesBuilder.class)
 public class WorkerCurrentPreferences {
     private LocalDate date;
     private String workerInternalId;

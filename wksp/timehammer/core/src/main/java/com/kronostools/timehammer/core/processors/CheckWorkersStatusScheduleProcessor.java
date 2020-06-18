@@ -4,9 +4,9 @@ import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorker;
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorkerBuilder;
 import com.kronostools.timehammer.common.messages.schedules.ScheduleTriggerMessage;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
-import com.kronostools.timehammer.core.model.WorkerCurrentPreferences;
 import io.smallrye.mutiny.Multi;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -52,10 +52,7 @@ public class CheckWorkersStatusScheduleProcessor {
                                     .executionId(triggerMessage.getExecutionId())
                                     .name(triggerMessage.getName())
                                     .batchSize(wcpl.size())
-                                    .workerInternalId(wcp.getWorkerInternalId())
-                                    .company(wcp.getCompany())
-                                    .workerExternalId(wcp.getWorkerExternalId())
-                                    .chats(wcp.getChatIds())
+                                    .workerCurrentPreferences(wcp)
                                     .build()));
                 } else {
                     LOG.error("Status of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());

@@ -1,6 +1,8 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Comprobación de estado
+        - Implementar statemachine
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro

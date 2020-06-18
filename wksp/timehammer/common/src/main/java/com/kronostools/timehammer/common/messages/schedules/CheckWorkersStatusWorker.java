@@ -1,19 +1,15 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @JsonDeserialize(builder = CheckWorkersStatusWorkerBuilder.class)
 public class CheckWorkersStatusWorker extends ProcessableBatchScheduleMessage {
-    private String workerInternalId;
-    private Company company;
-    private String workerExternalId;
-    private Set<String> chats;
+    private WorkerCurrentPreferences workerCurrentPreferences;
     private GetWorkerStatusPhase workerStatusPhase;
     private SaveWorkerStatusPhase saveWorkerStatusPhase;
 
@@ -27,36 +23,12 @@ public class CheckWorkersStatusWorker extends ProcessableBatchScheduleMessage {
                 .orElse(false);
     }
 
-    public String getWorkerInternalId() {
-        return workerInternalId;
+    public WorkerCurrentPreferences getWorkerCurrentPreferences() {
+        return workerCurrentPreferences;
     }
 
-    public void setWorkerInternalId(String workerInternalId) {
-        this.workerInternalId = workerInternalId;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public String getWorkerExternalId() {
-        return workerExternalId;
-    }
-
-    public void setWorkerExternalId(String workerExternalId) {
-        this.workerExternalId = workerExternalId;
-    }
-
-    public Set<String> getChats() {
-        return chats;
-    }
-
-    public void setChats(Set<String> chats) {
-        this.chats = chats;
+    public void setWorkerCurrentPreferences(WorkerCurrentPreferences workerCurrentPreferences) {
+        this.workerCurrentPreferences = workerCurrentPreferences;
     }
 
     public GetWorkerStatusPhase getWorkerStatusPhase() {

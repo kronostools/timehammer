@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.core.model;
 
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

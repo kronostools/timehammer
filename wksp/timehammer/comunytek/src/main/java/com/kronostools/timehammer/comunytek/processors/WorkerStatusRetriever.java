@@ -34,7 +34,7 @@ public class WorkerStatusRetriever {
         final CheckWorkersStatusWorker checkWorkersStatusWorker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
         return comunytekClient
-                .getStatus(checkWorkersStatusWorker.getWorkerExternalId(), checkWorkersStatusWorker.getGenerated())
+                .getStatus(checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerExternalId(), checkWorkersStatusWorker.getGenerated())
                 .onFailure(Exception.class)
                     .recoverWithItem((e) -> new ComunytekStatusResponseBuilder()
                             .result(ComunytekStatusResult.KO)
@@ -49,7 +49,7 @@ public class WorkerStatusRetriever {
                                 .statusContext(statusResponse.toWorkerStatusContext())
                                 .build();
                     } else {
-                        LOG.warn("Status of worker '{}' couldn't be retrieved", checkWorkersStatusWorker.getWorkerInternalId());
+                        LOG.warn("Status of worker '{}' couldn't be retrieved", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
 
                         if (statusResponse.getResult() == ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS) {
                             getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()

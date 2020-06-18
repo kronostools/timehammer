@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.core.dao;
 
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferencesBuilder;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.core.model.*;
@@ -58,7 +60,7 @@ public class WorkerCurrentPreferencesDao {
                                 list.add(previousWorker.build());
                             }
 
-                            previousWorker = WorkerCurrentPreferencesBuilder.from(refDate, row);
+                            previousWorker = WorkerCurrentPreferencesDbBuilder.from(refDate, row);
                         } else {
                             previousWorker = previousWorker.addChatId(row.getString("chat_id"));
                         }
@@ -102,7 +104,7 @@ public class WorkerCurrentPreferencesDao {
 
                     for (final Row row : pgRowSet) {
                         if (worker == null) {
-                            worker = WorkerCurrentPreferencesBuilder.from(refDate, row);
+                            worker = WorkerCurrentPreferencesDbBuilder.from(refDate, row);
                         } else {
                             worker = worker.addChatId(row.getString("chat_id"));
                         }

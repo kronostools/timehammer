@@ -2,6 +2,7 @@ package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.constants.WorkerCurrentPreferencesResult;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotInputMessage;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotInputMessageBuilder;
 import com.kronostools.timehammer.common.messages.telegramchatbot.WorkerCurrentPreferencesPhase;
@@ -9,7 +10,6 @@ import com.kronostools.timehammer.common.messages.telegramchatbot.WorkerCurrentP
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
-import com.kronostools.timehammer.core.model.WorkerCurrentPreferences;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;

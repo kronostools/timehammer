@@ -1,5 +1,8 @@
 package com.kronostools.timehammer.core.model;
 
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferencesBuilder;
+
 import java.util.Optional;
 
 public class WorkerCurrentPreferencesSingleResultBuilder extends SingleResultBuilder<WorkerCurrentPreferencesSingleResultBuilder, WorkerCurrentPreferences> {

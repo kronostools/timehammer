@@ -31,12 +31,12 @@ public class StatusWorkerRouter {
     public CompletionStage<Void> routeHolidays(final Message<CheckWorkersStatusWorker> message) {
         final CheckWorkersStatusWorker worker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Routing update status message of worker '{}' to company '{}'", worker.getWorkerInternalId(), worker.getCompany().getCode());
+        LOG.info("Routing update status message of worker '{}' to company '{}'", worker.getWorkerCurrentPreferences().getWorkerInternalId(), worker.getWorkerCurrentPreferences().getCompany().getCode());
 
-        if (worker.getCompany() == Company.COMUNYTEK) {
-            return comunytekWorkerStatusChannel.send(worker).handle(getMessageHandler(message, worker.getCompany()));
+        if (worker.getWorkerCurrentPreferences().getCompany() == Company.COMUNYTEK) {
+            return comunytekWorkerStatusChannel.send(worker).handle(getMessageHandler(message, worker.getWorkerCurrentPreferences().getCompany()));
         } else {
-            LOG.warn("Ignored update status message because there is no channel for company '{}'", worker.getCompany().getCode());
+            LOG.warn("Ignored update status message because there is no channel for company '{}'", worker.getWorkerCurrentPreferences().getCompany().getCode());
             return message.ack();
         }
     }

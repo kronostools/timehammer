@@ -1,17 +1,13 @@
 package com.kronostools.timehammer.common.messages.schedules;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.schedules.model.WorkerCurrentPreferences;
 
 import java.util.Optional;
-import java.util.Set;
 
 @JsonPOJOBuilder(withPrefix = "")
 public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMessageBuilder<CheckWorkersStatusWorkerBuilder> {
-    private String workerInternalId;
-    private Company company;
-    private String workerExternalId;
-    private Set<String> chats;
+    private WorkerCurrentPreferences workerCurrentPreferences;
     private GetWorkerStatusPhase workerStatusPhase;
     private SaveWorkerStatusPhase saveWorkerStatusPhase;
 
@@ -28,32 +24,14 @@ public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMes
                     .executionId(w.getExecutionId())
                     .name(w.getName())
                     .batchSize(w.getBatchSize())
-                    .workerInternalId(w.getWorkerInternalId())
-                    .company(w.getCompany())
-                    .workerExternalId(w.getWorkerExternalId())
-                    .chats(w.getChats())
+                    .workerCurrentPreferences(w.getWorkerCurrentPreferences())
                     .workerStatusPhase(GetWorkerStatusPhaseBuilder.copyAndBuild(w.getWorkerStatusPhase()))
                     .saveWorkerStatusPhase(SaveWorkerStatusPhaseBuilder.copyAndBuild(w.getSaveWorkerStatusPhase())))
                 .orElse(null);
     }
 
-    public CheckWorkersStatusWorkerBuilder workerInternalId(final String workerInternalId) {
-        this.workerInternalId = workerInternalId;
-        return this;
-    }
-
-    public CheckWorkersStatusWorkerBuilder company(final Company company) {
-        this.company = company;
-        return this;
-    }
-
-    public CheckWorkersStatusWorkerBuilder workerExternalId(final String workerExternalId) {
-        this.workerExternalId = workerExternalId;
-        return this;
-    }
-
-    public CheckWorkersStatusWorkerBuilder chats(final Set<String> chats) {
-        this.chats = chats;
+    public CheckWorkersStatusWorkerBuilder workerCurrentPreferences(final WorkerCurrentPreferences workerCurrentPreferences) {
+        this.workerCurrentPreferences = workerCurrentPreferences;
         return this;
     }
 
@@ -69,10 +47,7 @@ public class CheckWorkersStatusWorkerBuilder extends ProcessableBatchScheduleMes
 
     public CheckWorkersStatusWorker build() {
         final CheckWorkersStatusWorker result = new CheckWorkersStatusWorker(generated, name, executionId, batchSize);
-        result.setWorkerInternalId(workerInternalId);
-        result.setCompany(company);
-        result.setWorkerExternalId(workerExternalId);
-        result.setChats(chats);
+        result.setWorkerCurrentPreferences(workerCurrentPreferences);
         result.setWorkerStatusPhase(workerStatusPhase);
         result.setSaveWorkerStatusPhase(saveWorkerStatusPhase);
 
