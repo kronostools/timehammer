@@ -17,8 +17,8 @@ public class CommonConstants {
         public static final String COMUNYTEK_WORKER_STATUS = "comunytek-worker-status";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
         public static final String STATUS_WORKER_PROCESS = "status-worker-process";
+        public static final String STATUS_WORKER_NOTIFY = "status-worker-notify";
         public static final String STATUS_WORKER_NOTIFY_OUT = "status-worker-notify-out";
-        public static final String STATUS_WORKER_NOTIFY_IN = "status-worker-notify-in";
         public static final String HOLIDAYS_WORKER_SUMMARY = "holidays-worker-summary";
         public static final String HOLIDAYS_CLEAN_SUMMARY = "holidays-clean-summary";
         public static final String SCHEDULE_SUMMARY = "schedule-summary";
@@ -32,9 +32,9 @@ public class CommonConstants {
         public static final String WORKER_REGISTER_ROUTE = "worker-register-route";
         public static final String WORKER_REGISTER_VALIDATE = "worker-register-validate";
         public static final String WORKER_REGISTER_PERSIST = "worker-register-persist";
-        public static final String WORKER_REGISTER_SAVE_NOTIFY_OUT = "worker-register-save-notify-out";
-        public static final String WORKER_REGISTER_VALIDATE_NOTIFY_OUT = "worker-register-validate-notify-out";
-        public static final String WORKER_REGISTER_NOTIFY_IN = "worker-register-notify-in";
+        public static final String WORKER_REGISTER_SAVE_NOTIFY = "worker-register-save-notify";
+        public static final String WORKER_REGISTER_VALIDATE_NOTIFY = "worker-register-validate-notify";
+        public static final String WORKER_REGISTER_NOTIFY = "worker-register-notify";
         public static final String CATALOG_REQUEST = "catalog-request";
         public static final String CATALOG_REREQUEST = "catalog-rerequest";
         public static final String CATALOG_RESPONSE = "catalog-response";

@@ -26,7 +26,7 @@ public class WorkerSaverProcessor {
     }
 
     @Incoming(Channels.WORKER_REGISTER_PERSIST)
-    @Outgoing(Channels.WORKER_REGISTER_SAVE_NOTIFY_OUT)
+    @Outgoing(Channels.WORKER_REGISTER_SAVE_NOTIFY)
     public Uni<Message<WorkerRegistrationRequestMessage>> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 

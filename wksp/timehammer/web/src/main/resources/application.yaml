@@ -16,7 +16,7 @@ mp:
         topic: timemachine
         value:
           deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventJacksonDeserializer
-      worker-register-notify-in:
+      worker-register-notify:
         connector: smallrye-kafka
         topic: worker-register-notify
         value:

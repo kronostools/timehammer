@@ -2,7 +2,10 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Comprobación de estado
-        - Implementar statemachine
+        - El WorkerStatusNotifierProcessor devolverá un Multi<TelegramNotificationMessage>
+        - Tener en cuenta la cache de Waits
+        - Añadir al TelegramNotificationMessage una opción para indicarle un keyboard con las posibles opciones
+        - Verificar que funciona correctamente cuando no hay nada que notificar
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro

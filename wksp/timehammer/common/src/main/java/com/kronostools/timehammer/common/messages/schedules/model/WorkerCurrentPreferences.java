@@ -1,11 +1,14 @@
 package com.kronostools.timehammer.common.messages.schedules.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.constants.NonWorkingReason;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -26,10 +29,66 @@ public class WorkerCurrentPreferences {
     private boolean cityHoliday;
     private Set<String> chatIds;
 
+    @JsonIgnore
     public Boolean workToday() {
         return !CommonDateTimeUtils.isWeekend(date)
                 && !workerHoliday
                 && !cityHoliday;
+    }
+
+    @JsonIgnore
+    public NonWorkingReason getNonWorkingReason() {
+        NonWorkingReason result = NonWorkingReason.NONE;
+
+        if (workerHoliday) {
+            result = NonWorkingReason.WORKER_HOLIDAY;
+        } else if (cityHoliday) {
+            result = NonWorkingReason.CITY_HOLIDAY;
+        } else if (CommonDateTimeUtils.isWeekend(date)) {
+            result = NonWorkingReason.WEEKEND;
+        }
+
+        return result;
+    }
+
+    @JsonIgnore
+    public Boolean isTimeToStartWorking(final LocalTime time) {
+        return workToday()
+                && time.isAfter(workStart);
+    }
+
+    @JsonIgnore
+    public Boolean isTimeToEndWorking(final LocalTime time) {
+        return workToday()
+                && time.isAfter(workEnd);
+    }
+
+    @JsonIgnore
+    public Boolean lunchToday() {
+        return workToday()
+                && lunchStart != null;
+    }
+
+    @JsonIgnore
+    public Boolean isTimeToStartLunch(final LocalTime time) {
+        return lunchToday()
+                && time.isAfter(lunchStart);
+    }
+
+    @JsonIgnore
+    public Boolean isTimeToEndLunch(final LocalTime time) {
+        return lunchToday()
+                && time.isAfter(lunchEnd);
+    }
+
+    @JsonIgnore
+    public boolean canBeNotified(final LocalDateTime dateTime) {
+        return canBeNotified(dateTime.toLocalTime());
+    }
+
+    @JsonIgnore
+    public boolean canBeNotified(final LocalTime time) {
+        return workToday() && isTimeToStartWorking(time) && !isTimeToEndWorking(time);
     }
 
     public LocalDate getDate() {

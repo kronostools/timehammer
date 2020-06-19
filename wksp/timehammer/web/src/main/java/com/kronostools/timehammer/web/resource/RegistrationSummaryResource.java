@@ -36,7 +36,7 @@ public class RegistrationSummaryResource {
                 .build();
     }
 
-    @Incoming(Channels.WORKER_REGISTER_NOTIFY_IN)
+    @Incoming(Channels.WORKER_REGISTER_NOTIFY)
     public void processBatchScheduleEvent(final WorkerRegistrationRequestMessage registrationRequest) {
         final RegistrationRequestSummaryDtoBuilder registrationRequestSummaryDto = new RegistrationRequestSummaryDtoBuilder()
                 .registrationRequestId(registrationRequest.getRegistrationRequestId());

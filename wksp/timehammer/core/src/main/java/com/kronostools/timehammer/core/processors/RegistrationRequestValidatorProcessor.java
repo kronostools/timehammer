@@ -35,7 +35,7 @@ public class RegistrationRequestValidatorProcessor {
     private final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel;
     private final CityDao cityDao;
 
-    public RegistrationRequestValidatorProcessor(@Channel(Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT) final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel,
+    public RegistrationRequestValidatorProcessor(@Channel(Channels.WORKER_REGISTER_VALIDATE_NOTIFY) final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel,
                                                  @Channel(Channels.WORKER_REGISTER_ROUTE) final Emitter<WorkerRegistrationRequestMessage> workerRegisterRouteChannel,
                                                  final CityDao cityDao) {
         this.workerRegisterRouteChannel = workerRegisterRouteChannel;
@@ -48,7 +48,7 @@ public class RegistrationRequestValidatorProcessor {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
         if (registrationRequest.getCheckRegistrationRequestPhase().isNotSuccessful()) {
-            LOG.info("Nothing to validate because registration request '{}' is expired -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT);
+            LOG.info("Nothing to validate because registration request '{}' is expired -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY);
 
             return workerRegisterNotifyChannel.send(registrationRequest)
                     .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
@@ -69,7 +69,7 @@ public class RegistrationRequestValidatorProcessor {
                 return workerRegisterRouteChannel.send(registrationRequest)
                         .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
             } else {
-                LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY_OUT);
+                LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY);
 
                 return workerRegisterNotifyChannel.send(registrationRequest)
                         .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));

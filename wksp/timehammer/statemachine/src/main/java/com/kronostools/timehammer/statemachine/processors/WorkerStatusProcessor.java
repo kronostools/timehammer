@@ -32,7 +32,7 @@ public class WorkerStatusProcessor {
         final CheckWorkersStatusWorker checkWorkersStatusWorker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
         if (checkWorkersStatusWorker.getWorkerStatusPhase().isSuccessful()) {
-            LOG.info("Determining action corresponding status '{}' at '{}' for worker '{}' ...",
+            LOG.info("Determining action corresponding to status '{}' at '{}' for worker '{}' ...",
                     checkWorkersStatusWorker.getWorkerStatusPhase().getStatusContext().name(),
                     CommonDateTimeUtils.formatDateTimeToLog(checkWorkersStatusWorker.getGenerated()),
                     checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
@@ -49,7 +49,8 @@ public class WorkerStatusProcessor {
                                         .result(SimpleResult.OK)
                                         .workerStatusAction(wsa)
                                         .build());
-                        return Message.of(checkWorkersStatusWorker);
+
+                        return Message.of(checkWorkersStatusWorker, message::ack);
                     });
         } else {
             LOG.info("No action to determine because worker status could not be obtained. Reason: {}", checkWorkersStatusWorker.getWorkerStatusPhase().getResult().name());

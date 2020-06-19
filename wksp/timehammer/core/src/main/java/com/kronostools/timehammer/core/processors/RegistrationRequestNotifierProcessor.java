@@ -28,7 +28,7 @@ public class RegistrationRequestNotifierProcessor {
         this.registrationRequestNotifierChannel = registrationRequestNotifierChannel;
     }
 
-    @Incoming(Channels.WORKER_REGISTER_NOTIFY_IN)
+    @Incoming(Channels.WORKER_REGISTER_NOTIFY)
     public CompletionStage<Void> routeRegistrationRequest(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
