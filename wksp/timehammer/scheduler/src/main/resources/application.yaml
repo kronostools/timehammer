@@ -1,6 +1,11 @@
 mp:
   messaging:
     incoming:
+      status-worker-notify:
+        connector: smallrye-kafka
+        topic: status-worker-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
       holidays-worker-summary:
         connector: smallrye-kafka
         topic: holidays-worker-summary

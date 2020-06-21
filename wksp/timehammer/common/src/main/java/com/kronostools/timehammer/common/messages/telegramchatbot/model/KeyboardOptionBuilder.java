@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,8 +18,8 @@ public class KeyboardOptionBuilder {
     private String text;
 
     public static List<KeyboardOption> copyAndBuild(final List<KeyboardOption> keyboardOptions) {
-        return keyboardOptions.stream()
-                .map(ko -> KeyboardOptionBuilder.copy(ko).build())
+        return Optional.ofNullable(keyboardOptions).stream().flatMap(Collection::stream)
+                .map(KeyboardOptionBuilder::copyAndBuild)
                 .collect(Collectors.toList());
     }
 

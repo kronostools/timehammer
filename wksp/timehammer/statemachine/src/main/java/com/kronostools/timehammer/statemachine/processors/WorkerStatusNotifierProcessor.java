@@ -47,6 +47,8 @@ public class WorkerStatusNotifierProcessor {
     public Multi<Message<TelegramChatbotNotificationMessage>> routeWorkerStatus(final Message<CheckWorkersStatusWorker> message) {
         final CheckWorkersStatusWorker worker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
+        LOG.info("Determining status notification for worker '{}' ...", worker.getWorkerCurrentPreferences().getWorkerInternalId());
+
         String notificationText = null;
         List<KeyboardOption> notificationKeyboard = null;
 

@@ -2,9 +2,11 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Comprobación de estado
-        - El WorkerStatusNotifierProcessor devolverá un Multi<TelegramNotificationMessage>
-        - Tener en cuenta la cache de Waits
-        - Añadir al TelegramNotificationMessage una opción para indicarle un keyboard con las posibles opciones
+        - Renombrar UpdateWorkersStatusWorkerJacksonDeserializer -> CheckWorkersStatusWorkerJacksonDeserializer
+        - Probar con perfil real de Comunytek
+        - Cambiar el telegramchatbotnotification para que tenga en cuenta el keyboard
+            - Cachear el keyboard enviado al chat
+            - Si se envía un nuevo mensaje con keyboard... quitar el anterior
         - Verificar que funciona correctamente cuando no hay nada que notificar
         - Verificar que funciona cuando la notificacion es multiple
     - Core

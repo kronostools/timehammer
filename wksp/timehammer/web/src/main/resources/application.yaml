@@ -5,12 +5,12 @@ mp:
         connector: smallrye-kafka
         topic: batch-schedule-summary
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleSummaryMessageJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.BatchScheduleSummaryMessageJacksonDeserializer
       schedule-summary:
         connector: smallrye-kafka
         topic: schedule-summary
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.BatchScheduleSummaryMessageJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.ScheduleSummaryMessageJacksonDeserializer
       timemachine-stream:
         connector: smallrye-kafka
         topic: timemachine
@@ -32,11 +32,6 @@ mp:
         topic: timemachine
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      holidays-worker-update:
-        connector: smallrye-kafka
-        topic: holidays-worker-update
-        value:
-          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       worker-register-init:
         connector: smallrye-kafka
         topic: worker-register-init
@@ -45,5 +40,20 @@ mp:
       catalog-request:
         connector: smallrye-kafka
         topic: catalog-request
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-update-status:
+        connector: smallrye-kafka
+        topic: schedule-update-status
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-update-holidays:
+        connector: smallrye-kafka
+        topic: schedule-update-holidays
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      schedule-clea-holidays:
+        connector: smallrye-kafka
+        topic: schedule-clean-holidays
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

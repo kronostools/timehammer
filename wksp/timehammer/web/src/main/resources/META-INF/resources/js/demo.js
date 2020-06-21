@@ -40,11 +40,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         console.info('Closed schedules summary stream')
     })
 
-    const changeScheduleButtonClass = (scheduleButton, class) => {
+    const changeScheduleButtonClass = (scheduleButton, clazz) => {
         scheduleButton.classList.remove('btn-success')
         scheduleButton.classList.remove('btn-danger')
         scheduleButton.classList.remove('btn-primary')
-        scheduleButton.classList.add(class)
+        scheduleButton.classList.add(clazz)
     }
 
     schedulesSummaryEventSource.addEventListener('message', (event) => {
@@ -269,46 +269,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     scheduleButtonClick$
         .pipe(flatMap(triggerSchedule))
-        .subscribe(
-            // success
-            (r) => {
-                if (r.response.result) {
-                    console.info(`Schedule '${r.response.name}' was triggered successfully!`)
-                } else {
-                    console.error(`Error while triggering schedule '${r.response.name}'`)
-                }
-            },
-            // error
-            (e) => console.error(`Unexpected error while triggering schedule. Error: ${e.message}`)
-        )
-
-    // TODO: delete, this is for testing purposes
-    const updateWorkersHolidaysButton = document.getElementById('updateWorkersHolidaysTest')
-    const updateWorkersHolidaysButtonClick$ = fromEvent(updateWorkersHolidaysButton, 'click')
-
-    const sendUpdateWorkersHolidays = (e) => {
-        const clickedButton = e.currentTarget
-        const scheduleName = clickedButton.getAttribute('data-schedule')
-
-        const targetButton = document.getElementById(scheduleName)
-        targetButton.setAttribute('disabled', 'disabled')
-
-        changeScheduleButtonClass(targetButton, 'btn-primary')
-
-        Array.from(targetButton.getElementsByTagName('i'))
-            .map(e => {
-                e.classList.remove('fa-play')
-                e.classList.add('fa-sync')
-                e.classList.add('fa-spin')
-            })
-
-        console.debug(`Triggering schedule '${scheduleName}'`)
-
-        return rxjs.ajax.ajax('/test/sendToComunytekWorkerHoliday')
-    }
-
-    updateWorkersHolidaysButtonClick$
-        .pipe(flatMap(sendUpdateWorkersHolidays))
         .subscribe(
             // success
             (r) => {

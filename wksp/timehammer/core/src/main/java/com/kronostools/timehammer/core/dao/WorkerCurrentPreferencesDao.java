@@ -38,7 +38,7 @@ public class WorkerCurrentPreferencesDao {
                     "CASE WHEN $1 = 'MONDAY' THEN p.lunch_end_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.lunch_end_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.lunch_end_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.lunch_end_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.lunch_end_fri ELSE NULL END) END) END) END) END as lunch_end, " +
                     "p.work_city_code as work_city_code, c.timezone as timezone, p.company_code as company_code, " +
                     "wh.day is not null as worker_holiday, " +
-                    "ch.day is not null as city_holiday " +
+                    "ch.day is not null as city_holiday, " +
                     "wc.chat_id " +
                     "FROM worker_preferences p " +
                     "INNER JOIN city c ON c.code = p.work_city_code " +
@@ -64,6 +64,10 @@ public class WorkerCurrentPreferencesDao {
                         } else {
                             previousWorker = previousWorker.addChatId(row.getString("chat_id"));
                         }
+                    }
+
+                    if (previousWorker != null) {
+                        list.add(previousWorker.build());
                     }
 
                     return WorkerCurrentPreferencesMultipleResultBuilder.buildFromResult(list);

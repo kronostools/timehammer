@@ -29,12 +29,14 @@ public class DemoRoutes {
 
     public DemoRoutes(final TimeMachineService timeMachineService,
                       @Channel(Channels.TIMEMACHINE_OUT) final Emitter<TimeMachineEventMessage> timeMachineChannel,
+                      @Channel(Channels.SCHEDULE_UPDATE_STATUS) final Emitter<ScheduleTriggerMessage> updateWorkersStatusChannel,
                       @Channel(Channels.SCHEDULE_UPDATE_HOLIDAYS) final Emitter<ScheduleTriggerMessage> updateWorkersHolidayChannel,
                       @Channel(Channels.SCHEDULE_CLEAN_HOLIDAYS) final Emitter<ScheduleTriggerMessage> cleanPastWorkersHolidaysChannel) {
         this.timeMachineService = timeMachineService;
         this.timeMachineChannel = timeMachineChannel;
 
         this.scheduleChannels = new HashMap<>() {{
+            put("updateWorkersStatus", updateWorkersStatusChannel);
             put("updateWorkersHoliday", updateWorkersHolidayChannel);
             put("cleanPastWorkersHolidays", cleanPastWorkersHolidaysChannel);
         }};
@@ -74,7 +76,7 @@ public class DemoRoutes {
         });
     }
 
-    @Route(path = "/triggerSchedule/{scheduleName}", methods = HttpMethod.POST)
+    @Route(path = "/triggerSchedule/:scheduleName", methods = HttpMethod.POST)
     void triggerSchedule(RoutingContext rc) {
         final String scheduleName = rc.pathParam("scheduleName");
 

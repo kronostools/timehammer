@@ -46,13 +46,13 @@ public class WorkerStatusRetriever {
                     final GetWorkerStatusPhase getWorkerStatusPhase;
 
                     if (statusResponse.isSuccessful()) {
+                        LOG.info("Status of worker '{}' is '{}'", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), statusResponse.getStatus().getText());
+
                         getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
                                 .result(WorkerStatusResult.OK)
                                 .statusContext(statusResponse.toWorkerStatusContext())
                                 .build();
                     } else {
-                        LOG.warn("Status of worker '{}' couldn't be retrieved", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
-
                         if (statusResponse.getResult() == ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS) {
                             getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
                                     .result(WorkerStatusResult.MISSING_OR_INVALID_CREDENTIALS)
@@ -64,6 +64,8 @@ public class WorkerStatusRetriever {
                                     .errorMessage(statusResponse.getErrorMessage())
                                     .build();
                         }
+
+                        LOG.warn("Status of worker '{}' couldn't be retrieved. Reason: {}", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), getWorkerStatusPhase.getResult().name());
                     }
 
                     checkWorkersStatusWorker.setWorkerStatusPhase(getWorkerStatusPhase);
