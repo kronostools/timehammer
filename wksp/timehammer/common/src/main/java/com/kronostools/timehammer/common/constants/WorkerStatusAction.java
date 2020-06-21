@@ -1,5 +1,5 @@
 package com.kronostools.timehammer.common.constants;
 
 public enum WorkerStatusAction {
-    CLOCKIN, CLOCKOUT, NOOP
+    CLOCKIN_WORK, CLOCKOUT_WORK, CLOCKIN_LUNCH, CLOCKOUT_LUNCH, NOOP
 }

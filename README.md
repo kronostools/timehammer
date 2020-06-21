@@ -6,6 +6,7 @@
         - Tener en cuenta la cache de Waits
         - Añadir al TelegramNotificationMessage una opción para indicarle un keyboard con las posibles opciones
         - Verificar que funciona correctamente cuando no hay nada que notificar
+        - Verificar que funciona cuando la notificacion es multiple
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro

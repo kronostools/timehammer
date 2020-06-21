@@ -1,12 +1,16 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOption;
+import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOptionBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 @JsonPOJOBuilder(withPrefix = "")
 public class TelegramChatbotNotificationMessageBuilder extends TelegramChatbotMessageBuilder<TelegramChatbotNotificationMessageBuilder> {
     private String text;
+    private List<KeyboardOption> keyboard;
 
     public static TelegramChatbotNotificationMessageBuilder copy(final TelegramChatbotInputMessage telegramChatbotInputMessage) {
         return Optional.ofNullable(telegramChatbotInputMessage)
@@ -29,7 +33,8 @@ public class TelegramChatbotNotificationMessageBuilder extends TelegramChatbotMe
                         .generated(tcnm.getGenerated())
                         .chatId(tcnm.getChatId())
                         .messageId(tcnm.getMessageId())
-                        .text(tcnm.getText()))
+                        .text(tcnm.getText())
+                        .keyboard(KeyboardOptionBuilder.copyAndBuild(tcnm.getKeyboard())))
                 .orElse(null);
     }
 
@@ -38,7 +43,15 @@ public class TelegramChatbotNotificationMessageBuilder extends TelegramChatbotMe
         return this;
     }
 
+    public TelegramChatbotNotificationMessageBuilder keyboard(final List<KeyboardOption> keyboard) {
+        this.keyboard = keyboard;
+        return this;
+    }
+
     public TelegramChatbotNotificationMessage build() {
-        return new TelegramChatbotNotificationMessage(generated, chatId, messageId, text);
+        final TelegramChatbotNotificationMessage tcnm = new TelegramChatbotNotificationMessage(generated, chatId, messageId, text);
+        tcnm.setKeyboard(keyboard);
+
+        return tcnm;
     }
 }

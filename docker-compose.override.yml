@@ -65,3 +65,9 @@ services:
     ports:
       - 9000:8080
       - 6090:5005
+  statemachine:
+    volumes:
+      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
+    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
+    ports:
+      - 6100:5005

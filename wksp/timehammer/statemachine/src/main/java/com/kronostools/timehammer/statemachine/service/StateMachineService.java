@@ -25,19 +25,19 @@ public class StateMachineService {
         switch (statusContext) {
             case BEFORE_WORK:
                 if (currentPreferences.isTimeToStartWorking(now)) {
-                    statusAction = WorkerStatusAction.CLOCKIN;
+                    statusAction = WorkerStatusAction.CLOCKIN_WORK;
                 }
                 break;
             case WORK:
                 if (currentPreferences.isTimeToStartLunch(now)) {
-                    statusAction = WorkerStatusAction.CLOCKIN;
+                    statusAction = WorkerStatusAction.CLOCKIN_LUNCH;
                 } else if (currentPreferences.isTimeToEndWorking(now)) {
-                    statusAction = WorkerStatusAction.CLOCKOUT;
+                    statusAction = WorkerStatusAction.CLOCKOUT_WORK;
                 }
                 break;
             case LUNCH:
                 if (currentPreferences.isTimeToEndLunch(now)) {
-                    statusAction = WorkerStatusAction.CLOCKOUT;
+                    statusAction = WorkerStatusAction.CLOCKOUT_LUNCH;
                 }
                 break;
         }

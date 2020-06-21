@@ -3,27 +3,26 @@ package com.kronostools.timehammer.common.messages.constants;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 
 public class ChatbotMessages {
-    public static final String[] QUESTION_START = new String[] {
+    public static final String[] QUESTION_WORK_START = new String[] {
             "Ya va siendo hora de ponerse a currar no?"
     };
-    public static final String QUESTION_START_OPTION_Y = "Se ha registrado correctamente la entrada.";
+    public static final String QUESTION_WORK_START_OPTION_Y = "Se ha registrado correctamente la entrada.";
 
     public static final String[] QUESTION_LUNCH_START = new String[] {
             "Se come o qué?"
     };
     public static final String QUESTION_LUNCH_START_OPTION_Y = "Se ha registrado correctamente la pausa para la comida.";
 
-    public static final String[] QUESTION_LUNCH_RESUME = new String[] {
+    public static final String[] QUESTION_LUNCH_END = new String[] {
             "Has terminado ya de comer?"
     };
-    public static final String QUESTION_LUNCH_RESUME_OPTION_Y = "Se ha registrado correctamente el final de la pausa para la comida.";
+    public static final String QUESTION_LUNCH_END_OPTION_Y = "Se ha registrado correctamente el final de la pausa para la comida.";
 
-    public static final String[] QUESTION_END = new String[] {
+    public static final String[] QUESTION_WORK_END = new String[] {
             "Habrá que irse ya para casa no?"
     };
-    public static final String QUESTION_END_OPTION_Y = "Se ha registrado correctamente la salida.";
+    public static final String QUESTION_WORK_END_OPTION_Y = "Se ha registrado correctamente la salida.";
 
-    public static final String ANSWER_Y = "La acción se ha registrado correctamente.";
     public static final String ANSWER_Y_BUTTON = "Sí";
     public static final String ANSWER_N5M = "Anotado queda. Dentro de 5 minutos te lo volveré a recordar.";
     public static final String ANSWER_N5M_BUTTON = "+5 m";
