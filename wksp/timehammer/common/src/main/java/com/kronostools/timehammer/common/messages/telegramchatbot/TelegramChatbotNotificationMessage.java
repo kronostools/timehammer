@@ -24,6 +24,10 @@ public class TelegramChatbotNotificationMessage extends TelegramChatbotMessage {
         this.text = text;
     }
 
+    public boolean hasKeyboard() {
+        return keyboard != null && !keyboard.isEmpty();
+    }
+
     public List<KeyboardOption> getKeyboard() {
         return keyboard;
     }

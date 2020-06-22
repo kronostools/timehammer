@@ -7,6 +7,8 @@
         - Cambiar el telegramchatbotnotification para que tenga en cuenta el keyboard
             - Cachear el keyboard enviado al chat
             - Si se envía un nuevo mensaje con keyboard... quitar el anterior
+        - Cambiar statemachine
+            - Refactorizar WorkerStatusNotifierProcessor, crear algún service y hacer la lógica más legible
         - Verificar que funciona correctamente cuando no hay nada que notificar
         - Verificar que funciona cuando la notificacion es multiple
     - Core
