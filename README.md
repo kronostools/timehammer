@@ -4,9 +4,6 @@
     - Comprobación de estado
         - Renombrar UpdateWorkersStatusWorkerJacksonDeserializer -> CheckWorkersStatusWorkerJacksonDeserializer
         - Probar con perfil real de Comunytek
-        - Cambiar el telegramchatbotnotification para que tenga en cuenta el keyboard
-            - Cachear el keyboard enviado al chat
-            - Si se envía un nuevo mensaje con keyboard... quitar el anterior
         - Cambiar statemachine
             - Refactorizar WorkerStatusNotifierProcessor, crear algún service y hacer la lógica más legible
         - Verificar que funciona correctamente cuando no hay nada que notificar
@@ -15,6 +12,10 @@
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro
         - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
+    - Web - Demo
+        - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
+        - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
+        - Crear componente para establecer la hora
     - Preferencias
         - Extraer las preferencias a una tabla separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
         - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom

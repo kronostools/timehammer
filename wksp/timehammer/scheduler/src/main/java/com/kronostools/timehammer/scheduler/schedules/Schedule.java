@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public abstract class Schedule {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -51,6 +52,7 @@ public abstract class Schedule {
         return new ScheduleTriggerMessageBuilder()
                 .generated(timestamp)
                 .name(getConfig().getName())
+                .executionId(UUID.randomUUID())
                 .build();
     }
 

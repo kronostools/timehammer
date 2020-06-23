@@ -31,14 +31,9 @@ public class KeyboardOptionBuilder {
 
     public static KeyboardOptionBuilder copy(final KeyboardOption keyboardOption) {
         return Optional.ofNullable(keyboardOption)
-                .map(ko -> {
-                    final String[] codeParts = ko.getCode().split(SEPARATOR);
-
-                    return new KeyboardOptionBuilder()
-                            .answerCode(codeParts[0])
-                            .text(ko.getText())
-                            .company(Company.fromCode(codeParts[1]));
-                })
+                .map(ko -> new KeyboardOptionBuilder()
+                        .code(ko.getCode())
+                        .text(ko.getText()))
                 .orElse(null);
     }
 
@@ -54,6 +49,15 @@ public class KeyboardOptionBuilder {
 
     public KeyboardOptionBuilder company(final Company company) {
         this.company = company;
+        return this;
+    }
+
+    public KeyboardOptionBuilder code(final String code) {
+        final String[] codeParts = code.split(SEPARATOR);
+
+        answerCode = codeParts[0];
+        company = Company.fromCode(codeParts[1]);
+
         return this;
     }
 

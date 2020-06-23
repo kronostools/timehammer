@@ -56,11 +56,13 @@ public abstract class AbstractNotificationService implements NotificationService
 
         final OutgoingMessage outgoingMessage = getOutgoingMessage(notificationMessage);
 
-        LOG.info("Notifiying to chat '{}' ...", notificationMessage.getChatId());
+        LOG.info("Notifying to chat '{}' ...", notificationMessage.getChatId());
 
         removePreviousKeyboard(notificationMessage);
 
         if (notificationMessage.hasKeyboard()) {
+            LOG.debug("Notifying message with keyboard to chat '{}'", notificationMessage.getChatId());
+
             return notifyAsync(outgoingMessage).minimalCompletionStage().handle((r, e) -> {
                 if (e == null) {
                     if (r instanceof MessageResult) {
@@ -89,6 +91,8 @@ public abstract class AbstractNotificationService implements NotificationService
                 return null;
             });
         } else {
+            LOG.debug("Notifying message without keyboard to chat '{}'", notificationMessage.getChatId());
+
             return notifyAsync(outgoingMessage).minimalCompletionStage().handle((r, e) -> {
                 if (e == null) {
                     message.ack();
@@ -106,6 +110,10 @@ public abstract class AbstractNotificationService implements NotificationService
             final LinkedList<Long> messageIds = messageWithKeyboard.getIfPresent(notificationMessage.getChatId());
 
             if (messageIds != null) {
+                if (!messageIds.isEmpty()) {
+                    LOG.debug("Removing keyboards from {} previous messages in chat '{}' ...", messageIds.size(), notificationMessage.getChatId());
+                }
+
                 while (!messageIds.isEmpty()) {
                     final Long messageId = messageIds.pop();
 
@@ -121,6 +129,8 @@ public abstract class AbstractNotificationService implements NotificationService
                         messageIds.push(messageId);
                     }
                 }
+            } else {
+                LOG.debug("There is no previous message with keyboard in chat '{}'", notificationMessage.getChatId());
             }
         }
     }

@@ -72,3 +72,5 @@ timehammer:
     schedules:
       update-workers-holidays:
         enabled: false
+      update-workers-status:
+        enabled: false

@@ -93,6 +93,7 @@ public class WorkerStatusNotifierProcessor {
 
                     if (foundWait == null) {
                         notificationText = questionType.getText();
+                        notificationKeyboard = getKeyboardOptions(questionType.getOptions(), worker.getWorkerCurrentPreferences().getCompany());
                     } else if (foundWait.isExpired(worker.getGenerated())) {
                         workerWaitsCache.invalidate(waitId);
                         notificationText = questionType.getText();
