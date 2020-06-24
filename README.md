@@ -1,13 +1,12 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Registro - WorkerSaverProcessor
+        - Revisar gestión errores en WorkerService.saveWorker
+        - Probar que al registrar un nuevo chat de un worker existente, no se crear un nuevo worker, sino que se añade el chat al worker existente
     - Comprobación de estado
-        - Renombrar UpdateWorkersStatusWorkerJacksonDeserializer -> CheckWorkersStatusWorkerJacksonDeserializer
-        - Probar con perfil real de Comunytek
-        - Cambiar statemachine
-            - Refactorizar WorkerStatusNotifierProcessor, crear algún service y hacer la lógica más legible
-        - Verificar que funciona correctamente cuando no hay nada que notificar
         - Verificar que funciona cuando la notificacion es multiple
+            - Registrar el mismo usuario en varios móviles
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
     - Web - Registro
@@ -19,9 +18,6 @@
     - Preferencias
         - Extraer las preferencias a una tabla separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
         - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
-    - Test
-        - schedule update workers holiday
-        - schedule clean past workers holidays
     - Configurar el liveness y readyness (ver cómo funciona con kafka)
         - Revisar el workshop de quarkus que creo que hay un ejemplo
         - En chatbot añadir ping sobre telegram

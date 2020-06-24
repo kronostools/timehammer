@@ -125,4 +125,48 @@ public class WorkerCurrentPreferencesDao {
                         return WorkerCurrentPreferencesSingleResultBuilder.buildFromError(message);
                     });
     }
+
+    public Uni<WorkerCurrentPreferencesSingleResult> findByExternalId(final String externalId, final LocalDate refDate) {
+        final String dayOfWeek = refDate.getDayOfWeek().name();
+
+        return client.preparedQuery(
+                "SELECT p.worker_internal_id as worker_internal_id, p.worker_external_id as worker_external_id, p.work_ssid as work_ssid, " +
+                    "CASE WHEN $1 = 'MONDAY' THEN p.work_start_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.work_start_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.work_start_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.work_start_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.work_start_fri ELSE NULL END) END) END) END) END as work_start, " +
+                    "CASE WHEN $1 = 'MONDAY' THEN p.work_end_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.work_end_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.work_end_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.work_end_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.work_end_fri ELSE NULL END) END) END) END) END as work_end, " +
+                    "CASE WHEN $1 = 'MONDAY' THEN p.lunch_start_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.lunch_start_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.lunch_start_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.lunch_start_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.lunch_start_fri ELSE NULL END) END) END) END) END as lunch_start, " +
+                    "CASE WHEN $1 = 'MONDAY' THEN p.lunch_end_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.lunch_end_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.lunch_end_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.lunch_end_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.lunch_end_fri ELSE NULL END) END) END) END) END as lunch_end, " +
+                    "p.work_city_code as work_city_code, c.timezone as timezone, p.company_code as company_code, " +
+                    "wh.day is not null as worker_holiday, " +
+                    "ch.day is not null as city_holiday, " +
+                    "wc.chat_id " +
+                    "FROM worker_preferences p " +
+                    "INNER JOIN city c ON c.code = p.work_city_code " +
+                    "LEFT OUTER JOIN city_holiday ch ON ch.city_code = p.work_city_code AND ch.day = $2 " +
+                    "LEFT OUTER JOIN worker_holiday wh ON wh.worker_internal_id = p.worker_internal_id AND wh.day = $2 " +
+                    "LEFT OUTER JOIN worker_chat wc ON wc.worker_internal_id = p.worker_internal_id " +
+                    "WHERE p.worker_external_id = $3" +
+                    "ORDER BY p.worker_internal_id, wc.chat_id")
+                .execute(Tuple.of(dayOfWeek, refDate, externalId))
+                .map(pgRowSet -> {
+                    WorkerCurrentPreferencesBuilder worker = null;
+
+                    for (final Row row : pgRowSet) {
+                        if (worker == null) {
+                            worker = WorkerCurrentPreferencesDbBuilder.from(refDate, row);
+                        } else {
+                            worker = worker.addChatId(row.getString("chat_id"));
+                        }
+                    }
+
+                    return WorkerCurrentPreferencesSingleResultBuilder.buildFromResult(worker);
+                })
+                .onFailure()
+                    .recoverWithItem((e) -> {
+                        final String message = CommonUtils.stringFormat("There was an unexpected error getting current preferences corresponding to chat '{}' on '{}'", externalId, CommonDateTimeUtils.formatDateToLog(refDate));
+
+                        LOG.error("{}. Reason: {}", message, e.getMessage());
+
+                        return WorkerCurrentPreferencesSingleResultBuilder.buildFromError(message);
+                    });
+    }
 }

@@ -32,7 +32,8 @@ public class WorkerDao {
                 .flatMap(tx ->
                     tx.preparedQuery(
                         "INSERT INTO worker(internal_id, full_name, profile) " +
-                            "VALUES ($1, $2, $3)")
+                            "VALUES ($1, $2, $3) " +
+                            "ON CONFLICT DO NOTHING")
                         .execute(Tuple.of(registrationId, fullname, WorkerProfile.WORKER.name()))
                             .onItem().produceUni(rs -> tx.preparedQuery(
                                         "INSERT INTO worker_chat(worker_internal_id, chat_id) " +
@@ -77,7 +78,8 @@ public class WorkerDao {
                                             "    work_start_fri, work_end_fri, lunch_start_fri, lunch_end_fri, " +
                                             "    company_code, work_ssid, work_city_code" +
                                             ") " +
-                                            "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)")
+                                            "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25) " +
+                                            "ON CONFLICT DO UPDATE")
                                         .execute(Tuple.wrap(preferencesParams));
                             })
                             // on success, commit

@@ -5,12 +5,12 @@ mp:
         connector: smallrye-kafka
         topic: status-worker-process
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.CheckWorkersStatusWorkerJacksonDeserializer
       status-worker-notify:
         connector: smallrye-kafka
         topic: status-worker-notify
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.CheckWorkersStatusWorkerJacksonDeserializer
     outgoing:
       status-worker-notify-out:
         connector: smallrye-kafka

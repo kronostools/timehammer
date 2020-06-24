@@ -15,7 +15,7 @@ mp:
         connector: smallrye-kafka
         topic: status-worker-get
         value:
-          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersStatusWorkerJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.CheckWorkersStatusWorkerJacksonDeserializer
     outgoing:
       comunytek-worker-holidays:
         connector: smallrye-kafka

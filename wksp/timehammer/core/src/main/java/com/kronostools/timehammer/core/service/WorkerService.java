@@ -4,6 +4,7 @@ import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhase;
 import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhaseBuilder;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
+import com.kronostools.timehammer.core.dao.WorkerCurrentPreferencesDao;
 import com.kronostools.timehammer.core.dao.WorkerDao;
 import com.kronostools.timehammer.core.model.InsertResult;
 import io.smallrye.mutiny.Uni;
@@ -17,17 +18,25 @@ public class WorkerService {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerService.class);
 
     private final WorkerDao workerDao;
+    private final WorkerCurrentPreferencesDao workerCurrentPreferencesDao;
 
-    public WorkerService(final WorkerDao workerDao) {
+    public WorkerService(final WorkerDao workerDao, final WorkerCurrentPreferencesDao workerCurrentPreferencesDao) {
         this.workerDao = workerDao;
+        this.workerCurrentPreferencesDao = workerCurrentPreferencesDao;
     }
 
     public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequestMessage registrationRequest) {
-        return workerDao.newWorker(registrationRequest.getRegistrationRequestId(),
-                registrationRequest.getCheckWorkerCredentialsPhase().getFullname(),
-                registrationRequest.getCheckRegistrationRequestPhase().getChatId(),
-                registrationRequest.getRegistrationRequestForm())
-                .flatMap(this::getSaveWorkerPhaseFromInsertResult);
+        // TODO: revisar errores si falla la búsqueda
+        return workerCurrentPreferencesDao.findByExternalId(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getGenerated().toLocalDate())
+                .onItem().produceUni(wcpsr -> {
+                    final String registrationRequestId = wcpsr.isSuccessful() && wcpsr.hasResult() ? wcpsr.getResult().getWorkerInternalId() : registrationRequest.getRegistrationRequestId();
+
+                    return workerDao.newWorker(registrationRequestId,
+                            registrationRequest.getCheckWorkerCredentialsPhase().getFullname(),
+                            registrationRequest.getCheckRegistrationRequestPhase().getChatId(),
+                            registrationRequest.getRegistrationRequestForm())
+                            .flatMap(this::getSaveWorkerPhaseFromInsertResult);
+                });
     }
 
     private Uni<SaveWorkerPhase> getSaveWorkerPhaseFromInsertResult(final InsertResult ir) {

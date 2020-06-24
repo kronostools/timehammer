@@ -14,4 +14,8 @@ public abstract class SingleResult<T> extends DbResult {
     public void setResult(T result) {
         this.result = result;
     }
+
+    public boolean hasResult() {
+        return result != null;
+    }
 }

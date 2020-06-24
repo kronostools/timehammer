@@ -92,9 +92,12 @@ ALTER TABLE IF EXISTS worker_preferences
     REFERENCES city;
 
 ALTER TABLE IF EXISTS worker_preferences
-    ADD CONSTRAINT fk_worker_preferences__worker_external_id
+    ADD CONSTRAINT fk_worker_preferences__worker_internal_id
     FOREIGN KEY (worker_internal_id)
     REFERENCES worker;
+
+ALTER TABLE IF EXISTS worker_preferences
+    ADD CONSTRAINT uk_worker_preferences__worker_external_id UNIQUE (worker_external_id);
 
 INSERT INTO city(code, name, timezone)
 VALUES ('MAD', 'Madrid', 'Europe/Madrid');

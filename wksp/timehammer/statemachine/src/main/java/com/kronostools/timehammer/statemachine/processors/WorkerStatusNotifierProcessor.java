@@ -1,7 +1,5 @@
 package com.kronostools.timehammer.statemachine.processors;
 
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.constants.WorkerStatusAction;
@@ -15,9 +13,7 @@ import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbo
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotNotificationMessageBuilder;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOption;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOptionBuilder;
-import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
-import com.kronostools.timehammer.statemachine.model.Wait;
-import com.kronostools.timehammer.statemachine.model.WaitId;
+import com.kronostools.timehammer.statemachine.service.WorkerWaitService;
 import io.smallrye.mutiny.Multi;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -29,6 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,10 +33,10 @@ import java.util.stream.Collectors;
 public class WorkerStatusNotifierProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerStatusNotifierProcessor.class);
 
-    private final Cache<WaitId, Wait> workerWaitsCache;
+    private final WorkerWaitService workerWaitService;
 
-    public WorkerStatusNotifierProcessor() {
-        this.workerWaitsCache = Caffeine.newBuilder().build();
+    public WorkerStatusNotifierProcessor(final WorkerWaitService workerWaitService) {
+        this.workerWaitService = workerWaitService;
     }
 
     @Incoming(Channels.STATUS_WORKER_NOTIFY)
@@ -56,52 +53,33 @@ public class WorkerStatusNotifierProcessor {
             notificationText = ChatbotMessages.MISSING_PASSWORD;
         } else if (worker.getWorkerStatusActionPhase() == null
                 || worker.getWorkerStatusActionPhase().isNotSuccessful()) {
-            LOG.warn("Unsuccessful status check, nothing to notify");
+            LOG.warn("Unsuccessful status check for worker '{}', nothing to notify", worker.getWorkerCurrentPreferences().getWorkerInternalId());
         } else if (worker.getWorkerStatusActionPhase().getWorkerStatusAction() == WorkerStatusAction.NOOP) {
-            LOG.warn("Status action is '{}', nothing to notify", WorkerStatusAction.NOOP);
+            LOG.warn("Status action is '{}' for worker '{}', nothing to notify", WorkerStatusAction.NOOP, worker.getWorkerCurrentPreferences().getWorkerInternalId());
         } else {
-            LOG.info("Status context is '{}' and status action is '{}' for worker '{}', notifying it ...",
-                    worker.getWorkerStatusPhase().getStatusContext().name(),
-                    worker.getWorkerStatusActionPhase().getWorkerStatusAction().name(),
-                    worker.getWorkerCurrentPreferences().getWorkerInternalId());
-
             if (worker.getWorkerStatusActionPhase().getWorkerStatusAction() != WorkerStatusAction.NOOP) {
-                final QuestionType questionType;
+                final Optional<QuestionType> questionType = determineQuestion(worker.getWorkerStatusActionPhase().getWorkerStatusAction());
 
-                switch (worker.getWorkerStatusActionPhase().getWorkerStatusAction()) {
-                    case CLOCKIN_WORK:
-                        questionType = QuestionType.QUESTION_WORK_START;
-                        break;
-                    case CLOCKOUT_WORK:
-                        questionType = QuestionType.QUESTION_WORK_END;
-                        break;
-                    case CLOCKIN_LUNCH:
-                        questionType = QuestionType.QUESTION_LUNCH_START;
-                        break;
-                    case CLOCKOUT_LUNCH:
-                        questionType = QuestionType.QUESTION_LUNCH_END;
-                        break;
-                    default:
-                        questionType = null;
-                        break;
-                }
-
-                if (questionType != null) {
-                    final WaitId waitId = new WaitId(worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType);
-
-                    final Wait foundWait = workerWaitsCache.getIfPresent(waitId);
-
-                    if (foundWait == null) {
-                        notificationText = questionType.getText();
-                        notificationKeyboard = getKeyboardOptions(questionType.getOptions(), worker.getWorkerCurrentPreferences().getCompany());
-                    } else if (foundWait.isExpired(worker.getGenerated())) {
-                        workerWaitsCache.invalidate(waitId);
-                        notificationText = questionType.getText();
-                        notificationKeyboard = getKeyboardOptions(questionType.getOptions(), worker.getWorkerCurrentPreferences().getCompany());
+                if (questionType.isPresent()) {
+                    if (workerWaitService.workerHasWaitForQuestionAt(worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType.get(), worker.getGenerated())) {
+                        LOG.info("Worker '{}' should be asked '{}', but there is a current wait", worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType.get().name());
                     } else {
-                        LOG.info("Worker '{}' should be asked '{}', but there is a current wait until '{}'", worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType.name(), CommonDateTimeUtils.formatDateTimeToLog(foundWait.getLimitTimestamp()));
+                        LOG.info("Status context is '{}' and status action is '{}', notifying question '{}' to worker '{}' ...",
+                                worker.getWorkerStatusPhase().getStatusContext().name(),
+                                worker.getWorkerStatusActionPhase().getWorkerStatusAction().name(),
+                                questionType.get().name(),
+                                worker.getWorkerCurrentPreferences().getWorkerInternalId());
+
+                        notificationText = questionType.get().getText();
+                        notificationKeyboard = getKeyboardOptions(questionType.get().getOptions(), worker.getWorkerCurrentPreferences().getCompany());
                     }
+                } else {
+                    LOG.warn("No question could be determined for action '{}'", worker.getWorkerStatusActionPhase().getWorkerStatusAction().name());
                 }
+            } else {
+                LOG.info("Status action is '{}', nothing to notify to worker '{}'",
+                        worker.getWorkerStatusActionPhase().getWorkerStatusAction().name(),
+                        worker.getWorkerCurrentPreferences().getWorkerInternalId());
             }
         }
 
@@ -114,6 +92,30 @@ public class WorkerStatusNotifierProcessor {
         }
 
         return Multi.createFrom().iterable(notifications).on().completion(message::ack);
+    }
+
+    private Optional<QuestionType> determineQuestion(final WorkerStatusAction action) {
+        final QuestionType questionType;
+
+        switch (action) {
+            case CLOCKIN_WORK:
+                questionType = QuestionType.QUESTION_WORK_START;
+                break;
+            case CLOCKOUT_WORK:
+                questionType = QuestionType.QUESTION_WORK_END;
+                break;
+            case CLOCKIN_LUNCH:
+                questionType = QuestionType.QUESTION_LUNCH_START;
+                break;
+            case CLOCKOUT_LUNCH:
+                questionType = QuestionType.QUESTION_LUNCH_END;
+                break;
+            default:
+                questionType = null;
+                break;
+        }
+
+        return Optional.ofNullable(questionType);
     }
 
     private List<Message<TelegramChatbotNotificationMessage>> getNotifications(final Set<String> chatIds, final LocalDateTime generated, final String text, final List<KeyboardOption> keyboardOptions) {
