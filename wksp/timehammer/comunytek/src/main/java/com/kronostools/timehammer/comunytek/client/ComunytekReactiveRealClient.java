@@ -288,7 +288,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                                                                     .time(time)
                                                                     .status(status)
                                                                     .workedTime(workedTime)
-                                                                    .comment(comment)
+                                                                    .comment(comment != null ? comment.trim() : "")
                                                                     .build();
                                                         })
                                                         .orElse(new ComunytekStatusResponseBuilder()
@@ -353,6 +353,7 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
     private void updateSession(final String username, final String sessionId, final String fullName) {
         loginCache.put(username, new ComunytekCachedLoginResponseBuilder()
+                .result(ComunytekCachedLoginResult.OK)
                 .username(username)
                 .sessionId(sessionId)
                 .fullname(fullName)

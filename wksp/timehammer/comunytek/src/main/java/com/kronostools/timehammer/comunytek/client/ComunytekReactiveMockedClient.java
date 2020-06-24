@@ -1,18 +1,23 @@
 package com.kronostools.timehammer.comunytek.client;
 
+import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekStatusResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
 import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class ComunytekReactiveMockedClient implements ComunytekClient {
+    private static final Logger LOG = LoggerFactory.getLogger(ComunytekReactiveMockedClient.class);
 
+    private final Map<String, String> mockedCredentials;
     private final Map<String, Map<LocalDate, List<ComunytekStatusResponse>>> mockedRegistry;
     private final Set<LocalDate> mockedHolidays;
     
@@ -47,12 +52,15 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
             add(LocalDate.of(currentYear, 1, 10));
         }};
 
+        this.mockedCredentials = new HashMap<>();
         this.mockedRegistry = new HashMap<>();
     }
 
     @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
         if ("demo".equals(password)) {
+            mockedCredentials.put(username, password);
+
             return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
                     .result(ComunytekLoginResult.OK)
                     .fullname(username)
@@ -60,41 +68,64 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
                     .sessionId(ComunytekLoginForm.FAKE_SESSIONID)
                     .build());
         } else {
+            final String errorMessage = CommonUtils.stringFormat("Incorrect password for user '{}'. In demo mode, the password must be: demo", username);
+            LOG.error(errorMessage);
+
             return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
                     .result(ComunytekLoginResult.INVALID)
-                    .errorMessage("Incorrect password. In demo mode, the password must be: demo")
+                    .errorMessage(errorMessage)
                     .build());
         }
     }
 
     @Override
     public Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate holidayCandidate) {
-        return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
-                .result(ComunytekSimpleResult.OK)
-                .holiday(mockedHolidays.contains(holidayCandidate))
-                .build());
+        if (mockedCredentials.containsKey(username)) {
+            return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
+                    .result(ComunytekSimpleResult.OK)
+                    .holiday(mockedHolidays.contains(holidayCandidate))
+                    .build());
+        } else {
+            final String errorMessage = CommonUtils.stringFormat("Credentials of user '{}' are missing or invalid.", username);
+            LOG.error(errorMessage);
+
+            return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
+                    .result(ComunytekSimpleResult.KO)
+                    .errorMessage(errorMessage)
+                    .build());
+        }
     }
 
     @Override
     public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
         final ComunytekStatusResponse result;
 
-        if (mockedRegistry.containsKey(username) && mockedRegistry.get(username).containsKey(timestamp.toLocalDate())) {
-            final List<ComunytekStatusResponse> workerDayRegistry = mockedRegistry.get(username).get(timestamp.toLocalDate());
+        if (mockedCredentials.containsKey(username)) {
+            if (mockedRegistry.containsKey(username) && mockedRegistry.get(username).containsKey(timestamp.toLocalDate())) {
+                final List<ComunytekStatusResponse> workerDayRegistry = mockedRegistry.get(username).get(timestamp.toLocalDate());
 
-            result = workerDayRegistry.stream()
-                    .skip(workerDayRegistry.size() - 1)
-                    .findFirst()
-                    .orElse(new ComunytekStatusResponseBuilder()
-                            .result(ComunytekStatusResult.OK)
-                            .date(timestamp.toLocalDate())
-                            .status(ComunytekStatusValue.INITIAL)
-                            .build());
+                result = workerDayRegistry.stream()
+                        .skip(workerDayRegistry.size() - 1)
+                        .findFirst()
+                        .orElse(new ComunytekStatusResponseBuilder()
+                                .result(ComunytekStatusResult.OK)
+                                .date(timestamp.toLocalDate())
+                                .status(ComunytekStatusValue.INITIAL)
+                                .build());
+            } else {
+                result = new ComunytekStatusResponseBuilder()
+                        .result(ComunytekStatusResult.OK)
+                        .date(timestamp.toLocalDate())
+                        .status(ComunytekStatusValue.INITIAL)
+                        .build();
+            }
         } else {
+            final String errorMessage = CommonUtils.stringFormat("Credentials of user '{}' are missing or invalid.", username);
+            LOG.error(errorMessage);
+
             result = new ComunytekStatusResponseBuilder()
-                    .result(ComunytekStatusResult.OK)
-                    .date(timestamp.toLocalDate())
-                    .status(ComunytekStatusValue.INITIAL)
+                    .result(ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS)
+                    .errorMessage(errorMessage)
                     .build();
         }
 
