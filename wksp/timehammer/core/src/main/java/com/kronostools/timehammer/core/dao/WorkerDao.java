@@ -79,7 +79,14 @@ public class WorkerDao {
                                             "    company_code, work_ssid, work_city_code" +
                                             ") " +
                                             "VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25) " +
-                                            "ON CONFLICT DO UPDATE")
+                                            "ON CONFLICT (worker_internal_id) DO UPDATE SET " +
+                                                "worker_external_id = $2, " +
+                                                "work_start_mon = $3, work_end_mon = $4, lunch_start_mon = $5, lunch_end_mon = $6, " +
+                                                "work_start_tue = $7, work_end_tue = $8, lunch_start_tue = $9, lunch_end_tue = $10, " +
+                                                "work_start_wed = $11, work_end_wed = $12, lunch_start_wed = $13, lunch_end_wed = $14, " +
+                                                "work_start_thu = $15, work_end_thu = $16, lunch_start_thu = $17, lunch_end_thu = $18, " +
+                                                "work_start_fri = $19, work_end_fri = $20, lunch_start_fri = $21, lunch_end_fri = $22, " +
+                                                "company_code = $23, work_ssid = $24, work_city_code = $25")
                                         .execute(Tuple.wrap(preferencesParams));
                             })
                             // on success, commit

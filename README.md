@@ -1,9 +1,6 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Registro - WorkerSaverProcessor
-        - Revisar gestión errores en WorkerService.saveWorker
-        - Probar que al registrar un nuevo chat de un worker existente, no se crear un nuevo worker, sino que se añade el chat al worker existente
     - Comprobación de estado
         - Verificar que funciona cuando la notificacion es multiple
             - Registrar el mismo usuario en varios móviles

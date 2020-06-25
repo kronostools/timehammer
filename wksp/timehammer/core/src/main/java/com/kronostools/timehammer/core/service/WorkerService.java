@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
+
 @ApplicationScoped
 public class WorkerService {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerService.class);
@@ -26,7 +28,6 @@ public class WorkerService {
     }
 
     public Uni<SaveWorkerPhase> saveWorker(final WorkerRegistrationRequestMessage registrationRequest) {
-        // TODO: revisar errores si falla la búsqueda
         return workerCurrentPreferencesDao.findByExternalId(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getGenerated().toLocalDate())
                 .onItem().produceUni(wcpsr -> {
                     final String registrationRequestId = wcpsr.isSuccessful() && wcpsr.hasResult() ? wcpsr.getResult().getWorkerInternalId() : registrationRequest.getRegistrationRequestId();
@@ -36,7 +37,17 @@ public class WorkerService {
                             registrationRequest.getCheckRegistrationRequestPhase().getChatId(),
                             registrationRequest.getRegistrationRequestForm())
                             .flatMap(this::getSaveWorkerPhaseFromInsertResult);
-                });
+                })
+                .onFailure()
+                    .recoverWithItem(e -> {
+                        final String errorMessage = stringFormat("Unexpected error while registering worker '{}'", registrationRequest.getRegistrationRequestId());
+                        LOG.error(errorMessage, e);
+
+                        return new SaveWorkerPhaseBuilder()
+                                .result(SimpleResult.KO)
+                                .errorMessage(errorMessage)
+                                .build();
+                    });
     }
 
     private Uni<SaveWorkerPhase> getSaveWorkerPhaseFromInsertResult(final InsertResult ir) {
