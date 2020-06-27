@@ -7,17 +7,12 @@ import com.kronostools.timehammer.comunytek.constants.ComunytekStatusResult;
 import com.kronostools.timehammer.comunytek.constants.ComunytekStatusValue;
 import com.kronostools.timehammer.comunytek.model.*;
 import io.smallrye.mutiny.Uni;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class ComunytekReactiveMockedClient implements ComunytekClient {
-    private static final Logger LOG = LoggerFactory.getLogger(ComunytekReactiveMockedClient.class);
-
-    private final Map<String, String> mockedCredentials;
+public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     private final Map<String, Map<LocalDate, List<ComunytekStatusResponse>>> mockedRegistry;
     private final Set<LocalDate> mockedHolidays;
     
@@ -52,14 +47,15 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
             add(LocalDate.of(currentYear, 1, 10));
         }};
 
-        this.mockedCredentials = new HashMap<>();
         this.mockedRegistry = new HashMap<>();
     }
 
     @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
         if ("demo".equals(password)) {
-            mockedCredentials.put(username, password);
+            credentialsCache.put(username, new CachedWorkerCredentialsBuilder()
+                    .externalPassword(password)
+                    .build());
 
             return Uni.createFrom().item(new ComunytekLoginResponseBuilder()
                     .result(ComunytekLoginResult.OK)
@@ -80,7 +76,9 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
 
     @Override
     public Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate holidayCandidate) {
-        if (mockedCredentials.containsKey(username)) {
+        final CachedWorkerCredentials credentials = credentialsCache.getIfPresent(username);
+
+        if (credentials != null) {
             return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
                     .result(ComunytekSimpleResult.OK)
                     .holiday(mockedHolidays.contains(holidayCandidate))
@@ -100,7 +98,9 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
     public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
         final ComunytekStatusResponse result;
 
-        if (mockedCredentials.containsKey(username)) {
+        final CachedWorkerCredentials credentials = credentialsCache.getIfPresent(username);
+
+        if (credentials != null) {
             if (mockedRegistry.containsKey(username) && mockedRegistry.get(username).containsKey(timestamp.toLocalDate())) {
                 final List<ComunytekStatusResponse> workerDayRegistry = mockedRegistry.get(username).get(timestamp.toLocalDate());
 
@@ -136,10 +136,4 @@ public class ComunytekReactiveMockedClient implements ComunytekClient {
     public boolean isMocked() {
         return true;
     }
-
-    @Override
-    public void dumpCredentials() {}
-
-    @Override
-    public void loadCredentials() {}
 }

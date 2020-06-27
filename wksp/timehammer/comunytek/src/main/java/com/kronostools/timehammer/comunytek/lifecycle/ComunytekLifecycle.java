@@ -10,23 +10,19 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
 @ApplicationScoped
-public class AuthLifecycle {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthLifecycle.class);
+public class ComunytekLifecycle {
+    private static final Logger LOG = LoggerFactory.getLogger(ComunytekLifecycle.class);
 
     final ComunytekClient comunytekClient;
 
-    public AuthLifecycle(final ComunytekClient comunytekClient) {
+    public ComunytekLifecycle(final ComunytekClient comunytekClient) {
         this.comunytekClient = comunytekClient;
     }
 
     void onStartup(@Observes StartupEvent event) {
         LOG.info("BEGIN onStartup");
 
-        LOG.info("Loading worker credentials from temp dump file ...");
-
         comunytekClient.loadCredentials();
-
-        LOG.info("Loaded worker credentials");
 
         LOG.info("END onStartup");
     }
@@ -34,11 +30,7 @@ public class AuthLifecycle {
     void onShutdown(@Observes ShutdownEvent event) {
         LOG.info("BEGIN onShutdown");
 
-        LOG.debug("Dumping worker credentials to temp dump file ...");
-
         comunytekClient.dumpCredentials();
-
-        LOG.debug("Dumped worker credentials");
 
         LOG.info("END onShutdown");
     }

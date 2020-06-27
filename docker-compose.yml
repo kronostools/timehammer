@@ -145,6 +145,7 @@ services:
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
+      - comunytekdata:/data
     working_dir: /root/wksp/timehammer/comunytek
     command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
     depends_on:
@@ -226,6 +227,7 @@ services:
 
 volumes:
   dbdata:
+  comunytekdata:
 
 networks:
   timehammer:

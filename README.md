@@ -1,6 +1,8 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Arreglar el dump/load de los credentials en modulo comunytek
+    - En commandprocessor crear un servicio con las request de updatepassword con el contexto necesario (ej: company)
     - Comprobación de estado
         - Verificar que funciona cuando la notificacion es multiple
             - Registrar el mismo usuario en varios móviles

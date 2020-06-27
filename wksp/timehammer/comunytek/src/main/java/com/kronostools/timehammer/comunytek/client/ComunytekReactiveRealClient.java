@@ -14,8 +14,6 @@ import io.smallrye.mutiny.Uni;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDate;
@@ -23,9 +21,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.stream.Stream;
 
-public class ComunytekReactiveRealClient implements ComunytekClient {
-    private static final Logger LOG = LoggerFactory.getLogger(ComunytekReactiveRealClient.class);
-
+public class ComunytekReactiveRealClient extends AbstractComunytekClient {
     private static final String BASE_URL = "/SWHandler";
 
     private static final long UNEXPECTED_ERROR_MAX_RETRIES = 2L;
@@ -42,7 +38,6 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
 
     private final WebClient client;
 
-    private final Cache<String, CachedWorkerCredentials> credentialsCache;
     private final Cache<String, ComunytekCachedLoginResponse> loginCache;
 
     private final TimeMachineService timeMachineService;
@@ -55,9 +50,6 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                 .setDefaultPort(443)
                 .setSsl(true)
                 .setTrustAll(true));
-
-        this.credentialsCache = Caffeine.newBuilder()
-                .build();
 
         this.loginCache = Caffeine.newBuilder()
                 .expireAfterWrite(loginCacheConfig.getExpiration().getQty(), loginCacheConfig.getExpiration().getUnit())
@@ -376,15 +368,5 @@ public class ComunytekReactiveRealClient implements ComunytekClient {
                     .invalidSince(timeMachineService.getNow())
                     .build());
         }
-    }
-
-    @Override
-    public void dumpCredentials() {
-        // TODO: implement logic
-    }
-
-    @Override
-    public void loadCredentials() {
-        // TODO; implement logic
     }
 }
