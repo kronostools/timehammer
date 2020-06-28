@@ -11,6 +11,11 @@ mp:
         topic: worker-register-init
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-update-password-init:
+        connector: smallrye-kafka
+        topic: worker-update-password-init
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
     outgoing:
       notification-telegram:
         connector: smallrye-kafka
@@ -22,12 +27,21 @@ mp:
         topic: worker-register-validate
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-update-password-validate:
+        connector: smallrye-kafka
+        topic: worker-update-password-validate
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
 timehammer:
   domain:
     base-url: https://timehammer.kronostools.com
   chatbot:
     registration-request-cache:
+      expiration:
+        qty: 10
+        unit: MINUTES
+    update-password-request-cache:
       expiration:
         qty: 10
         unit: MINUTES

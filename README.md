@@ -1,14 +1,17 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - En commandprocessor crear un servicio con las request de updatepassword con el contexto necesario (ej: company)
     - Comprobación de estado
         - Verificar que funciona cuando la notificacion es multiple
             - Registrar el mismo usuario en varios móviles
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
-    - Web - Registro
-        - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
+    - Web
+        - Actualizar contraseña
+            - Si no se recibe el queryParam requerido redirigir a una página de 404 Bad Request
+        - Registro
+            - Si no se recibe el queryParam requerido redirigir a una página de 404 Bad Request
+            - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
     - Web - Demo
         - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
         - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
@@ -25,23 +28,6 @@
     - Monitorización de componentes con Graphana y Prometheus
     - Schedule
         - Añadir schedule para limpiar los trash_message
-- Llevar servicio /auth/mock/chatbotRegistration a /demo
-- Cambiar el ComunytekMockedClient para llevar la cuenta de la contraseña
-    - Si el usuario no existe se establece la contraseña
-    - Si el usuario existe la contraseña tiene que coincidir
-    - Es posible añadir servicio en /demo para cambiar la contraseña del ComunytekMockedClient???
-- Gestionar el caso en el que se ha cambiado la contraseña en la empresa y no en el chatbot y todo va a petar
-    - Controlar los petes
-    - Notificar al usuario de alguna manera
-- Elegir el cliente en función de la empresa
-- Revisar idea de
-    - Acciones clockin / clockout
-    - Ámbitos work / lunch
-    - Ejecutar acción en ámbito
-        - Supone un cambio de estado
-        - Acción en Comunytek (traductor de acciones con distintas implementaciones)
-    - Estado INIT, WORKING, LUNCHING, ENDED
-    - Acciones Comunitek Entrada, Pausar (Motivo), Reanudar, Salida 
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
@@ -52,7 +38,6 @@
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)
-- Modularizar ?
 - Icono TimeHammer
 - Icono KronosTools
 - Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)

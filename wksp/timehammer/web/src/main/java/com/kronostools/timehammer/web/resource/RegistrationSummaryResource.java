@@ -76,10 +76,10 @@ public class RegistrationSummaryResource {
             }
         }
 
-        publishScheduleEvent(registrationRequestSummaryDto.build());
+        publishRegistrationRequestSummaryEvent(registrationRequestSummaryDto.build());
     }
 
-    private void publishScheduleEvent(final RegistrationRequestSummaryDto registrationRequestSummaryDto) {
+    private void publishRegistrationRequestSummaryEvent(final RegistrationRequestSummaryDto registrationRequestSummaryDto) {
         final StreamSubscriber streamSubscriber = cache.getIfPresent(registrationRequestSummaryDto.getRegistrationRequestId());
 
         if (streamSubscriber != null) {

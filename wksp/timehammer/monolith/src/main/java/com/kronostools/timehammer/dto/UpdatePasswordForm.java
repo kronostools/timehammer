@@ -22,7 +22,7 @@ public class UpdatePasswordForm {
 
     @Override
     public String toString() {
-        return "UpdatePasswordForm{" +
+        return "UpdatePasswordRequestForm{" +
                 "internalId='" + internalId + '\'' +
                 '}';
     }

@@ -11,6 +11,11 @@ mp:
         topic: worker-register-route
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-update-password-route:
+        connector: smallrye-kafka
+        topic: worker-update-password-route
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       status-worker-get:
         connector: smallrye-kafka
         topic: status-worker-get
@@ -25,6 +30,11 @@ mp:
       comunytek-worker-register:
         connector: smallrye-kafka
         topic: comunytek-worker-register
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      comunytek-worker-update-password:
+        connector: smallrye-kafka
+        topic: comunytek-worker-update-password
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       comunytek-worker-status:

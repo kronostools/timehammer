@@ -3,6 +3,7 @@ package com.kronostools.timehammer.commandprocessor.processors;
 import com.kronostools.timehammer.commandprocessor.config.TimehammerDomainConfig;
 import com.kronostools.timehammer.commandprocessor.model.ChatbotRegistrationRequest;
 import com.kronostools.timehammer.commandprocessor.service.RegistrationRequestService;
+import com.kronostools.timehammer.commandprocessor.service.UpdatePasswordRequestService;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
@@ -21,11 +22,14 @@ public class CommandProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(CommandProcessor.class);
 
     private final RegistrationRequestService registrationRequestService;
+    private final UpdatePasswordRequestService updatePasswordRequestService;
     private final TimehammerDomainConfig timehammerDomainConfig;
 
     public CommandProcessor(final RegistrationRequestService registrationRequestService,
+                            final UpdatePasswordRequestService updatePasswordRequestService,
                             final TimehammerDomainConfig timehammerDomainConfig) {
         this.registrationRequestService = registrationRequestService;
+        this.updatePasswordRequestService = updatePasswordRequestService;
         this.timehammerDomainConfig = timehammerDomainConfig;
     }
 
@@ -70,7 +74,9 @@ public class CommandProcessor {
                                     .text(ChatbotMessages.COMMAND_UPDATE_SETTINGS_INIT(url))
                                     .build();
                         } else if (chatbotCommand == ChatbotCommand.UPDATE_PASSWORD) {
-                            final String url = timehammerDomainConfig.getUpdatePasswordUrl(worker.getWorkerInternalId());
+                            final String requestId = updatePasswordRequestService.newUpdatePasswordRequest(worker.getWorkerInternalId(), chatId, worker.getCompany(), worker.getWorkerExternalId());
+
+                            final String url = timehammerDomainConfig.getUpdatePasswordUrl(requestId);
 
                             notificationMessage = TelegramChatbotNotificationMessageBuilder
                                     .copy(inputMessage)

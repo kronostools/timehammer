@@ -21,6 +21,11 @@ mp:
         topic: worker-register-notify
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-update-password-notify:
+        connector: smallrye-kafka
+        topic: worker-update-password-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       catalog-response:
         connector: smallrye-kafka
         topic: catalog-response
@@ -35,6 +40,11 @@ mp:
       worker-register-init:
         connector: smallrye-kafka
         topic: worker-register-init
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-update-password-init:
+        connector: smallrye-kafka
+        topic: worker-update-password-init
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       catalog-request:
@@ -52,7 +62,7 @@ mp:
         topic: schedule-update-holidays
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      schedule-clea-holidays:
+      schedule-clean-holidays:
         connector: smallrye-kafka
         topic: schedule-clean-holidays
         value:

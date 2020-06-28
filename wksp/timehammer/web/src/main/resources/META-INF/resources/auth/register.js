@@ -14,6 +14,10 @@ $(document).ready(function() {
 
     const registrationRequestId = queryParams.internalId[0]
 
+    if (!registrationRequestId) {
+        window.location = '../error_400.html'
+    }
+
     const loadingElem = $('#loading').loading()
     const loading = loadingElem.loading('instance')
 
@@ -116,7 +120,7 @@ $(document).ready(function() {
     }
     // END REGISTRATION SUMMARY STREAM
 
-    // BEGIN CATALOGUE STREAM
+    // BEGIN CATALOG STREAM
     const catalogRegistration = function() {
         const catalogSource = new EventSource(`/catalog/stream/${registrationRequestId}`)
 
@@ -168,7 +172,7 @@ $(document).ready(function() {
             comboElements.forEach(ce => $(`#${comboId}`).append($('<option>', { 'value': ce.code, 'text': ce.label })))
         }
     }
-    // END CATALOGUE STREAM
+    // END CATALOG STREAM
 
     const requestCatalogs = function() {
         const formData = {

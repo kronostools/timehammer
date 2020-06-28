@@ -14,6 +14,7 @@ public class CommonConstants {
         public static final String STATUS_WORKER_GET = "status-worker-get";
         public static final String COMUNYTEK_WORKER_HOLIDAYS = "comunytek-worker-holidays";
         public static final String COMUNYTEK_WORKER_REGISTER = "comunytek-worker-register";
+        public static final String COMUNYTEK_WORKER_UPDATE_PASSWORD = "comunytek-worker-update-password";
         public static final String COMUNYTEK_WORKER_STATUS = "comunytek-worker-status";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
         public static final String STATUS_WORKER_PROCESS = "status-worker-process";
@@ -35,6 +36,11 @@ public class CommonConstants {
         public static final String WORKER_REGISTER_SAVE_NOTIFY = "worker-register-save-notify";
         public static final String WORKER_REGISTER_VALIDATE_NOTIFY = "worker-register-validate-notify";
         public static final String WORKER_REGISTER_NOTIFY = "worker-register-notify";
+        public static final String WORKER_UPDATE_PASSWORD_INIT = "worker-update-password-init";
+        public static final String WORKER_UPDATE_PASSWORD_VALIDATE = "worker-update-password-validate";
+        public static final String WORKER_UPDATE_PASSWORD_ROUTE = "worker-update-password-route";
+        public static final String WORKER_UPDATE_PASSWORD_VALIDATE_NOTIFY = "worker-update-password-validate-notify";
+        public static final String WORKER_UPDATE_PASSWORD_NOTIFY = "worker-update-password-notify";
         public static final String CATALOG_REQUEST = "catalog-request";
         public static final String CATALOG_REREQUEST = "catalog-rerequest";
         public static final String CATALOG_RESPONSE = "catalog-response";

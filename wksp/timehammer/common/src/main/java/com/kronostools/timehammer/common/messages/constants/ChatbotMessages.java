@@ -52,6 +52,8 @@ public class ChatbotMessages {
 
     public static final String SUCCESSFUL_REGISTRATION = "¡Enhorabuena! El registro se ha realizado satisfactoriamente. Si en algún momento quieres cancelar el registro, envía /unregister. Para conocer cómo funciona esto, envía /help.";
 
+    public static final String SUCCESSFUL_PASSWORD_UPDATE = "El cambio de contraseña se ha registrado satisfactoriamente. Lamentamos las molestias ocasionadas. Para más información sobre cómo se almacenan las contraseñas envía /help.";
+
     public static final String MISSING_PASSWORD = "Necesitamos que vuelvas a establecer tu contraseña. Envía /updatePassword para establecerla. Lamentamos las molestias ocasionadas. Para más información sobre cómo se almacenan las contraseñas envía /help";
 
     public static String COMMAND_UNREGISTER_INIT(final String registrationUrl) {

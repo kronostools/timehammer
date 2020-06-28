@@ -49,6 +49,11 @@ mp:
         topic: worker-register-validate
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-update-password-validate:
+        connector: smallrye-kafka
+        topic: worker-update-password-validate
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       worker-register-persist:
         connector: smallrye-kafka
         topic: worker-register-persist
@@ -57,6 +62,11 @@ mp:
       worker-register-notify:
         connector: smallrye-kafka
         topic: worker-register-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+      worker-update-password-notify:
+        connector: smallrye-kafka
+        topic: worker-update-password-notify
         value:
           deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
     outgoing:
@@ -95,6 +105,11 @@ mp:
         topic: worker-register-route
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-update-password-route:
+        connector: smallrye-kafka
+        topic: worker-update-password-route
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       worker-register-save-notify:
         connector: smallrye-kafka
         topic: worker-register-notify
@@ -103,6 +118,11 @@ mp:
       worker-register-validate-notify:
         connector: smallrye-kafka
         topic: worker-register-notify
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      worker-update-password-validate-notify:
+        connector: smallrye-kafka
+        topic: worker-update-password-notify
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       notification-telegram:

@@ -6,9 +6,7 @@ import com.kronostools.timehammer.common.messages.registration.CheckWorkerCreden
 import com.kronostools.timehammer.common.messages.registration.CheckWorkerCredentialsPhaseBuilder;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessage;
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
-import com.kronostools.timehammer.comunytek.client.ComunytekClient;
-import com.kronostools.timehammer.comunytek.constants.ComunytekLoginResult;
-import com.kronostools.timehammer.comunytek.model.ComunytekLoginResponseBuilder;
+import com.kronostools.timehammer.comunytek.service.WorkerCredentialValidatorService;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -19,13 +17,13 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class WorkerCredentialsValidator {
-    private static final Logger LOG = LoggerFactory.getLogger(WorkerCredentialsValidator.class);
+public class RegistrationCredentialsValidator {
+    private static final Logger LOG = LoggerFactory.getLogger(RegistrationCredentialsValidator.class);
 
-    private final ComunytekClient comunytekClient;
+    private final WorkerCredentialValidatorService workerCredentialValidatorService;
 
-    public WorkerCredentialsValidator(final ComunytekClient comunytekClient) {
-        this.comunytekClient = comunytekClient;
+    public RegistrationCredentialsValidator(final WorkerCredentialValidatorService workerCredentialValidatorService) {
+        this.workerCredentialValidatorService = workerCredentialValidatorService;
     }
 
     @Incoming(Channels.COMUNYTEK_WORKER_REGISTER)
@@ -35,12 +33,7 @@ public class WorkerCredentialsValidator {
 
         LOG.info("Checking credentials of worker '{}' against Comunytek ...", registrationRequest.getRegistrationRequestForm().getWorkerExternalId());
 
-        return comunytekClient.login(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
-                .onFailure(Exception.class)
-                    .recoverWithItem((e) -> new ComunytekLoginResponseBuilder()
-                            .result(ComunytekLoginResult.KO)
-                            .errorMessage(e.getMessage())
-                            .build())
+        return workerCredentialValidatorService.checkWorkerCredentials(registrationRequest.getRegistrationRequestForm().getWorkerExternalId(), registrationRequest.getRegistrationRequestForm().getWorkerExternalPassword())
                 .flatMap(comunytekLoginResponse -> {
                     final CheckWorkerCredentialsPhase result;
 
