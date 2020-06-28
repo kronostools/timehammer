@@ -1,10 +1,6 @@
 package com.kronostools.timehammer.common.messages.updatePassword;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.kronostools.timehammer.common.messages.registration.CheckWorkerCredentialsPhase;
-import com.kronostools.timehammer.common.messages.registration.CheckWorkerCredentialsPhaseBuilder;
-import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhase;
-import com.kronostools.timehammer.common.messages.registration.SaveWorkerPhaseBuilder;
 import com.kronostools.timehammer.common.messages.schedules.ProcessableBatchScheduleMessageBuilder;
 import com.kronostools.timehammer.common.messages.updatePassword.forms.UpdatePasswordRequestForm;
 
@@ -16,8 +12,7 @@ public class WorkerUpdatePasswordRequestMessageBuilder extends ProcessableBatchS
     private UpdatePasswordRequestForm updatePasswordRequestForm;
     private CheckUpdatePasswordRequestPhase checkUpdatePasswordRequestPhase;
     private ValidateUpdatePasswordRequestPhase validateUpdatePasswordRequestPhase;
-    private CheckWorkerCredentialsPhase checkWorkerCredentialsPhase;
-    private SaveWorkerPhase saveWorkerPhase;
+    private CheckUpdatePasswordCredentialsPhase checkUpdatePasswordCredentialsPhase;
 
     public static WorkerUpdatePasswordRequestMessage copyAndBuild(final WorkerUpdatePasswordRequestMessage updatePasswordRequest) {
         return Optional.ofNullable(updatePasswordRequest)
@@ -34,8 +29,7 @@ public class WorkerUpdatePasswordRequestMessageBuilder extends ProcessableBatchS
                     .updatePasswordRequestForm(w.getUpdatePasswordRequestForm())
                     .checkUpdatePasswordRequestPhase(CheckUpdatePasswordRequestPhaseBuilder.copyAndBuild(w.getCheckUpdatePasswordRequestPhase()))
                     .validateUpdatePasswordRequestPhase(ValidateUpdatePasswordRequestPhaseBuilder.copyAndBuild(updatePasswordRequest.getValidateUpdatePasswordRequestPhase()))
-                    .checkWorkerCredentialsPhase(CheckWorkerCredentialsPhaseBuilder.copyAndBuild(w.getCheckUpdatePasswordCredentialsPhase()))
-                    .saveWorkerPhase(SaveWorkerPhaseBuilder.copyAndBuild(w.getSaveWorkerPhase())))
+                    .checkUpdatePasswordCredentialsPhase(CheckUpdatePasswordCredentialsPhaseBuilder.copyAndBuild(w.getCheckUpdatePasswordCredentialsPhase())))
                 .orElse(null);
     }
 
@@ -59,13 +53,8 @@ public class WorkerUpdatePasswordRequestMessageBuilder extends ProcessableBatchS
         return this;
     }
 
-    public WorkerUpdatePasswordRequestMessageBuilder checkWorkerCredentialsPhase(final CheckWorkerCredentialsPhase checkWorkerCredentialsPhase) {
-        this.checkWorkerCredentialsPhase = checkWorkerCredentialsPhase;
-        return this;
-    }
-
-    public WorkerUpdatePasswordRequestMessageBuilder saveWorkerPhase(final SaveWorkerPhase saveWorkerPhase) {
-        this.saveWorkerPhase = saveWorkerPhase;
+    public WorkerUpdatePasswordRequestMessageBuilder checkUpdatePasswordCredentialsPhase(final CheckUpdatePasswordCredentialsPhase checkUpdatePasswordCredentialsPhase) {
+        this.checkUpdatePasswordCredentialsPhase = checkUpdatePasswordCredentialsPhase;
         return this;
     }
 
@@ -73,8 +62,7 @@ public class WorkerUpdatePasswordRequestMessageBuilder extends ProcessableBatchS
         final WorkerUpdatePasswordRequestMessage result = new WorkerUpdatePasswordRequestMessage(generated, requestId, updatePasswordRequestForm);
         result.setCheckUpdatePasswordRequestPhase(checkUpdatePasswordRequestPhase);
         result.setValidateUpdatePasswordRequestPhase(validateUpdatePasswordRequestPhase);
-        result.setCheckUpdatePasswordCredentialsPhase(checkWorkerCredentialsPhase);
-        result.setSaveWorkerPhase(saveWorkerPhase);
+        result.setCheckUpdatePasswordCredentialsPhase(checkUpdatePasswordCredentialsPhase);
 
         return result;
     }
