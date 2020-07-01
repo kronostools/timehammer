@@ -53,7 +53,7 @@ mp:
         connector: smallrye-kafka
         topic: worker-update-password-validate
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       worker-register-persist:
         connector: smallrye-kafka
         topic: worker-register-persist
@@ -68,7 +68,7 @@ mp:
         connector: smallrye-kafka
         topic: worker-update-password-notify
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerRegistrationRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
     outgoing:
       holidays-worker-get:
         connector: smallrye-kafka

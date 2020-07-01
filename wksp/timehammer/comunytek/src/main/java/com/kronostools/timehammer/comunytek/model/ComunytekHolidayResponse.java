@@ -5,18 +5,18 @@ import com.kronostools.timehammer.comunytek.constants.ComunytekSimpleResult;
 import java.time.LocalDate;
 
 public class ComunytekHolidayResponse extends ComunytekResponse<ComunytekSimpleResult> {
-    private boolean holiday;
+    private Boolean holiday;
     private LocalDate date;
 
     ComunytekHolidayResponse(final ComunytekSimpleResult simpleResult, final String errorMessage) {
         super(simpleResult, errorMessage);
     }
 
-    public boolean isHoliday() {
+    public Boolean getHoliday() {
         return holiday;
     }
 
-    public void setHoliday(boolean holiday) {
+    public void setHoliday(Boolean holiday) {
         this.holiday = holiday;
     }
 

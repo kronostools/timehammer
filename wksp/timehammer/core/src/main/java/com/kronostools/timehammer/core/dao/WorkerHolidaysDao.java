@@ -53,18 +53,24 @@ public class WorkerHolidaysDao {
                         "DELETE FROM worker_holiday " +
                             "WHERE day < $1")
                 .execute(Tuple.of(refDate))
-                .map(pgRowSet -> new DeleteResultBuilder()
-                        .deleted(pgRowSet.rowCount())
-                        .build())
-                .onFailure()
-                .recoverWithItem((e) -> {
-                    final String message = CommonUtils.stringFormat("There was an unexpected error deleting past holidays respect '{}'", CommonDateTimeUtils.formatDateToLog(refDate));
+                .map(pgRowSet -> {
+                    final int deleted = pgRowSet.rowCount();
 
-                    LOG.error("{}. Reason: {}", message, e.getMessage());
+                    LOG.debug("Deleted {} past holidays successfully", deleted);
 
                     return new DeleteResultBuilder()
-                            .errorMessage(message)
+                            .deleted(deleted)
                             .build();
-                });
+                })
+                .onFailure()
+                    .recoverWithItem((e) -> {
+                        final String message = CommonUtils.stringFormat("There was an unexpected error deleting past holidays respect '{}'", CommonDateTimeUtils.formatDateToLog(refDate));
+
+                        LOG.error("{}. Reason: {}", message, e.getMessage());
+
+                        return new DeleteResultBuilder()
+                                .errorMessage(message)
+                                .build();
+                    });
     }
 }

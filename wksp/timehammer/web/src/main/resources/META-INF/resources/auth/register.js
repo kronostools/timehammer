@@ -12,11 +12,11 @@ $(document).ready(function() {
     }
     // end-copy
 
-    const registrationRequestId = queryParams.internalId[0]
-
-    if (!registrationRequestId) {
+    if (!queryParams.registrationRequestId) {
         window.location = '../error_400.html'
     }
+
+    const registrationRequestId = queryParams.internalId[0]
 
     const loadingElem = $('#loading').loading()
     const loading = loadingElem.loading('instance')
@@ -251,7 +251,7 @@ $(document).ready(function() {
         loading.hide()
 
         showFormErrors([{
-            fieldId: '',
+            fieldName: '',
             errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario de registro, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
         }])
     }
@@ -260,7 +260,7 @@ $(document).ready(function() {
         loading.hide()
 
         showFormErrors([{
-            fieldId: '',
+            fieldName: '',
             errorMessage: 'Ha ocurrido un error inesperado durante la recuperación de datos para el formulario, por favor, refresque la página. Si el error persite, espere unos minutos antes de reintentarlo.'
         }], true)
     }

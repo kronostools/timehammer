@@ -15,7 +15,7 @@ mp:
         connector: smallrye-kafka
         topic: worker-update-password-init
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
     outgoing:
       notification-telegram:
         connector: smallrye-kafka

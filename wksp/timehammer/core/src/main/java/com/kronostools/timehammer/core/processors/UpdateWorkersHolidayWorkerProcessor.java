@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.schedules.SaveHolidayPhase;
 import com.kronostools.timehammer.common.messages.schedules.SaveHolidayPhaseBuilder;
 import com.kronostools.timehammer.common.messages.schedules.UpdateWorkersHolidayWorker;
@@ -37,12 +38,13 @@ public class UpdateWorkersHolidayWorkerProcessor {
             LOG.warn("Worker's holidays cannot be updated because it could not have been checked. Reason: {}", worker.getCheckHolidayPhase().getErrorMessage());
 
             worker.setSaveHolidayPhase(new SaveHolidayPhaseBuilder()
+                    .result(SimpleResult.KO)
                     .errorMessage(worker.getCheckHolidayPhase().getErrorMessage())
                     .build());
 
             return Uni.createFrom().item(Message.of(worker, message::ack));
         } else {
-            if (worker.getCheckHolidayPhase().isHoliday()) {
+            if (worker.getCheckHolidayPhase().getHoliday()) {
                 return workerHolidaysDao
                         .upsertHoliday(worker.getWorkerInternalId(), worker.getHolidayCandidate())
                         .onItem()
@@ -53,11 +55,13 @@ public class UpdateWorkersHolidayWorkerProcessor {
                                 LOG.info("Holidays of worker '{}' were updated successfully", worker.getWorkerInternalId());
 
                                 saveHolidayPhase = new SaveHolidayPhaseBuilder()
+                                        .result(SimpleResult.OK)
                                         .build();
                             } else {
                                 LOG.error("Unexpected error while updating holidays of worker '{}'. Error: {}", worker.getWorkerInternalId(), upsertResult.getErrorMessage());
 
                                 saveHolidayPhase = new SaveHolidayPhaseBuilder()
+                                        .result(SimpleResult.KO)
                                         .errorMessage(upsertResult.getErrorMessage())
                                         .build();
                             }
@@ -69,7 +73,9 @@ public class UpdateWorkersHolidayWorkerProcessor {
             } else {
                 LOG.info("Nothing to update because worker '{}' didn't picked '{}' as holidays", worker.getWorkerInternalId(), CommonDateTimeUtils.formatDateToLog(worker.getHolidayCandidate()));
 
-                worker.setSaveHolidayPhase(new SaveHolidayPhaseBuilder().build());
+                worker.setSaveHolidayPhase(new SaveHolidayPhaseBuilder()
+                        .result(SimpleResult.OK)
+                        .build());
 
                 return Uni.createFrom().item(Message.of(worker, message::ack));
             }

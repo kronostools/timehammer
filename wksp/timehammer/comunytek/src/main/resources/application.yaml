@@ -15,7 +15,7 @@ mp:
         connector: smallrye-kafka
         topic: comunytek-worker-update-password
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       comunytek-worker-status:
         connector: smallrye-kafka
         topic: comunytek-worker-status

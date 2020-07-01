@@ -25,7 +25,7 @@ mp:
         connector: smallrye-kafka
         topic: worker-update-password-notify
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       catalog-response:
         connector: smallrye-kafka
         topic: catalog-response

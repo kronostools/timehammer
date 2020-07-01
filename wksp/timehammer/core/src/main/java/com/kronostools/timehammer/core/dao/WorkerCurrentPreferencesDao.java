@@ -30,6 +30,8 @@ public class WorkerCurrentPreferencesDao {
     public Uni<WorkerCurrentPreferencesMultipleResult> findAll(final LocalDate refDate) {
         final String dayOfWeek = refDate.getDayOfWeek().name();
 
+        LOG.debug("Getting all workers preferences at '{}' ...", CommonDateTimeUtils.formatDateToLog(refDate));
+
         return client.preparedQuery(
                 "SELECT p.worker_internal_id as worker_internal_id, p.worker_external_id as worker_external_id, p.work_ssid as work_ssid, " +
                     "CASE WHEN $1 = 'MONDAY' THEN p.work_start_mon ELSE (CASE WHEN $1 = 'TUESDAY' THEN p.work_start_tue ELSE (CASE WHEN $1 = 'WEDNESDAY' THEN p.work_start_wed ELSE (CASE WHEN $1 = 'THURSDAY' THEN p.work_start_thu ELSE (CASE WHEN $1 = 'FRIDAY' THEN p.work_start_fri ELSE NULL END) END) END) END) END as work_start, " +
@@ -48,6 +50,8 @@ public class WorkerCurrentPreferencesDao {
                     "ORDER BY p.worker_internal_id, wc.chat_id")
                 .execute(Tuple.of(dayOfWeek, refDate))
                 .map(pgRowSet -> {
+                    LOG.debug("Processing result ({} rows) of query ...", pgRowSet.size());
+
                     final List<WorkerCurrentPreferences> list = new ArrayList<>(pgRowSet.size());
 
                     WorkerCurrentPreferencesBuilder previousWorker = null;
@@ -69,6 +73,8 @@ public class WorkerCurrentPreferencesDao {
                     if (previousWorker != null) {
                         list.add(previousWorker.build());
                     }
+
+                    LOG.debug("Processed result with {} workers at the end", list.size());
 
                     return WorkerCurrentPreferencesMultipleResultBuilder.buildFromResult(list);
                 })

@@ -21,7 +21,7 @@ public class CheckHolidayPhaseBuilder extends PhaseBuilder<SimpleResult, CheckHo
                 .map(chp -> new CheckHolidayPhaseBuilder()
                         .result(chp.getResult())
                         .errorMessage(chp.getErrorMessage())
-                        .holiday(chp.isHoliday()))
+                        .holiday(chp.getHoliday()))
                 .orElse(null);
     }
 

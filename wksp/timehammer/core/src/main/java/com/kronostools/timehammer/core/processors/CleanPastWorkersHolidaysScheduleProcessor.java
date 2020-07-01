@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.core.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.messages.constants.SimpleResult;
 import com.kronostools.timehammer.common.messages.schedules.*;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.WorkerHolidaysDao;
@@ -37,14 +38,19 @@ public class CleanPastWorkersHolidaysScheduleProcessor {
 
                     if (deleteResult.isSuccessful()) {
                         dbResult = new CleanPastHolidaysPhaseBuilder()
+                                .result(SimpleResult.OK)
                                 .build();
                     } else {
                         dbResult = new CleanPastHolidaysPhaseBuilder()
+                                .result(SimpleResult.KO)
                                 .errorMessage(deleteResult.getErrorMessage())
                                 .build();
                     }
 
                     final CleanPastWorkersHolidays scheduleResult = new CleanPastWorkersHolidaysBuilder()
+                            .generated(triggerMessage.getGenerated())
+                            .executionId(triggerMessage.getExecutionId())
+                            .name(triggerMessage.getName())
                             .cleanPastHolidaysPhase(dbResult)
                             .build();
 

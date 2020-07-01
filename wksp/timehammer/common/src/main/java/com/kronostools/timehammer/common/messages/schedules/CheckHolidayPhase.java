@@ -12,7 +12,7 @@ public class CheckHolidayPhase extends Phase<SimpleResult> {
         super(result, errorMessage);
     }
 
-    public boolean isHoliday() {
+    public Boolean getHoliday() {
         return holiday;
     }
 

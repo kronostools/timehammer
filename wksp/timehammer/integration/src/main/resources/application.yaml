@@ -15,7 +15,7 @@ mp:
         connector: smallrye-kafka
         topic: worker-update-password-route
         value:
-          deserializer: com.kronostools.timehammer.common.messages.registration.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
+          deserializer: com.kronostools.timehammer.common.messages.updatePassword.deserializers.WorkerUpdatePasswordRequestJacksonDeserializer
       status-worker-get:
         connector: smallrye-kafka
         topic: status-worker-get

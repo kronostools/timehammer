@@ -11,6 +11,11 @@ mp:
         topic: holidays-worker-summary
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.UpdateWorkersHolidayWorkerJacksonDeserializer
+      holidays-clean-summary:
+        connector: smallrye-kafka
+        topic: holidays-clean-summary
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.CleanPastWorkersHolidaysJacksonDeserializer
     outgoing:
       schedule-update-holidays:
         connector: smallrye-kafka

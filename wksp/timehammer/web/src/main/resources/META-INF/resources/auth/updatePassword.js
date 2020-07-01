@@ -12,11 +12,11 @@ $(document).ready(function() {
     }
     // end-copy
 
-    const internalId = queryParams.internalId[0]
-
-    if (!internalId) {
+    if (!queryParams.internalId) {
         window.location = '../error_400.html'
     }
+
+    const internalId = queryParams.internalId[0]
 
     const loadingElem = $('#loading').loading()
     const loading = loadingElem.loading('instance')
@@ -75,6 +75,8 @@ $(document).ready(function() {
 
     updatePasswordRequestSummarySource.addEventListener('open', (event) => {
         console.info(`Connected to updatePasswordRequestSummary stream! (subscriber id: ${internalId})`)
+
+        loading.hide()
     })
 
     updatePasswordRequestSummarySource.addEventListener('error', (event) => {
@@ -154,7 +156,7 @@ $(document).ready(function() {
         loading.hide()
 
         showFormErrors([{
-            fieldId: '',
+            fieldName: '',
             errorMessage: 'Ha ocurrido un error inesperado durante el envío del formulario, por favor, inténtalo de nuevo. Si el error persite, espere unos minutos antes de reintentarlo.'
         }])
     }
@@ -163,7 +165,7 @@ $(document).ready(function() {
         loading.hide()
 
         showFormErrors([{
-            fieldId: '',
+            fieldName: '',
             errorMessage: 'Ha ocurrido un error inesperado durante la recuperación de datos para el formulario, por favor, refresque la página. Si el error persite, espere unos minutos antes de reintentarlo.'
         }], true)
     }

@@ -199,7 +199,7 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
                                                         .anyMatch(d -> d.equals(holidayCandidate)))
                                                     .build();
 
-                                            LOG.debug("User '{}' {} '{}' as holiday", username, result.isHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(holidayCandidate));
+                                            LOG.debug("User '{}' {} '{}' as holiday", username, result.getHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(holidayCandidate));
                                         }
                                     } else {
                                         final String message = CommonUtils.stringFormat("There was an unexpected error trying to get holidays of user '{}'", username);

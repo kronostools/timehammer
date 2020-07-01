@@ -47,11 +47,11 @@ public class WorkerHolidaysRetriever {
                     final CheckHolidayPhase checkHolidayPhase;
 
                     if (holidayResponse.isSuccessful()) {
-                        LOG.info("Worker '{}' working at '{}' {} '{}' as holiday", worker.getWorkerInternalId(), worker.getCompany().getCode(), holidayResponse.isHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(worker.getHolidayCandidate()));
+                        LOG.info("Worker '{}' working at '{}' {} '{}' as holiday", worker.getWorkerInternalId(), worker.getCompany().getCode(), holidayResponse.getHoliday() ? "picked" : "didn't pick", CommonDateTimeUtils.formatDateToLog(worker.getHolidayCandidate()));
 
                         checkHolidayPhase = new CheckHolidayPhaseBuilder()
                                 .result(SimpleResult.OK)
-                                .holiday(holidayResponse.isHoliday())
+                                .holiday(holidayResponse.getHoliday())
                                 .build();
                     } else {
                         LOG.warn("Holidays of worker '{}' couldn't be retrieved", worker.getWorkerInternalId());
