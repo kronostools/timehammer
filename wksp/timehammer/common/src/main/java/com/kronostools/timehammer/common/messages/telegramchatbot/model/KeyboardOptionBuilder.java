@@ -1,8 +1,6 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import com.kronostools.timehammer.common.constants.Company;
-import com.kronostools.timehammer.common.utils.CommonUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,10 +9,7 @@ import java.util.stream.Collectors;
 
 @JsonPOJOBuilder(withPrefix = "")
 public class KeyboardOptionBuilder {
-    private static final String SEPARATOR = "#";
-
-    private String answerCode;
-    private Company company;
+    private String code;
     private String text;
 
     public static List<KeyboardOption> copyAndBuild(final List<KeyboardOption> keyboardOptions) {
@@ -37,8 +32,8 @@ public class KeyboardOptionBuilder {
                 .orElse(null);
     }
 
-    public KeyboardOptionBuilder answerCode(final String code) {
-        this.answerCode = code;
+    public KeyboardOptionBuilder code(final String code) {
+        this.code = code;
         return this;
     }
 
@@ -47,21 +42,7 @@ public class KeyboardOptionBuilder {
         return this;
     }
 
-    public KeyboardOptionBuilder company(final Company company) {
-        this.company = company;
-        return this;
-    }
-
-    public KeyboardOptionBuilder code(final String code) {
-        final String[] codeParts = code.split(SEPARATOR);
-
-        answerCode = codeParts[0];
-        company = Company.fromCode(codeParts[1]);
-
-        return this;
-    }
-
     public KeyboardOption build() {
-        return new KeyboardOption(CommonUtils.stringFormat("{}{}{}", answerCode, SEPARATOR, company.getCode()), text);
+        return new KeyboardOption(code, text);
     }
 }

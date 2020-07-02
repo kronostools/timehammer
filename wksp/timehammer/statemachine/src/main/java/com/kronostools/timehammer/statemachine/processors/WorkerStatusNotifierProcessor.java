@@ -3,9 +3,7 @@ package com.kronostools.timehammer.statemachine.processors;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.constants.WorkerStatusAction;
-import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
-import com.kronostools.timehammer.common.messages.constants.QuestionType;
 import com.kronostools.timehammer.common.messages.constants.WorkerStatusResult;
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorker;
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorkerBuilder;
@@ -13,7 +11,9 @@ import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbo
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotNotificationMessageBuilder;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOption;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOptionBuilder;
+import com.kronostools.timehammer.statemachine.constants.QuestionType;
 import com.kronostools.timehammer.statemachine.service.WorkerWaitService;
+import com.kronostools.timehammer.statemachine.utils.AnswerUtils;
 import io.smallrye.mutiny.Multi;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -71,7 +71,7 @@ public class WorkerStatusNotifierProcessor {
                                 worker.getWorkerCurrentPreferences().getWorkerInternalId());
 
                         notificationText = questionType.get().getText();
-                        notificationKeyboard = getKeyboardOptions(questionType.get().getOptions(), worker.getWorkerCurrentPreferences().getCompany());
+                        notificationKeyboard = getKeyboardOptions(questionType.get(), worker.getWorkerCurrentPreferences().getCompany());
                     }
                 } else {
                     LOG.warn("No question could be determined for action '{}'", worker.getWorkerStatusActionPhase().getWorkerStatusAction().name());
@@ -129,12 +129,11 @@ public class WorkerStatusNotifierProcessor {
                 .collect(Collectors.toList());
     }
 
-    private List<KeyboardOption> getKeyboardOptions(final List<AnswerOption> answerOptions, final Company company) {
-        return answerOptions.stream()
+    private List<KeyboardOption> getKeyboardOptions(final QuestionType questionType, final Company company) {
+        return questionType.getOptions().stream()
                 .map(ao -> new KeyboardOptionBuilder()
-                        .answerCode(ao.getCode())
-                        .company(company)
-                        .text(ao.getButtonText())
+                        .code(AnswerUtils.getAnswerCode(questionType, ao.getOption(), company))
+                        .text(ao.getOption().getButtonText())
                         .build())
                 .collect(Collectors.toList());
     }

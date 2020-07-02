@@ -12,6 +12,11 @@ mp:
         topic: command-preprocess
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      answer-id:
+        connector: smallrye-kafka
+        topic: answer-id
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
 camel:
   context:

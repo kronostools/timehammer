@@ -147,6 +147,10 @@ public final class CommonDateTimeUtils {
         return date.atTime(12, 0);
     }
 
+    public static LocalDateTime atMidnight(final LocalDate date) {
+        return date.atTime(23, 59);
+    }
+
     private static String formatDateTime(final LocalDateTime dateTime, final String format) {
         return Optional.ofNullable(dateTime)
                 .map(dt -> dt.format(DateTimeFormatter.ofPattern(format)))

@@ -11,13 +11,14 @@
             - Registrar el mismo usuario en varios móviles
     - Core
         - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
+        - Crear un servicio con una cache para la recuperación de las preferencias (invalidar la cache al actualizar las preferencias)
     - Web
         - Registro
             - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
-    - Web - Demo
-        - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
-        - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
-        - Crear componente para establecer la hora
+        - Demo
+            - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
+            - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
+            - Crear componente para establecer la hora
     - Preferencias
         - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
         - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom

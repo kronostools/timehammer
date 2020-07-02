@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.statemachine.model;
 
-import com.kronostools.timehammer.common.messages.constants.QuestionType;
+import com.kronostools.timehammer.statemachine.constants.QuestionType;
 
 import java.util.Objects;
 

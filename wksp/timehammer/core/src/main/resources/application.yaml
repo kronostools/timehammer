@@ -44,6 +44,11 @@ mp:
         topic: command-id
         value:
           deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotInputMessageJacksonDeserializer
+      answer-id:
+        connector: smallrye-kafka
+        topic: answer-id
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotAnswerMessageJacksonDeserializer
       worker-register-validate:
         connector: smallrye-kafka
         topic: worker-register-validate
@@ -98,6 +103,11 @@ mp:
       command-process:
         connector: smallrye-kafka
         topic: command-process
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      answer-process:
+        connector: smallrye-kafka
+        topic: answer-process
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
       worker-register-route:

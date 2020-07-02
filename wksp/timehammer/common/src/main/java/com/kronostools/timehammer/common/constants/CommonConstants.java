@@ -28,6 +28,10 @@ public class CommonConstants {
         public static final String COMMAND_ID_IN = "command-id";
         public static final String COMMAND_ID_OUT = "command-id";
         public static final String COMMAND_PROCESS = "command-process";
+        public static final String ANSWER_ID = "answer-id";
+        public static final String ANSWER_PROCESS = "answer-process";
+        public static final String ANSWER_EXECUTE = "answer-execute";
+        public static final String ANSWER_NOTIFY = "answer-notify";
         public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
         public static final String WORKER_REGISTER_INIT = "worker-register-init";
         public static final String WORKER_REGISTER_ROUTE = "worker-register-route";

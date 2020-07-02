@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class TelegramChatbotMessageRouter implements Processor {
-    private static final Logger LOG = LoggerFactory.getLogger(TelegramChatbotMessageRouter.class);
+public class TelegramMessageRouter implements Processor {
+    private static final Logger LOG = LoggerFactory.getLogger(TelegramMessageRouter.class);
 
-    private final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel;
+    private final Emitter<TelegramChatbotInputMessage> messageChannel;
 
-    public TelegramChatbotMessageRouter(@Channel(Channels.COMMAND_PREPROCESS) final Emitter<TelegramChatbotInputMessage> chatbotMessageChannel) {
-        this.chatbotMessageChannel = chatbotMessageChannel;
+    public TelegramMessageRouter(@Channel(Channels.COMMAND_PREPROCESS) final Emitter<TelegramChatbotInputMessage> messageChannel) {
+        this.messageChannel = messageChannel;
     }
 
     @Override
     public void process(final Exchange exchange) {
-        chatbotMessageChannel.send(RoutesUtils.getCommandMessage(exchange)).handle((Void, e) -> {
+        messageChannel.send(RoutesUtils.getCommandMessage(exchange)).handle((Void, e) -> {
             if (e != null) {
                 LOG.error("Exception while routing chatbot message", e);
             } else {

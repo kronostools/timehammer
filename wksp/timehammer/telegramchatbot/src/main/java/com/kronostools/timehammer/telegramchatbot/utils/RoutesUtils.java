@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.telegramchatbot.utils;
 
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
+import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessage;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotInputMessage;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Commands;
@@ -46,5 +47,10 @@ public class RoutesUtils {
     public static TelegramChatbotInputMessage getCommandMessage(final Exchange exchange) {
         return exchange.getMessage()
                 .getHeader(RoutesConstants.Headers.COMMAND_MESSAGE, TelegramChatbotInputMessage.class);
+    }
+
+    public static TelegramChatbotAnswerMessage getAnswerMessage(final Exchange exchange) {
+        return exchange.getMessage()
+                .getHeader(RoutesConstants.Headers.ANSWER_MESSAE, TelegramChatbotAnswerMessage.class);
     }
 }

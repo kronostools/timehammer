@@ -2,8 +2,10 @@ package com.kronostools.timehammer.statemachine.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import com.kronostools.timehammer.common.messages.constants.QuestionType;
+import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
+import com.kronostools.timehammer.statemachine.constants.AnswerOption;
+import com.kronostools.timehammer.statemachine.constants.QuestionType;
 import com.kronostools.timehammer.statemachine.model.Wait;
 import com.kronostools.timehammer.statemachine.model.WaitId;
 import org.slf4j.Logger;
@@ -17,8 +19,11 @@ public class WorkerWaitService {
     private static final Logger LOG = LoggerFactory.getLogger(WorkerWaitService.class);
 
     private final Cache<WaitId, Wait> workerWaitsCache;
+    private final TimeMachineService timeMachineService;
 
-    public WorkerWaitService() {
+    public WorkerWaitService(final TimeMachineService timeMachineService) {
+        this.timeMachineService = timeMachineService;
+
         this.workerWaitsCache = Caffeine.newBuilder().build();
     }
 
@@ -45,5 +50,12 @@ public class WorkerWaitService {
         }
 
         return existingWait;
+    }
+
+    public void saveWaitForWorkerAndQuestion(final String workerInternalId, final QuestionType questionType, final AnswerOption answerOption) {
+        if (answerOption.isWait()) {
+            final LocalDateTime waitLimitTimestamp = answerOption.getWaitLimitTimestamp(timeMachineService.getNow());
+            workerWaitsCache.put(new WaitId(workerInternalId, questionType), new Wait(waitLimitTimestamp));
+        }
     }
 }

@@ -2,9 +2,11 @@ package com.kronostools.timehammer.telegramchatbot.routes;
 
 import com.kronostools.timehammer.telegramchatbot.config.ChatbotConfig;
 import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramAnswerChatIdInterceptor;
+import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramAnswerInterceptor;
 import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramMessageChatIdInterceptor;
 import com.kronostools.timehammer.telegramchatbot.interceptors.TelegramMessageCommandInterceptor;
-import com.kronostools.timehammer.telegramchatbot.processors.TelegramChatbotMessageRouter;
+import com.kronostools.timehammer.telegramchatbot.processors.TelegramAnswerRouter;
+import com.kronostools.timehammer.telegramchatbot.processors.TelegramMessageRouter;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.telegram.model.IncomingCallbackQuery;
 import org.apache.camel.component.telegram.model.IncomingMessage;
@@ -16,29 +18,27 @@ public class TelegramChatbotRoute extends RouteBuilder {
     private final ChatbotConfig chatbotConfig;
     private final TelegramMessageChatIdInterceptor telegramMessageChatIdInterceptor;
     private final TelegramMessageCommandInterceptor telegramMessageCommandInterceptor;
-    private final TelegramChatbotMessageRouter telegramChatbotMessageRouter;
+    private final TelegramMessageRouter telegramMessageRouter;
+
     private final TelegramAnswerChatIdInterceptor telegramAnswerChatIdInterceptor;
-    // TODO: uncomment and implement
-    //private final TelegramAnswerInterceptor telegramAnswerInterceptor;
-    //private final TelegramAnswerProcessor telegramAnswerProcessor;
+    private final TelegramAnswerInterceptor telegramAnswerInterceptor;
+    private final TelegramAnswerRouter telegramAnswerRouter;
 
     public TelegramChatbotRoute(final ChatbotConfig chatbotConfig,
                                 final TelegramMessageChatIdInterceptor telegramMessageChatIdInterceptor,
                                 final TelegramMessageCommandInterceptor telegramMessageCommandInterceptor,
-                                final TelegramChatbotMessageRouter telegramChatbotMessageRouter,
-                                final TelegramAnswerChatIdInterceptor telegramAnswerChatIdInterceptor
-                                // TODO: uncomment ant implement
-                                //final TelegramAnswerInterceptor telegramAnswerInterceptor,
-                                //final TelegramAnswerProcessor telegramAnswerProcessor
+                                final TelegramMessageRouter telegramMessageRouter,
+                                final TelegramAnswerChatIdInterceptor telegramAnswerChatIdInterceptor,
+                                final TelegramAnswerInterceptor telegramAnswerInterceptor,
+                                final TelegramAnswerRouter telegramAnswerRouter
                                 ) {
         this.chatbotConfig = chatbotConfig;
         this.telegramMessageChatIdInterceptor = telegramMessageChatIdInterceptor;
         this.telegramMessageCommandInterceptor = telegramMessageCommandInterceptor;
-        this.telegramChatbotMessageRouter = telegramChatbotMessageRouter;
+        this.telegramMessageRouter = telegramMessageRouter;
         this.telegramAnswerChatIdInterceptor = telegramAnswerChatIdInterceptor;
-        // TODO: uncomment and implement
-        //this.telegramAnswerInterceptor = telegramAnswerInterceptor;
-        //this.telegramAnswerProcessor = telegramAnswerProcessor;
+        this.telegramAnswerInterceptor = telegramAnswerInterceptor;
+        this.telegramAnswerRouter = telegramAnswerRouter;
     }
 
     @Override
@@ -48,12 +48,11 @@ public class TelegramChatbotRoute extends RouteBuilder {
                     .when(body().isInstanceOf(IncomingMessage.class))
                         .process(telegramMessageChatIdInterceptor)
                         .process(telegramMessageCommandInterceptor)
-                        .process(telegramChatbotMessageRouter)
+                        .process(telegramMessageRouter)
                     .when(body().isInstanceOf(IncomingCallbackQuery.class))
                         .process(telegramAnswerChatIdInterceptor)
-                        // TODO: uncomment and implement
-                        //.process(telegramAnswerInterceptor)
-                        //.process(telegramAnswerProcessor)
+                        .process(telegramAnswerInterceptor)
+                        .process(telegramAnswerRouter)
                 .end();
     }
 }
