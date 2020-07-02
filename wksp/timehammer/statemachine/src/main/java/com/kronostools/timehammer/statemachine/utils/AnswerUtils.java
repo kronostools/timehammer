@@ -19,4 +19,8 @@ public class AnswerUtils {
     public static AnswerOption getAnswerOption(final String rawAnswer) {
         return AnswerOption.getFromCode(rawAnswer.split(SEPARATOR)[1]);
     }
+
+    public static Company getCompany(final String rawAnswer) {
+        return Company.fromCode(rawAnswer.split(SEPARATOR)[2]);
+    }
 }

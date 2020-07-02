@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.kronostools.timehammer.common.constants.Company;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +10,7 @@ public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
     private String rawAnswer;
     private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
     private boolean wait;
+    private Company company;
     private String answerResponseText;
 
     TelegramChatbotAnswerMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
@@ -37,6 +39,14 @@ public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
 
     public void setWait(boolean wait) {
         this.wait = wait;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public String getAnswerResponseText() {

@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+import com.kronostools.timehammer.common.constants.Company;
 
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
     private String rawAnswer;
     private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
     private boolean wait;
+    private Company company;
     private String answerResponseText;
 
     public static TelegramChatbotAnswerMessage copyAndBuild(final TelegramChatbotAnswerMessage telegramChatbotAnswerMessage) {
@@ -26,6 +28,7 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
                         .rawAnswer(tcam.getRawAnswer())
                         .workerCurrentPreferencesPhase(WorkerCurrentPreferencesPhaseBuilder.copyAndBuild(tcam.getWorkerCurrentPreferencesPhase()))
                         .wait(tcam.isWait())
+                        .company(tcam.getCompany())
                         .answerResponseText(tcam.getAnswerResponseText()))
                 .orElse(null);
     }
@@ -45,6 +48,11 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
         return this;
     }
 
+    public TelegramChatbotAnswerMessageBuilder company(final Company company) {
+        this.company = company;
+        return this;
+    }
+
     public TelegramChatbotAnswerMessageBuilder answerResponseText(final String answerResponseText) {
         this.answerResponseText = answerResponseText;
         return this;
@@ -55,6 +63,7 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
         result.setRawAnswer(rawAnswer);
         result.setWorkerCurrentPreferencesPhase(workerCurrentPreferencesPhase);
         result.setWait(wait);
+        result.setCompany(company);
         result.setAnswerResponseText(answerResponseText);
 
         return result;

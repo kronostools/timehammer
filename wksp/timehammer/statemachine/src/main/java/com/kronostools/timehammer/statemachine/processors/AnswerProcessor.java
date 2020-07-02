@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.statemachine.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessage;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessageBuilder;
 import com.kronostools.timehammer.statemachine.constants.AnswerOption;
@@ -56,9 +57,12 @@ public class AnswerProcessor {
                     .build())
                     .handle(getMessageHandler(message, answerMessage.getChatId()));
         } else {
+            final Company company = AnswerUtils.getCompany(answerMessage.getRawAnswer());
+
             return answerRouteChannel.send(TelegramChatbotAnswerMessageBuilder
                     .copy(answerMessage)
                     .wait(false)
+                    .company(company)
                     .build())
                     .handle(getMessageHandler(message, answerMessage.getChatId()));
         }

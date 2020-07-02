@@ -21,6 +21,11 @@ mp:
         topic: status-worker-get
         value:
           deserializer: com.kronostools.timehammer.common.messages.schedules.deserializers.CheckWorkersStatusWorkerJacksonDeserializer
+      answer-execute:
+        connector: smallrye-kafka
+        topic: answer-execute
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotAnswerMessageJacksonDeserializer
     outgoing:
       comunytek-worker-holidays:
         connector: smallrye-kafka
@@ -40,5 +45,10 @@ mp:
       comunytek-worker-status:
         connector: smallrye-kafka
         topic: comunytek-worker-status
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      comunytek-answer-execute:
+        connector: smallrye-kafka
+        topic: comunytek-answer-execute
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer

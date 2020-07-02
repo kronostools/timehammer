@@ -16,6 +16,7 @@ public class CommonConstants {
         public static final String COMUNYTEK_WORKER_REGISTER = "comunytek-worker-register";
         public static final String COMUNYTEK_WORKER_UPDATE_PASSWORD = "comunytek-worker-update-password";
         public static final String COMUNYTEK_WORKER_STATUS = "comunytek-worker-status";
+        public static final String COMUNYTEK_ANSWER_EXECUTE = "comunytek-answer-execute";
         public static final String HOLIDAYS_WORKER_UPDATE = "holidays-worker-update";
         public static final String STATUS_WORKER_PROCESS = "status-worker-process";
         public static final String STATUS_WORKER_NOTIFY = "status-worker-notify";
