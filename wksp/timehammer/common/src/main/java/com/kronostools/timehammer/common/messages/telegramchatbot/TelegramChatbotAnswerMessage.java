@@ -2,6 +2,8 @@ package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkerStatusPhase;
 
 import java.time.LocalDateTime;
 
@@ -9,9 +11,9 @@ import java.time.LocalDateTime;
 public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
     private String rawAnswer;
     private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
-    private boolean wait;
+    private AnswerOption answerOption;
     private Company company;
-    private String answerResponseText;
+    private UpdateWorkerStatusPhase updateWorkerStatusPhase;
 
     TelegramChatbotAnswerMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
         super(generated, chatId, messageId);
@@ -33,12 +35,12 @@ public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
         this.workerCurrentPreferencesPhase = workerCurrentPreferencesPhase;
     }
 
-    public boolean isWait() {
-        return wait;
+    public AnswerOption getAnswerOption() {
+        return answerOption;
     }
 
-    public void setWait(boolean wait) {
-        this.wait = wait;
+    public void setAnswerOption(AnswerOption answerOption) {
+        this.answerOption = answerOption;
     }
 
     public Company getCompany() {
@@ -49,11 +51,11 @@ public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
         this.company = company;
     }
 
-    public String getAnswerResponseText() {
-        return answerResponseText;
+    public UpdateWorkerStatusPhase getUpdateWorkerStatusPhase() {
+        return updateWorkerStatusPhase;
     }
 
-    public void setAnswerResponseText(String answerResponseText) {
-        this.answerResponseText = answerResponseText;
+    public void setUpdateWorkerStatusPhase(UpdateWorkerStatusPhase updateWorkerStatusPhase) {
+        this.updateWorkerStatusPhase = updateWorkerStatusPhase;
     }
 }

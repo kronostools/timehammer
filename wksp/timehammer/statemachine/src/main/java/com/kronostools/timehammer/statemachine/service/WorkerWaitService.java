@@ -2,9 +2,9 @@ package com.kronostools.timehammer.statemachine.service;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
-import com.kronostools.timehammer.statemachine.constants.AnswerOption;
 import com.kronostools.timehammer.statemachine.constants.QuestionType;
 import com.kronostools.timehammer.statemachine.model.Wait;
 import com.kronostools.timehammer.statemachine.model.WaitId;
@@ -52,10 +52,10 @@ public class WorkerWaitService {
         return existingWait;
     }
 
-    public void saveWaitForWorkerAndQuestion(final String workerInternalId, final QuestionType questionType, final AnswerOption answerOption) {
+    public void saveWaitForWorkerAndQuestion(final String workerInternalId, final AnswerOption answerOption) {
         if (answerOption.isWait()) {
             final LocalDateTime waitLimitTimestamp = answerOption.getWaitLimitTimestamp(timeMachineService.getNow());
-            workerWaitsCache.put(new WaitId(workerInternalId, questionType), new Wait(waitLimitTimestamp));
+            workerWaitsCache.put(new WaitId(workerInternalId, answerOption), new Wait(waitLimitTimestamp));
         }
     }
 }

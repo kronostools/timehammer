@@ -3,6 +3,7 @@ package com.kronostools.timehammer.statemachine.processors;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.constants.WorkerStatusAction;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
 import com.kronostools.timehammer.common.messages.constants.WorkerStatusResult;
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorker;
@@ -130,10 +131,10 @@ public class WorkerStatusNotifierProcessor {
     }
 
     private List<KeyboardOption> getKeyboardOptions(final QuestionType questionType, final Company company) {
-        return questionType.getOptions().stream()
+        return AnswerOption.getAnswerOptions(questionType.getContext(), questionType.getContextAction()).stream()
                 .map(ao -> new KeyboardOptionBuilder()
-                        .code(AnswerUtils.getAnswerCode(questionType, ao.getOption(), company))
-                        .text(ao.getOption().getButtonText())
+                        .code(AnswerUtils.getAnswerCode(ao, company))
+                        .text(ao.getButtonText())
                         .build())
                 .collect(Collectors.toList());
     }

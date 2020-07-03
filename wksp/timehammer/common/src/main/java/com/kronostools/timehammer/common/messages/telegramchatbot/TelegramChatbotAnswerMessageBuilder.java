@@ -2,6 +2,9 @@ package com.kronostools.timehammer.common.messages.telegramchatbot;
 
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkerStatusPhase;
+import com.kronostools.timehammer.common.messages.schedules.UpdateWorkerStatusPhaseBuilder;
 
 import java.util.Optional;
 
@@ -9,9 +12,9 @@ import java.util.Optional;
 public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageBuilder<TelegramChatbotAnswerMessageBuilder> {
     private String rawAnswer;
     private WorkerCurrentPreferencesPhase workerCurrentPreferencesPhase;
-    private boolean wait;
+    private AnswerOption answerOption;
     private Company company;
-    private String answerResponseText;
+    private UpdateWorkerStatusPhase updateWorkerStatusPhase;
 
     public static TelegramChatbotAnswerMessage copyAndBuild(final TelegramChatbotAnswerMessage telegramChatbotAnswerMessage) {
         return Optional.ofNullable(telegramChatbotAnswerMessage)
@@ -27,9 +30,9 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
                         .messageId(tcam.getMessageId())
                         .rawAnswer(tcam.getRawAnswer())
                         .workerCurrentPreferencesPhase(WorkerCurrentPreferencesPhaseBuilder.copyAndBuild(tcam.getWorkerCurrentPreferencesPhase()))
-                        .wait(tcam.isWait())
+                        .answerOption(tcam.getAnswerOption())
                         .company(tcam.getCompany())
-                        .answerResponseText(tcam.getAnswerResponseText()))
+                        .updateWorkerStatusPhase(UpdateWorkerStatusPhaseBuilder.copyAndBuild(tcam.getUpdateWorkerStatusPhase())))
                 .orElse(null);
     }
 
@@ -43,8 +46,8 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
         return this;
     }
 
-    public TelegramChatbotAnswerMessageBuilder wait(final boolean wait) {
-        this.wait = wait;
+    public TelegramChatbotAnswerMessageBuilder answerOption(final AnswerOption answerOption) {
+        this.answerOption = answerOption;
         return this;
     }
 
@@ -53,8 +56,8 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
         return this;
     }
 
-    public TelegramChatbotAnswerMessageBuilder answerResponseText(final String answerResponseText) {
-        this.answerResponseText = answerResponseText;
+    public TelegramChatbotAnswerMessageBuilder updateWorkerStatusPhase(final UpdateWorkerStatusPhase updateWorkerStatusPhase) {
+        this.updateWorkerStatusPhase = updateWorkerStatusPhase;
         return this;
     }
 
@@ -62,9 +65,9 @@ public class TelegramChatbotAnswerMessageBuilder extends TelegramChatbotMessageB
         final TelegramChatbotAnswerMessage result = new TelegramChatbotAnswerMessage(generated, chatId, messageId);
         result.setRawAnswer(rawAnswer);
         result.setWorkerCurrentPreferencesPhase(workerCurrentPreferencesPhase);
-        result.setWait(wait);
+        result.setAnswerOption(answerOption);
         result.setCompany(company);
-        result.setAnswerResponseText(answerResponseText);
+        result.setUpdateWorkerStatusPhase(updateWorkerStatusPhase);
 
         return result;
     }

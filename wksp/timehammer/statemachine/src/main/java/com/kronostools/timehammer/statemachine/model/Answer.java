@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.statemachine.model;
 
-import com.kronostools.timehammer.statemachine.constants.AnswerOption;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 
 public class Answer {
     private final AnswerOption option;

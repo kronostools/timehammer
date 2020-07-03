@@ -2,10 +2,9 @@ package com.kronostools.timehammer.statemachine.processors;
 
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
 import com.kronostools.timehammer.common.constants.Company;
+import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessage;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessageBuilder;
-import com.kronostools.timehammer.statemachine.constants.AnswerOption;
-import com.kronostools.timehammer.statemachine.constants.QuestionType;
 import com.kronostools.timehammer.statemachine.service.WorkerWaitService;
 import com.kronostools.timehammer.statemachine.utils.AnswerUtils;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -46,14 +45,11 @@ public class AnswerProcessor {
         final AnswerOption answerOption = AnswerUtils.getAnswerOption(answerMessage.getRawAnswer());
 
         if (answerOption.isWait()) {
-            final QuestionType questionType = AnswerUtils.getQuestionType(answerMessage.getRawAnswer());
-
-            workerWaitService.saveWaitForWorkerAndQuestion(answerMessage.getWorkerCurrentPreferencesPhase().getWorkerInternalId(), questionType, answerOption);
+            workerWaitService.saveWaitForWorkerAndQuestion(answerMessage.getWorkerCurrentPreferencesPhase().getWorkerInternalId(), answerOption);
 
             return answerNotifyChannel.send(TelegramChatbotAnswerMessageBuilder
                     .copy(answerMessage)
-                    .wait(true)
-                    .answerResponseText(questionType.getAnswer(answerOption))
+                    .answerOption(answerOption)
                     .build())
                     .handle(getMessageHandler(message, answerMessage.getChatId()));
         } else {
@@ -61,7 +57,7 @@ public class AnswerProcessor {
 
             return answerRouteChannel.send(TelegramChatbotAnswerMessageBuilder
                     .copy(answerMessage)
-                    .wait(false)
+                    .answerOption(answerOption)
                     .company(company)
                     .build())
                     .handle(getMessageHandler(message, answerMessage.getChatId()));

@@ -257,7 +257,7 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
 
                                             throw new ComunytekExpiredSessionException(message);
                                         } else {
-                                            LOG.debug("Status of user '{}' were retrieved successfully", username);
+                                            LOG.debug("Status of user '{}' was retrieved successfully", username);
 
                                             if (response.bodyAsString() != null && response.bodyAsString().length() > 0) {
                                                 final String[] hoursReportedParts = response.bodyAsString().split(LINE_BREAK);
@@ -319,6 +319,90 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
                                     .build());
                         } else {
                             return Uni.createFrom().item(new ComunytekStatusResponseBuilder()
+                                    .result(ComunytekStatusResult.KO)
+                                    .errorMessage(clr.getErrorMessage())
+                                    .build());
+                        }
+                    }
+                })
+                .onFailure(ComunytekExpiredSessionException.class)
+                    .retry()
+                    .atMost(EXPIRED_SESSION_MAX_RETRIES);
+    }
+
+    @Override
+    public Uni<ComunytekUpdateStatusResponse> updateStatus(final String username, final ComunytekAction action, final LocalDateTime timestamp) {
+        LOG.debug("Updating status of user '{}' ...", username);
+
+        return cachedLogin(username)
+                .flatMap(clr -> {
+                    if (clr.isSuccessful()) {
+                        LOG.debug("Calling comunytek to update status ...");
+
+                        return client
+                                .post(getUrl("reghoras"))
+                                .putHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED)
+                                .sendBuffer(ComunytekUpdateStatusForm.Builder.builder()
+                                        .sessionId(clr.getSessionId())
+                                        .username(username)
+                                        .action(action.getCode())
+                                        .comment(action.getComment())
+                                        .build()
+                                        .toBuffer())
+                                .map(response -> {
+                                    LOG.debug("Processing update status response from comunytek - status: {}", response.statusCode());
+
+                                    final ComunytekUpdateStatusResponse result;
+
+                                    if (response.statusCode() == 200) {
+                                        if (ERROR_EXPIRED_SESSION.equals(response.bodyAsString())) {
+                                            invalidateSession(username);
+
+                                            final String message = CommonUtils.stringFormat("Session of user '{}' has expired and its status could not be updated", username);
+                                            LOG.warn(message);
+
+                                            throw new ComunytekExpiredSessionException(message);
+                                        } else {
+                                            LOG.debug("Status of user '{}' was updated successfully", username);
+
+                                            if (response.bodyAsString() != null
+                                                    && response.bodyAsString().length() > 0
+                                                    && response.bodyAsString().trim().equals("OK")) {
+                                                result = new ComunytekUpdateStatusResponseBuilder()
+                                                        .result(ComunytekStatusResult.OK)
+                                                        .build();
+                                            } else {
+                                                final String errorMessage = CommonUtils.stringFormat("Status of user '{}' was not updated successfully. Response was: {}", username, response.bodyAsString());
+
+                                                LOG.error(errorMessage);
+
+                                                result = new ComunytekUpdateStatusResponseBuilder()
+                                                        .result(ComunytekStatusResult.KO)
+                                                        .errorMessage(errorMessage)
+                                                        .build();
+                                            }
+                                        }
+                                    } else {
+                                        final String message = CommonUtils.stringFormat("There was an unexpected error trying to get status of user '{}'", username);
+                                        LOG.error(message);
+
+                                        throw new ComunytekUnexpectedException(message);
+                                    }
+
+                                    return result;
+                                })
+                                .onFailure(ComunytekUnexpectedException.class)
+                                    .retry()
+                                    .atMost(UNEXPECTED_ERROR_MAX_RETRIES);
+                    } else {
+                        if (clr.getResult() == ComunytekCachedLoginResult.INVALID
+                                || clr.getResult() == ComunytekCachedLoginResult.MISSING) {
+                            return Uni.createFrom().item(new ComunytekUpdateStatusResponseBuilder()
+                                    .result(ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS)
+                                    .errorMessage(clr.getErrorMessage())
+                                    .build());
+                        } else {
+                            return Uni.createFrom().item(new ComunytekUpdateStatusResponseBuilder()
                                     .result(ComunytekStatusResult.KO)
                                     .errorMessage(clr.getErrorMessage())
                                     .build());
