@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.common.messages.telegramchatbot;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.kronostools.timehammer.common.constants.Company;
 import com.kronostools.timehammer.common.messages.constants.AnswerOption;
@@ -17,6 +18,11 @@ public class TelegramChatbotAnswerMessage extends TelegramChatbotMessage {
 
     TelegramChatbotAnswerMessage(final LocalDateTime generated, final String chatId, final Long messageId) {
         super(generated, chatId, messageId);
+    }
+
+    @JsonIgnore
+    public boolean isWait() {
+        return answerOption.isWait();
     }
 
     public String getRawAnswer() {

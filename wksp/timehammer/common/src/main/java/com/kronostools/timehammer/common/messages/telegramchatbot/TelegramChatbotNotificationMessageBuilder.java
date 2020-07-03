@@ -10,6 +10,7 @@ import java.util.Optional;
 @JsonPOJOBuilder(withPrefix = "")
 public class TelegramChatbotNotificationMessageBuilder extends TelegramChatbotMessageBuilder<TelegramChatbotNotificationMessageBuilder> {
     private String text;
+    private Boolean clearPreviousKeyboard;
     private List<KeyboardOption> keyboard;
 
     public static TelegramChatbotNotificationMessageBuilder copy(final TelegramChatbotInputMessage telegramChatbotInputMessage) {
@@ -43,13 +44,20 @@ public class TelegramChatbotNotificationMessageBuilder extends TelegramChatbotMe
         return this;
     }
 
+    public TelegramChatbotNotificationMessageBuilder clearPreviousKeyboard(final boolean clearPreviousKeyboard) {
+        this.clearPreviousKeyboard = clearPreviousKeyboard;
+        return this;
+    }
+
     public TelegramChatbotNotificationMessageBuilder keyboard(final List<KeyboardOption> keyboard) {
+        this.clearPreviousKeyboard = true;
         this.keyboard = keyboard;
         return this;
     }
 
     public TelegramChatbotNotificationMessage build() {
         final TelegramChatbotNotificationMessage tcnm = new TelegramChatbotNotificationMessage(generated, chatId, messageId, text);
+        tcnm.setClearPreviousKeyboard(clearPreviousKeyboard != null ? clearPreviousKeyboard : false);
         tcnm.setKeyboard(keyboard);
 
         return tcnm;

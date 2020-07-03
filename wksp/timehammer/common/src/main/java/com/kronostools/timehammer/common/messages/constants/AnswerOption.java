@@ -9,46 +9,92 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum AnswerOption {
-    SW_Y("SWY", ChatbotMessages.ANSWER_Y_BUTTON, false, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.SW_RESPONSE_Y),
-    SW_W5M("SWW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.RESPONSE_W5M),
-    SW_W10M("SWW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.RESPONSE_W10M),
-    SW_W15M("SWW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.RESPONSE_W15M),
-    SW_W20M("SWW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.RESPONSE_W20M),
-    SW_N("SWN", ChatbotMessages.ANSWER_N_BUTTON, true, StatusContext.WORK, StatusContextAction.START, ChatbotMessages.RESPONSE_N),
+    SW_Y("SWY", ChatbotMessages.ANSWER_Y_BUTTON, false,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.SW_RESPONSE_Y, ChatbotMessages.SW_RESPONSE_Y_ERROR),
+    SW_W5M("SWW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W5M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SW_W10M("SWW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W10M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SW_W15M("SWW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W15M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SW_W20M("SWW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W20M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SW_N("SWN", ChatbotMessages.ANSWER_N_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_N, ChatbotMessages.RESPONSE_N),
 
-    EW_Y("EWY", ChatbotMessages.ANSWER_Y_BUTTON, false, StatusContext.WORK, StatusContextAction.END, ChatbotMessages.EW_RESPONSE_Y),
-    EW_W5M("EWW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true, StatusContext.WORK, StatusContextAction.END, ChatbotMessages.RESPONSE_W5M),
-    EW_W10M("EWW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true, StatusContext.WORK, StatusContextAction.END, ChatbotMessages.RESPONSE_W10M),
-    EW_W15M("EWW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true, StatusContext.WORK, StatusContextAction.END, ChatbotMessages.RESPONSE_W15M),
-    EW_W20M("EWW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true, StatusContext.WORK, StatusContextAction.END, ChatbotMessages.RESPONSE_W20M),
+    EW_Y("EWY", ChatbotMessages.ANSWER_Y_BUTTON, false,
+            StatusContext.WORK, StatusContextAction.END,
+            ChatbotMessages.EW_RESPONSE_Y, ChatbotMessages.EW_RESPONSE_Y_ERROR),
+    EW_W5M("EWW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W5M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EW_W10M("EWW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W10M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EW_W15M("EWW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W15M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EW_W20M("EWW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true,
+            StatusContext.WORK, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W20M, ChatbotMessages.RESPONSE_WXM_ERROR),
 
-    SL_Y("SLY", ChatbotMessages.ANSWER_Y_BUTTON, false, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.SL_RESPONSE_Y),
-    SL_W5M("SLW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.RESPONSE_W5M),
-    SL_W10M("SLW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.RESPONSE_W10M),
-    SL_W15M("SLW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.RESPONSE_W15M),
-    SL_W20M("SLW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.RESPONSE_W20M),
-    SL_N("SLN", ChatbotMessages.ANSWER_N_BUTTON, true, StatusContext.LUNCH, StatusContextAction.START, ChatbotMessages.RESPONSE_N),
+    SL_Y("SLY", ChatbotMessages.ANSWER_Y_BUTTON, false,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.SL_RESPONSE_Y, ChatbotMessages.SL_RESPONSE_Y_ERROR),
+    SL_W5M("SLW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W5M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SL_W10M("SLW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W10M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SL_W15M("SLW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W15M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SL_W20M("SLW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_W20M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    SL_N("SLN", ChatbotMessages.ANSWER_N_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.START,
+            ChatbotMessages.RESPONSE_N, ChatbotMessages.RESPONSE_N_ERROR),
 
-    EL_Y("ELY", ChatbotMessages.ANSWER_Y_BUTTON, false, StatusContext.LUNCH, StatusContextAction.END, ChatbotMessages.EL_RESPONSE_Y),
-    EL_W5M("ELW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.END, ChatbotMessages.RESPONSE_W5M),
-    EL_W10M("ELW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.END, ChatbotMessages.RESPONSE_W10M),
-    EL_W15M("ELW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.END, ChatbotMessages.RESPONSE_W15M),
-    EL_W20M("ELW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true, StatusContext.LUNCH, StatusContextAction.END, ChatbotMessages.RESPONSE_W20M);
+    EL_Y("ELY", ChatbotMessages.ANSWER_Y_BUTTON, false,
+            StatusContext.LUNCH, StatusContextAction.END,
+            ChatbotMessages.EL_RESPONSE_Y, ChatbotMessages.EL_RESPONSE_Y_ERROR),
+    EL_W5M("ELW5M", ChatbotMessages.ANSWER_N5M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W5M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EL_W10M("ELW10M", ChatbotMessages.ANSWER_N10M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W10M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EL_W15M("ELW15M", ChatbotMessages.ANSWER_N15M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W15M, ChatbotMessages.RESPONSE_WXM_ERROR),
+    EL_W20M("ELW20M", ChatbotMessages.ANSWER_N20M_BUTTON, true,
+            StatusContext.LUNCH, StatusContextAction.END,
+            ChatbotMessages.RESPONSE_W20M, ChatbotMessages.RESPONSE_WXM_ERROR);
 
     private final String code;
     private final String buttonText;
     private final boolean wait;
     private final StatusContext context;
     private final StatusContextAction contextAction;
-    private final String responseText;
+    private final String responseTextSuccess;
+    private final String responseTextError;
 
-    AnswerOption(final String code, final String buttonText, final boolean wait, final StatusContext context, final StatusContextAction contextAction, final String responseText) {
+    AnswerOption(final String code, final String buttonText, final boolean wait, final StatusContext context, final StatusContextAction contextAction, final String responseTextSuccess, final String responseTextError) {
         this.code = code;
         this.buttonText = buttonText;
         this.wait = wait;
         this.context = context;
         this.contextAction = contextAction;
-        this.responseText = responseText;
+        this.responseTextSuccess = responseTextSuccess;
+        this.responseTextError = responseTextError;
     }
 
     public static AnswerOption getFromCode(final String code) {
@@ -125,7 +171,11 @@ public enum AnswerOption {
         return contextAction;
     }
 
-    public String getResponseText() {
-        return responseText;
+    public String getResponseTextSuccess() {
+        return responseTextSuccess;
+    }
+
+    public String getResponseTextError() {
+        return responseTextError;
     }
 }

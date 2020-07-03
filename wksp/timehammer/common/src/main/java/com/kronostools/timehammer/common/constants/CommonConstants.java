@@ -21,6 +21,7 @@ public class CommonConstants {
         public static final String STATUS_WORKER_PROCESS = "status-worker-process";
         public static final String STATUS_WORKER_NOTIFY = "status-worker-notify";
         public static final String STATUS_WORKER_NOTIFY_OUT = "status-worker-notify-out";
+        public static final String STATUS_NOTIFICATION_TELEGRAM = "status-notification-telegram";
         public static final String HOLIDAYS_WORKER_SUMMARY = "holidays-worker-summary";
         public static final String HOLIDAYS_CLEAN_SUMMARY = "holidays-clean-summary";
         public static final String SCHEDULE_SUMMARY = "schedule-summary";
@@ -32,7 +33,9 @@ public class CommonConstants {
         public static final String ANSWER_ID = "answer-id";
         public static final String ANSWER_PROCESS = "answer-process";
         public static final String ANSWER_EXECUTE = "answer-execute";
+        public static final String ANSWER_WAIT_NOTIFY = "answer-wait-notify";
         public static final String ANSWER_NOTIFY = "answer-notify";
+        public static final String ANSWER_NOTIFICATION_TELEGRAM = "answer-notification-telegram";
         public static final String NOTIFICATION_TELEGRAM = "notification-telegram";
         public static final String WORKER_REGISTER_INIT = "worker-register-init";
         public static final String WORKER_REGISTER_ROUTE = "worker-register-route";

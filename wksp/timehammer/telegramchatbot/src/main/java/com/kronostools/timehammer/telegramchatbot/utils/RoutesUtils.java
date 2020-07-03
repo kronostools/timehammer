@@ -51,6 +51,6 @@ public class RoutesUtils {
 
     public static TelegramChatbotAnswerMessage getAnswerMessage(final Exchange exchange) {
         return exchange.getMessage()
-                .getHeader(RoutesConstants.Headers.ANSWER_MESSAE, TelegramChatbotAnswerMessage.class);
+                .getHeader(RoutesConstants.Headers.ANSWER_MESSAGE, TelegramChatbotAnswerMessage.class);
     }
 }

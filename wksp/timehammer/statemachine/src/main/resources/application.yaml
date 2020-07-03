@@ -16,6 +16,11 @@ mp:
         topic: answer-process
         value:
           deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotAnswerMessageJacksonDeserializer
+      answer-notify:
+        connector: smallrye-kafka
+        topic: answer-notify
+        value:
+          deserializer: com.kronostools.timehammer.common.messages.telegramchatbot.deserializers.TelegramChatbotAnswerMessageJacksonDeserializer
     outgoing:
       status-worker-notify-out:
         connector: smallrye-kafka
@@ -27,12 +32,17 @@ mp:
         topic: answer-execute
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      answer-notify:
+      answer-wait-notify:
         connector: smallrye-kafka
         topic: answer-notify
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
-      notification-telegram:
+      status-notification-telegram:
+        connector: smallrye-kafka
+        topic: notification-telegram
+        value:
+          serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+      answer-notification-telegram:
         connector: smallrye-kafka
         topic: notification-telegram
         value:

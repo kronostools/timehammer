@@ -29,7 +29,7 @@ public class TelegramAnswerChatIdInterceptor implements Processor {
             final String chatId = incomingMessage.getChat().getId();
             final Long messageId = incomingMessage.getMessageId();
 
-            exchange.getMessage().setHeader(Headers.ANSWER_MESSAE, new TelegramChatbotAnswerMessageBuilder()
+            exchange.getMessage().setHeader(Headers.ANSWER_MESSAGE, new TelegramChatbotAnswerMessageBuilder()
                     .generated(generated)
                     .chatId(chatId)
                     .messageId(messageId).build());

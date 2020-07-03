@@ -7,21 +7,25 @@ public class ChatbotMessages {
             "Ya va siendo hora de ponerse a currar no?"
     };
     public static final String SW_RESPONSE_Y = "Se ha registrado correctamente la entrada.";
+    public static final String SW_RESPONSE_Y_ERROR = "Ha ocurrido un error y no se ha podido registrar la entrada. En breve volveré a preguntar.";
 
     public static final String[] QUESTION_LUNCH_START = new String[] {
             "Se come o qué?"
     };
     public static final String SL_RESPONSE_Y = "Se ha registrado correctamente la pausa para la comida.";
+    public static final String SL_RESPONSE_Y_ERROR = "Ha ocurrido un error y no se ha podido registrar la pausa para la comida. En breve volveré a preguntar.";
 
     public static final String[] QUESTION_LUNCH_END = new String[] {
             "Has terminado ya de comer?"
     };
     public static final String EL_RESPONSE_Y = "Se ha registrado correctamente el final de la pausa para la comida.";
+    public static final String EL_RESPONSE_Y_ERROR = "Ha ocurrido un error y no se ha podido registrar el final de la pausa para la comida. En breve volveré a preguntar.";
 
     public static final String[] QUESTION_WORK_END = new String[] {
             "Habrá que irse ya para casa no?"
     };
     public static final String EW_RESPONSE_Y = "Se ha registrado correctamente la salida.";
+    public static final String EW_RESPONSE_Y_ERROR = "Ha ocurrido un error y no se ha podido registrar la salida. En breve volveré a preguntar.";
 
     public static final String ANSWER_Y_BUTTON = "Sí";
     public static final String RESPONSE_W5M = "Anotado queda. Dentro de 5 minutos te lo volveré a recordar.";
@@ -32,7 +36,11 @@ public class ChatbotMessages {
     public static final String ANSWER_N15M_BUTTON = "+15 m";
     public static final String RESPONSE_W20M = "Anotado queda. Dentro de 20 minutos te lo volveré a recordar.";
     public static final String ANSWER_N20M_BUTTON = "+20 m";
+
+    public static final String RESPONSE_WXM_ERROR = "Ha ocurrido un error y no he podido registrar tu elección. En breve volveré a preguntar.";
+
     public static final String RESPONSE_N = "Anotado queda. Hasta el próximo día laborable no se te volverá a notificar de lo mismo.";
+    public static final String RESPONSE_N_ERROR = "Ha ocurrido un error y no he podido registrar tu elección. En breve volveré a preguntar.";
     public static final String ANSWER_N_BUTTON = "No";
 
     public static final String COMMAND_REGISTRATION_REQUIRED = "El commando que intentas ejecutar requiere estar registrado. /register para registrarse.";

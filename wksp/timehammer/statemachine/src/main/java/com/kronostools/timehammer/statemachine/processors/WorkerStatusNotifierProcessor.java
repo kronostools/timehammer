@@ -41,7 +41,7 @@ public class WorkerStatusNotifierProcessor {
     }
 
     @Incoming(Channels.STATUS_WORKER_NOTIFY)
-    @Outgoing(Channels.NOTIFICATION_TELEGRAM)
+    @Outgoing(Channels.STATUS_NOTIFICATION_TELEGRAM)
     public Multi<Message<TelegramChatbotNotificationMessage>> routeWorkerStatus(final Message<CheckWorkersStatusWorker> message) {
         final CheckWorkersStatusWorker worker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 

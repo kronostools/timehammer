@@ -31,7 +31,7 @@ public class AnswerProcessor {
 
     public AnswerProcessor(final WorkerWaitService workerWaitService,
                            @Channel(Channels.ANSWER_EXECUTE) final Emitter<TelegramChatbotAnswerMessage> answerRouteChannel,
-                           @Channel(Channels.ANSWER_NOTIFY) final Emitter<TelegramChatbotAnswerMessage> answerNotifyChannel) {
+                           @Channel(Channels.ANSWER_WAIT_NOTIFY) final Emitter<TelegramChatbotAnswerMessage> answerNotifyChannel) {
         this.workerWaitService = workerWaitService;
 
         this.answerRouteChannel = answerRouteChannel;
@@ -41,6 +41,8 @@ public class AnswerProcessor {
     @Incoming(Channels.ANSWER_PROCESS)
     public CompletionStage<Void> processAnswer(final Message<TelegramChatbotAnswerMessage> message) {
         final TelegramChatbotAnswerMessage answerMessage = TelegramChatbotAnswerMessageBuilder.copy(message.getPayload()).build();
+
+        LOG.debug("Processing answer '{}' comming from worker '{}' ...", answerMessage.getRawAnswer(), answerMessage.getWorkerCurrentPreferencesPhase().getWorkerInternalId());
 
         final AnswerOption answerOption = AnswerUtils.getAnswerOption(answerMessage.getRawAnswer());
 

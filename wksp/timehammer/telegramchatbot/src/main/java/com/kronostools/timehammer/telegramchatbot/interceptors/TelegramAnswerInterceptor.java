@@ -21,10 +21,14 @@ public class TelegramAnswerInterceptor implements Processor {
 
         final IncomingCallbackQuery incomingCallbackQuery = exchange.getIn().getBody(IncomingCallbackQuery.class);
 
+        final String rawAnswer = incomingCallbackQuery.getData();
+
+        LOG.debug("Raw answer is: {}", rawAnswer);
+
         exchange.getMessage()
-                .setHeader(RoutesConstants.Headers.ANSWER_MESSAE, TelegramChatbotAnswerMessageBuilder
+                .setHeader(RoutesConstants.Headers.ANSWER_MESSAGE, TelegramChatbotAnswerMessageBuilder
                         .copy(RoutesUtils.getAnswerMessage(exchange))
-                        .rawAnswer(incomingCallbackQuery.getData())
+                        .rawAnswer(rawAnswer)
                         .build());
     }
 }

@@ -106,7 +106,7 @@ public abstract class AbstractNotificationService implements NotificationService
     }
 
     private void removePreviousKeyboard(final TelegramChatbotNotificationMessage notificationMessage) {
-        if (notificationMessage.hasKeyboard()) {
+        if (notificationMessage.isClearPreviousKeyboard()) {
             final LinkedList<Long> messageIds = messageWithKeyboard.getIfPresent(notificationMessage.getChatId());
 
             if (messageIds != null) {

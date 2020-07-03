@@ -9,6 +9,7 @@ import java.util.List;
 @JsonDeserialize(builder = TelegramChatbotNotificationMessageBuilder.class)
 public class TelegramChatbotNotificationMessage extends TelegramChatbotMessage {
     private String text;
+    private boolean clearPreviousKeyboard;
     private List<KeyboardOption> keyboard;
 
     TelegramChatbotNotificationMessage(final LocalDateTime generated, final String chatId, final Long messageId, final String text) {
@@ -22,6 +23,14 @@ public class TelegramChatbotNotificationMessage extends TelegramChatbotMessage {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public boolean isClearPreviousKeyboard() {
+        return clearPreviousKeyboard;
+    }
+
+    public void setClearPreviousKeyboard(boolean clearPreviousKeyboard) {
+        this.clearPreviousKeyboard = clearPreviousKeyboard;
     }
 
     public boolean hasKeyboard() {

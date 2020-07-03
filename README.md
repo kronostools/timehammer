@@ -1,6 +1,10 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Revisar respuesta de stackoverflow
+        - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
+        - ya no recuerdo donde se daba el caso
+            - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
     - Revisar todos los usos de 'await().indefinitely()'
         - No entiendo por qué en el caso de la actualización de estado no termina nunca
             - En la actualización de las vacaciones sí funciona (comparar por ver diferencias)
