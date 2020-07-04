@@ -28,10 +28,15 @@ public class StateMachineService {
                     statusAction = WorkerStatusAction.CLOCKIN_WORK;
                 }
                 break;
-            case WORK:
+            case WORK_BEFORE_LUNCH:
                 if (currentPreferences.isTimeToStartLunch(now)) {
                     statusAction = WorkerStatusAction.CLOCKIN_LUNCH;
                 } else if (currentPreferences.isTimeToEndWorking(now)) {
+                    statusAction = WorkerStatusAction.CLOCKOUT_WORK;
+                }
+                break;
+            case WORK_AFTER_LUNCH:
+                if (currentPreferences.isTimeToEndWorking(now)) {
                     statusAction = WorkerStatusAction.CLOCKOUT_WORK;
                 }
                 break;

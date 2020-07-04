@@ -1,5 +1,6 @@
 package com.kronostools.timehammer.comunytek.client;
 
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.constants.*;
 import com.kronostools.timehammer.comunytek.model.*;
@@ -156,7 +157,10 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
             }
 
             if (status != null) {
+                LOG.debug("Status of user '{}' will be updated to '{}' ({}) at '{}' with comment '{}'", username, status.getCode(), status.getText(), CommonDateTimeUtils.formatDateTimeToLog(timestamp), action.getComment());
+
                 final ComunytekStatusResponse registryEntry = new ComunytekStatusResponseBuilder()
+                        .result(ComunytekStatusResult.OK)
                         .date(timestamp.toLocalDate())
                         .time(timestamp.toLocalTime())
                         .status(status)
@@ -174,6 +178,8 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
                     } else {
                         userDayRegistry = new ArrayList<>();
                         userDayRegistry.add(registryEntry);
+
+                        userRegistry.put(timestamp.toLocalDate(), userDayRegistry);
                     }
                 } else {
                     final List<ComunytekStatusResponse> userDayRegistry = new ArrayList<>();
@@ -184,6 +190,8 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
 
                     mockedRegistry.put(username, userRegistry);
                 }
+            } else {
+                LOG.debug("There is no status corresponding to action '{}' for user '{}'", action.getCode(), username);
             }
 
             result = new ComunytekUpdateStatusResponseBuilder()

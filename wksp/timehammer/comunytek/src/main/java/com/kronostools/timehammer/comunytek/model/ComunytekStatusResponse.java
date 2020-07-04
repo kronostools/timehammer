@@ -68,8 +68,10 @@ public class ComunytekStatusResponse extends ComunytekResponse<ComunytekStatusRe
                 statusContext = WorkerStatusContext.BEFORE_WORK;
                 break;
             case STARTED:
+                statusContext = WorkerStatusContext.WORK_BEFORE_LUNCH;
+                break;
             case RESUMED:
-                statusContext = WorkerStatusContext.WORK;
+                statusContext = WorkerStatusContext.WORK_AFTER_LUNCH;
                 break;
             case PAUSED:
                 if (isLunch()) {

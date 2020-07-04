@@ -1,6 +1,7 @@
 package com.kronostools.timehammer.telegramchatbot.interceptors;
 
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotAnswerMessageBuilder;
+import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.telegramchatbot.constants.RoutesConstants.Headers;
 import org.apache.camel.Exchange;
@@ -18,6 +19,12 @@ import java.util.Optional;
 public class TelegramAnswerChatIdInterceptor implements Processor {
     private static final Logger LOG = LoggerFactory.getLogger(TelegramAnswerChatIdInterceptor.class);
 
+    private final TimeMachineService timeMachineService;
+
+    public TelegramAnswerChatIdInterceptor(final TimeMachineService timeMachineService) {
+        this.timeMachineService = timeMachineService;
+    }
+
     @Override
     public void process(final Exchange exchange) {
         LOG.debug("Getting chatId and messageId from answer message ...");
@@ -25,7 +32,7 @@ public class TelegramAnswerChatIdInterceptor implements Processor {
         final IncomingMessage incomingMessage = exchange.getIn().getBody(IncomingCallbackQuery.class).getMessage();
 
         Optional.ofNullable(incomingMessage).ifPresent(im -> {
-            final LocalDateTime generated = CommonDateTimeUtils.getDateTime(im.getDate());
+            final LocalDateTime generated = timeMachineService.isMocked() ? timeMachineService.getNow() : CommonDateTimeUtils.getDateTime(im.getDate());
             final String chatId = incomingMessage.getChat().getId();
             final Long messageId = incomingMessage.getMessageId();
 

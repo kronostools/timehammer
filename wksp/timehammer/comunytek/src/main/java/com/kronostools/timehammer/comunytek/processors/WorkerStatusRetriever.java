@@ -6,6 +6,7 @@ import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWo
 import com.kronostools.timehammer.common.messages.schedules.CheckWorkersStatusWorkerBuilder;
 import com.kronostools.timehammer.common.messages.schedules.GetWorkerStatusPhase;
 import com.kronostools.timehammer.common.messages.schedules.GetWorkerStatusPhaseBuilder;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.comunytek.client.ComunytekClient;
 import com.kronostools.timehammer.comunytek.constants.ComunytekStatusResult;
 import com.kronostools.timehammer.comunytek.model.ComunytekStatusResponseBuilder;
@@ -46,7 +47,7 @@ public class WorkerStatusRetriever {
                     final GetWorkerStatusPhase getWorkerStatusPhase;
 
                     if (statusResponse.isSuccessful()) {
-                        LOG.info("Status of worker '{}' is '{}'", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), statusResponse.getStatus().getText());
+                        LOG.info("Status of worker '{}' at '{}' is '{}'", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), CommonDateTimeUtils.formatDateTimeToLog(checkWorkersStatusWorker.getGenerated()), statusResponse.getStatus().getText());
 
                         getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
                                 .result(WorkerStatusResult.OK)

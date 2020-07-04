@@ -1,6 +1,9 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
+    - Al decir que no se come ya no pregunta por la salida del trabajo
+    - Al terminar el contenedor statemachine persistir en fichero las esperas que sigan en curso. Al iniciar el contenedor que se carguen las esperas.
+        - Hacerlo de la misma manera que se hace con las contraseñas en Comunytek
     - Revisar respuesta de stackoverflow
         - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
         - ya no recuerdo donde se daba el caso

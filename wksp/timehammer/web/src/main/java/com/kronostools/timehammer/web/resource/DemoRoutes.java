@@ -16,13 +16,18 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @RouteBase(path = "/demo")
 public class DemoRoutes {
+    private static final Logger LOG = LoggerFactory.getLogger(DemoRoutes.class);
+
     private final TimeMachineService timeMachineService;
     private final Emitter<TimeMachineEventMessage> timeMachineChannel;
     private final Map<String, Emitter<ScheduleTriggerMessage>> scheduleChannels;
@@ -80,8 +85,12 @@ public class DemoRoutes {
     void triggerSchedule(RoutingContext rc) {
         final String scheduleName = rc.pathParam("scheduleName");
 
+        final LocalDateTime timestamp = timeMachineService.getNow();
+
+        LOG.debug("Triggering schedule '{}' at '{}'", scheduleName, CommonDateTimeUtils.formatDateTimeToLog(timestamp));
+
         final ScheduleTriggerMessage scheduleTriggerMessage = new ScheduleTriggerMessageBuilder()
-                .generated(timeMachineService.getNow())
+                .generated(timestamp)
                 .name(scheduleName)
                 .executionId(UUID.randomUUID())
                 .build();
