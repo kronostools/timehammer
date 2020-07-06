@@ -2,11 +2,14 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Probar las respuestas con perfil de producción para usar el cliente real de Comunytek
+    - Configurar el liveness y readyness
+        - Para Kafka, activar propiedad quarkus.kafka.health.enabled
+            - Probar
+        - En chatbot añadir ping sobre telegram (endpoint getMe)
+            - Probar
+        - En comunytek añadir ping sobre comunytek (endpoint about)
+            - Probar
     - Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
-    - Configurar el liveness y readyness (ver cómo funciona con kafka)
-        - Revisar el workshop de quarkus que creo que hay un ejemplo
-        - En chatbot añadir ping sobre telegram
-        - En comunytek añadir ping sobre comunytek
     - Chatbot
         - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
     - Web: Demo

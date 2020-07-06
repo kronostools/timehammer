@@ -22,6 +22,11 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>io.smallrye.reactive</groupId>
+      <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
+    </dependency>
+
     <!-- BEGIN CAMEL QUARKUS -->
     <dependency>
       <groupId>${camel.quarkus.group-id}</groupId>

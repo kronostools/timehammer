@@ -18,6 +18,6 @@ services:
     image: timehammer-native:1.0.0
     container_name: timehammernative
     ports:
-      - 9000:8080
+      - 8090:8080
     networks:
       - timehammer

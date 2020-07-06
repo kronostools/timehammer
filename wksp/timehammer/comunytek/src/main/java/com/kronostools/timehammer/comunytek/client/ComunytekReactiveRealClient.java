@@ -59,6 +59,16 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
     }
 
     @Override
+    public Uni<Boolean> about() {
+        return client.get(getUrl("about"))
+                .putHeader("Accept", MediaType.TEXT_HTML)
+                .send()
+                .map(response -> response.statusCode() == 200)
+                .onFailure()
+                    .recoverWithItem(Boolean.FALSE);
+    }
+
+    @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
         LOG.debug("Calling comunytek to login ...");
 

@@ -49,4 +49,4 @@ timehammer:
 "%localdemo":
   timehammer:
     domain:
-      base-url: http://192.168.86.168:9000
+      base-url: http://192.168.86.168:8090

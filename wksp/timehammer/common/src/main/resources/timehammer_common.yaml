@@ -7,6 +7,10 @@ quarkus:
       com.kronostools.timehammer:
         level: INFO
 
+  kafka:
+    health:
+      enabled: true
+
 kafka:
   bootstrap:
     servers: kafka:9092

@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public interface ComunytekClient {
+    Uni<Boolean> about();
+
     Uni<ComunytekLoginResponse> login(final String username, final String password);
 
     Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate date);

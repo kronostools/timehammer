@@ -49,6 +49,11 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     }
 
     @Override
+    public Uni<Boolean> about() {
+        return Uni.createFrom().item(Boolean.TRUE);
+    }
+
+    @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
         if ("demo".equals(password)) {
             credentialsCache.put(username, new CachedWorkerCredentialsBuilder()

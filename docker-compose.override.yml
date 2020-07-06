@@ -16,58 +16,67 @@ services:
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6010:5005
+      - 8010:8080
   catalog:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6020:5005
+      - 8020:8080
   core:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6030:5005
+      - 8030:8080
   integration:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6040:5005
+      - 8040:8080
   comunytek:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6050:5005
+      - 8050:8080
   commandprocessor:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6060:5005
+      - 8060:8080
   telegramchatbot:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6070:5005
+      - 8070:8080
   telegramchatbotnotifier:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6080:5005
+      - 8080:8080
   web:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
-      - 9000:8080
       - 6090:5005
+      - 8090:8080
   statemachine:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
     command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
     ports:
       - 6100:5005
+      - 8100:8080
