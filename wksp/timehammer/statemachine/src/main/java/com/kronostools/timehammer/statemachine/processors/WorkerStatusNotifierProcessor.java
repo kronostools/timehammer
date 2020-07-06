@@ -12,7 +12,6 @@ import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbo
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotNotificationMessageBuilder;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOption;
 import com.kronostools.timehammer.common.messages.telegramchatbot.model.KeyboardOptionBuilder;
-import com.kronostools.timehammer.statemachine.constants.QuestionType;
 import com.kronostools.timehammer.statemachine.service.WorkerWaitService;
 import com.kronostools.timehammer.statemachine.utils.AnswerUtils;
 import io.smallrye.mutiny.Multi;
@@ -26,7 +25,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,20 +57,20 @@ public class WorkerStatusNotifierProcessor {
             LOG.warn("Status action is '{}' for worker '{}', nothing to notify", WorkerStatusAction.NOOP, worker.getWorkerCurrentPreferences().getWorkerInternalId());
         } else {
             if (worker.getWorkerStatusActionPhase().getWorkerStatusAction() != WorkerStatusAction.NOOP) {
-                final Optional<QuestionType> questionType = determineQuestion(worker.getWorkerStatusActionPhase().getWorkerStatusAction());
+                final WorkerStatusAction workerStatusAction = worker.getWorkerStatusActionPhase().getWorkerStatusAction();
 
-                if (questionType.isPresent()) {
-                    if (workerWaitService.workerHasWaitForQuestionAt(worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType.get(), worker.getGenerated())) {
-                        LOG.info("Worker '{}' should be asked '{}', but there is a current wait", worker.getWorkerCurrentPreferences().getWorkerInternalId(), questionType.get().name());
+                if (workerStatusAction.hasQuestion()) {
+                    if (workerWaitService.workerHasWaitForQuestionAt(worker.getWorkerCurrentPreferences().getWorkerInternalId(), workerStatusAction, worker.getGenerated())) {
+                        LOG.info("Worker '{}' should be asked by '{}', but there is a current wait", worker.getWorkerCurrentPreferences().getWorkerInternalId(), workerStatusAction.name());
                     } else {
-                        LOG.info("Status context is '{}' and status action is '{}', notifying question '{}' to worker '{}' ...",
+                        LOG.info("Status context is '{}' and status action is '{}', notifying '{}' question to worker '{}' ...",
                                 worker.getWorkerStatusPhase().getStatusContext().name(),
                                 worker.getWorkerStatusActionPhase().getWorkerStatusAction().name(),
-                                questionType.get().name(),
+                                workerStatusAction.name(),
                                 worker.getWorkerCurrentPreferences().getWorkerInternalId());
 
-                        notificationText = questionType.get().getText();
-                        notificationKeyboard = getKeyboardOptions(questionType.get(), worker.getWorkerCurrentPreferences().getCompany());
+                        notificationText = workerStatusAction.getText();
+                        notificationKeyboard = getKeyboardOptions(workerStatusAction, worker.getWorkerCurrentPreferences().getCompany());
                     }
                 } else {
                     LOG.warn("No question could be determined for action '{}'", worker.getWorkerStatusActionPhase().getWorkerStatusAction().name());
@@ -95,30 +93,6 @@ public class WorkerStatusNotifierProcessor {
         return Multi.createFrom().iterable(notifications).on().completion(message::ack);
     }
 
-    private Optional<QuestionType> determineQuestion(final WorkerStatusAction action) {
-        final QuestionType questionType;
-
-        switch (action) {
-            case CLOCKIN_WORK:
-                questionType = QuestionType.QUESTION_WORK_START;
-                break;
-            case CLOCKOUT_WORK:
-                questionType = QuestionType.QUESTION_WORK_END;
-                break;
-            case CLOCKIN_LUNCH:
-                questionType = QuestionType.QUESTION_LUNCH_START;
-                break;
-            case CLOCKOUT_LUNCH:
-                questionType = QuestionType.QUESTION_LUNCH_END;
-                break;
-            default:
-                questionType = null;
-                break;
-        }
-
-        return Optional.ofNullable(questionType);
-    }
-
     private List<Message<TelegramChatbotNotificationMessage>> getNotifications(final Set<String> chatIds, final LocalDateTime generated, final String text, final List<KeyboardOption> keyboardOptions) {
         return chatIds.stream()
                 .map(chatId -> Message.of(new TelegramChatbotNotificationMessageBuilder()
@@ -130,8 +104,8 @@ public class WorkerStatusNotifierProcessor {
                 .collect(Collectors.toList());
     }
 
-    private List<KeyboardOption> getKeyboardOptions(final QuestionType questionType, final Company company) {
-        return AnswerOption.getAnswerOptions(questionType.getContext(), questionType.getContextAction()).stream()
+    private List<KeyboardOption> getKeyboardOptions(final WorkerStatusAction workerStatusAction, final Company company) {
+        return AnswerOption.getAnswerOptions(workerStatusAction.getContext(), workerStatusAction.getContextAction()).stream()
                 .map(ao -> new KeyboardOptionBuilder()
                         .code(AnswerUtils.getAnswerCode(ao, company))
                         .text(ao.getButtonText())

@@ -151,6 +151,38 @@ public enum AnswerOption {
         return waitLimitTimestamp;
     }
 
+    public boolean isAllDayWait() {
+        final boolean isAllDayWait;
+
+        switch(this) {
+            case SW_N:
+            case SL_N:
+                isAllDayWait = true;
+                break;
+            case SW_W5M:
+            case EW_W5M:
+            case SL_W5M:
+            case EL_W5M:
+            case SW_W10M:
+            case EW_W10M:
+            case SL_W10M:
+            case EL_W10M:
+            case SW_W15M:
+            case EW_W15M:
+            case SL_W15M:
+            case EL_W15M:
+            case SW_W20M:
+            case EW_W20M:
+            case SL_W20M:
+            case EL_W20M:
+            default:
+                isAllDayWait = false;
+                break;
+        }
+
+        return isAllDayWait;
+    }
+
     public String getCode() {
         return code;
     }

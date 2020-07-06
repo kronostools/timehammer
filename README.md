@@ -2,8 +2,25 @@
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
     - Al decir que no se come ya no pregunta por la salida del trabajo
+        - probar
     - Al terminar el contenedor statemachine persistir en fichero las esperas que sigan en curso. Al iniciar el contenedor que se carguen las esperas.
         - Hacerlo de la misma manera que se hace con las contraseñas en Comunytek
+        - probar
+    - Probar las respuestas con perfil de producción para usar el cliente real de Comunytek
+    - Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
+    - Probar a ver si se puede cambiar la configuración haciendo un nuevo registro
+    - Probar si se guardan mensajes en la tabla trash_message
+    - Configurar el liveness y readyness (ver cómo funciona con kafka)
+        - Revisar el workshop de quarkus que creo que hay un ejemplo
+        - En chatbot añadir ping sobre telegram
+        - En comunytek añadir ping sobre comunytek
+    - Chatbot
+        - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
+    - Web: Demo
+        - Quitar listado de usuarios y detalle de usuarios
+        - Añadir (de forma estática) la lista de días de vacaciones el modo mocked
+        - Añadir (de forma estática) la lista de días festivos de Madrid
+    - Compilación nativa de imágenes Docker
     - Revisar respuesta de stackoverflow
         - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
         - ya no recuerdo donde se daba el caso
@@ -25,16 +42,10 @@
         - Demo
             - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
             - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
-            - Crear componente para establecer la hora
+            - Crear componente JQuery para establecer la hora
     - Preferencias
         - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
         - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
-    - Configurar el liveness y readyness (ver cómo funciona con kafka)
-        - Revisar el workshop de quarkus que creo que hay un ejemplo
-        - En chatbot añadir ping sobre telegram
-        - En comunytek añadir ping sobre comunytek
-    - Chatbot
-        - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
     - Monitorización de componentes con Graphana y Prometheus
     - Schedule
         - Añadir schedule para limpiar los trash_message
@@ -47,7 +58,7 @@
 - *************** DEMO ***************
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
-- Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-M6)
+- Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-CR2)
 - Icono TimeHammer
 - Icono KronosTools
 - Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
@@ -56,11 +67,6 @@
     - la excepcion tendrá un periodo de aplicación
     - en las preferencias añadir una lista de timetable exceptions
     - al recuperar el trabajador con las preferencias se recuperarán únicamente las que apliquen a la fecha actual
-- Mejoras sobre validación de registro
-    - en el front no se muestrar errores sobre el horario
-    - tener en cuenta las validaciones sobre los periodos de excepción
-        - que no se solapen
-        - que las fechas sean coherentes
 - Página para actualizar el perfil de un usuario
     - Similar al login, se recibe un chatId y en base al chatId se recupera el registrationId y se devuelve una URL con el registrationId
     - Se crea una página html donde se carga el perfil actual del usuario y se procesa el envío

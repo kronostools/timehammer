@@ -1,13 +1,14 @@
 package com.kronostools.timehammer.statemachine.model;
 
+import com.kronostools.timehammer.common.constants.WorkerStatusAction;
 import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.messages.constants.StatusContext;
 import com.kronostools.timehammer.common.messages.constants.StatusContextAction;
-import com.kronostools.timehammer.statemachine.constants.QuestionType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class WaitId {
+public class WaitId implements Serializable {
     private final String workerInternalId;
     private final StatusContext context;
     private final StatusContextAction contextAction;
@@ -18,8 +19,8 @@ public class WaitId {
         this.contextAction = contextAction;
     }
 
-    public WaitId(final String workerInternalId, final QuestionType questionType) {
-        this(workerInternalId, questionType.getContext(), questionType.getContextAction());
+    public WaitId(final String workerInternalId, final WorkerStatusAction workerStatusAction) {
+        this(workerInternalId, workerStatusAction.getContext(), workerStatusAction.getContextAction());
     }
 
     public WaitId(final String workerInternalId, final AnswerOption answerOption) {
