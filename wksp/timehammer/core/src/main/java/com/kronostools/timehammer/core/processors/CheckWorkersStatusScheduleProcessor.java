@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CheckWorkersStatusScheduleProcessor {
@@ -38,7 +38,6 @@ public class CheckWorkersStatusScheduleProcessor {
 
         final List<CheckWorkersStatusWorker> workers = new ArrayList<>();
 
-        /*
         workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
             .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
                 if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
@@ -62,8 +61,8 @@ public class CheckWorkersStatusScheduleProcessor {
             .await()
                 .indefinitely();
                 //.atMost(Duration.ofMillis(1500L));
-        */
 
+        /*
         return workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
                 .onItem().produceMulti(workerCurrentPreferencesMultipleResult -> {
                     if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
@@ -91,8 +90,8 @@ public class CheckWorkersStatusScheduleProcessor {
                     message.ack();
                     LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
                 });
+        */
 
-        /*
         LOG.debug("Status of {} workers will be updated", workers.size());
 
         return Multi.createFrom().iterable(workers.stream().map(Message::of).collect(Collectors.toList()))
@@ -101,6 +100,5 @@ public class CheckWorkersStatusScheduleProcessor {
                     message.ack();
                     LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
                 });
-        */
     }
 }

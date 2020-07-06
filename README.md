@@ -1,15 +1,8 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Al decir que no se come ya no pregunta por la salida del trabajo
-        - probar
-    - Al terminar el contenedor statemachine persistir en fichero las esperas que sigan en curso. Al iniciar el contenedor que se carguen las esperas.
-        - Hacerlo de la misma manera que se hace con las contraseñas en Comunytek
-        - probar
     - Probar las respuestas con perfil de producción para usar el cliente real de Comunytek
     - Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
-    - Probar a ver si se puede cambiar la configuración haciendo un nuevo registro
-    - Probar si se guardan mensajes en la tabla trash_message
     - Configurar el liveness y readyness (ver cómo funciona con kafka)
         - Revisar el workshop de quarkus que creo que hay un ejemplo
         - En chatbot añadir ping sobre telegram
@@ -25,9 +18,6 @@
         - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
         - ya no recuerdo donde se daba el caso
             - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
-    - Revisar todos los usos de 'await().indefinitely()'
-        - No entiendo por qué en el caso de la actualización de estado no termina nunca
-            - En la actualización de las vacaciones sí funciona (comparar por ver diferencias)
     - Comprobación de estado
         - Verificar que funciona con varios usuarios
             - Después del cambio del ProduceMulti
