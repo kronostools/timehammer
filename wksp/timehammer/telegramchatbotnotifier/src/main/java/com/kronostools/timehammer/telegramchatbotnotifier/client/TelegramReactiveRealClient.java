@@ -7,8 +7,10 @@ import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
 import io.vertx.mutiny.ext.web.client.WebClient;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.MediaType;
 
+@ApplicationScoped
 public class TelegramReactiveRealClient implements TelegramClient {
 
     private final WebClient client;

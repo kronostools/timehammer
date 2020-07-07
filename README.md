@@ -1,14 +1,6 @@
 # TODO
 
 - Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Probar las respuestas con perfil de producción para usar el cliente real de Comunytek
-    - Configurar el liveness y readyness
-        - Para Kafka, activar propiedad quarkus.kafka.health.enabled
-            - Probar
-        - En chatbot añadir ping sobre telegram (endpoint getMe)
-            - Probar
-        - En comunytek añadir ping sobre comunytek (endpoint about)
-            - Probar
     - Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
     - Chatbot
         - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
@@ -17,6 +9,9 @@
         - Añadir (de forma estática) la lista de días de vacaciones el modo mocked
         - Añadir (de forma estática) la lista de días festivos de Madrid
     - Compilación nativa de imágenes Docker
+    - Prueba día completo
+        - scheduler en ejecución
+        - comunytek real
     - Revisar respuesta de stackoverflow
         - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
         - ya no recuerdo donde se daba el caso
