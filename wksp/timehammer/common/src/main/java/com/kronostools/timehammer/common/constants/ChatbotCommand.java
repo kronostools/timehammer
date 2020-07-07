@@ -6,10 +6,11 @@ import java.util.stream.Stream;
 public enum ChatbotCommand {
     START("/start", "", Boolean.FALSE, Boolean.FALSE),
     HELP("/help", "Obtener ayuda", Boolean.TRUE, Boolean.FALSE),
-    SETTINGS("/settings", "Cambiar la configuración", Boolean.TRUE, Boolean.TRUE),
     REGISTER("/register", "Registrarse", Boolean.TRUE, Boolean.FALSE),
     UNREGISTER("/unregister", "Cancelar el registro", Boolean.TRUE, Boolean.TRUE),
-    UPDATE_PASSWORD("/updatePassword", "Actualizar la contraseña", Boolean.TRUE, Boolean.TRUE);
+    UPDATE_PASSWORD("/updatePassword", "Actualizar la contraseña", Boolean.TRUE, Boolean.TRUE),
+    UPDATE_SETTINGS("/updateSettings", "Cambiar la configuración", Boolean.TRUE, Boolean.TRUE),
+    TODAY_SETTINGS("/todaySettings", "Ver la configuración para hoy", Boolean.TRUE, Boolean.TRUE);
 
 
     private final String commandText;

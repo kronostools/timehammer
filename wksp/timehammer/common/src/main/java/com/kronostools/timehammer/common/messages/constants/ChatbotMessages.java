@@ -56,6 +56,7 @@ public class ChatbotMessages {
     private static final String COMMAND_HELP = "Para conocer cómo funciona este chatbot accede al [FAQ]({}).";
     private static final String COMMAND_UPDATE_SETTINGS_INIT = "Para actualizar tus preferencias accede [aquí]({})";
     private static final String COMMAND_UPDATE_PASSWORD_INIT = "Para establecer la contraseña accede a [Establecer contraseña]({}).";
+    public static final String COMMAND_TODAY_SETTINGS = "{}\n{}\n{}\n{}\n{}";
     public static final String COMMAND_UNIMPLEMENTED = "Este chatbot todavía se encuentra en fase de desarrollo. Esta funcionalidad todavía no está disponible.";
 
     public static final String SUCCESSFUL_REGISTRATION = "¡Enhorabuena! El registro se ha realizado satisfactoriamente. Si en algún momento quieres cancelar el registro, envía /unregister. Para conocer cómo funciona esto, envía /help.";
@@ -63,6 +64,7 @@ public class ChatbotMessages {
     public static final String SUCCESSFUL_PASSWORD_UPDATE = "El cambio de contraseña se ha registrado satisfactoriamente. Lamentamos las molestias ocasionadas. Para más información sobre cómo se almacenan las contraseñas envía /help.";
 
     public static final String MISSING_PASSWORD = "Necesitamos que vuelvas a establecer tu contraseña. Envía /updatePassword para establecerla. Lamentamos las molestias ocasionadas. Para más información sobre cómo se almacenan las contraseñas envía /help";
+
 
     public static String COMMAND_UNREGISTER_INIT(final String registrationUrl) {
         return CommonUtils.stringFormat(COMMAND_UNREGISTER_INIT, registrationUrl);
@@ -86,5 +88,9 @@ public class ChatbotMessages {
 
     public static String COMMAND_UPDATE_PASSWORD_INIT(final String updatePasswordUrl) {
         return CommonUtils.stringFormat(COMMAND_UPDATE_PASSWORD_INIT, updatePasswordUrl);
+    }
+
+    public static String COMMAND_TODAY_SETTINGS(final String day, final String workTime, final String lunchTime, final String workerHoliday, final String cityHoliday) {
+        return CommonUtils.stringFormat(COMMAND_TODAY_SETTINGS, day, workTime, lunchTime, workerHoliday, cityHoliday);
     }
 }

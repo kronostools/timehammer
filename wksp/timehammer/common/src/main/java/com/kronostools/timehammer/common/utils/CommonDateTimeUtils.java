@@ -77,6 +77,14 @@ public final class CommonDateTimeUtils {
                 .orElse(null);
     }
 
+    public static LocalDateTime getDateTimeAtZone(final LocalDate date, final LocalTime time, final SupportedTimezone zone) {
+        return Optional.ofNullable(LocalDateTime.of(date, time))
+                .map(dt -> dt.atOffset(ZoneOffset.UTC)
+                        .withOffsetSameInstant(zone.getOffset(dt))
+                        .toLocalDateTime())
+                .orElse(null);
+    }
+
     public static LocalDateTime getDateTimeWithZoneAtStartOfDay(final LocalDateTime dateTime, final SupportedTimezone zone) {
         return Optional.ofNullable(dateTime)
                 .map(dt -> dt.toLocalDate().atStartOfDay()
@@ -114,8 +122,46 @@ public final class CommonDateTimeUtils {
         return formatDate(date, FORMAT_YYYYMMDD);
     }
 
+    public static String formatDateToChatbot(final LocalDate date) {
+        return formatDate(date, FORMAT_DDMMYYYY_DSEP_FWS);
+    }
+
     public static String formatTimeSimple(final LocalTime time) {
         return formatTime(time, FORMAT_HHMM_TSEP);
+    }
+
+    public static String formatTimeToChatbot(final LocalTime time) {
+        return formatTime(time, FORMAT_HHMM_TSEP);
+    }
+
+    public static String formatDayOfWeekToChatbot(final DayOfWeek dow) {
+        String day = null;
+
+        switch (dow) {
+            case MONDAY:
+                day = "Lunes";
+                break;
+            case TUESDAY:
+                day = "Martes";
+                break;
+            case WEDNESDAY:
+                day = "Miércoles";
+                break;
+            case THURSDAY:
+                day = "Jueves";
+                break;
+            case FRIDAY:
+                day = "Viernes";
+                break;
+            case SATURDAY:
+                day = "Sábado";
+                break;
+            case SUNDAY:
+                day = "Domingo";
+                break;
+        }
+
+        return day;
     }
 
     public static boolean isTimeFromFormValid(final String time) {

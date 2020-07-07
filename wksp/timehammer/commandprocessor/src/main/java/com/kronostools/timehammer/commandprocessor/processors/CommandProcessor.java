@@ -6,8 +6,11 @@ import com.kronostools.timehammer.commandprocessor.service.RegistrationRequestSe
 import com.kronostools.timehammer.commandprocessor.service.UpdatePasswordRequestService;
 import com.kronostools.timehammer.common.constants.ChatbotCommand;
 import com.kronostools.timehammer.common.constants.CommonConstants.Channels;
+import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.messages.constants.ChatbotMessages;
 import com.kronostools.timehammer.common.messages.telegramchatbot.*;
+import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
+import com.kronostools.timehammer.common.utils.CommonUtils;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Message;
@@ -16,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.time.LocalTime;
 
 @ApplicationScoped
 public class CommandProcessor {
@@ -66,12 +70,42 @@ public class CommandProcessor {
                                     .copy(inputMessage)
                                     .text(ChatbotMessages.COMMAND_UNREGISTER_INIT(url))
                                     .build();
-                        } else if (chatbotCommand == ChatbotCommand.SETTINGS) {
+                        } else if (chatbotCommand == ChatbotCommand.UPDATE_SETTINGS) {
                             final String url = timehammerDomainConfig.getSettingsUrl(worker.getWorkerInternalId());
 
                             notificationMessage = TelegramChatbotNotificationMessageBuilder
                                     .copy(inputMessage)
                                     .text(ChatbotMessages.COMMAND_UPDATE_SETTINGS_INIT(url))
+                                    .build();
+                        } else if (chatbotCommand == ChatbotCommand.TODAY_SETTINGS) {
+                            final String day = CommonUtils.stringFormat("Dia: {} ({})", CommonDateTimeUtils.formatDateToChatbot(worker.getDate()), CommonDateTimeUtils.formatDayOfWeekToChatbot(worker.getDate().getDayOfWeek()));
+
+                            final String workTime;
+                            if (worker.workToday()) {
+                                final LocalTime workStart = CommonDateTimeUtils.getDateTimeAtZone(worker.getDate(), worker.getWorkStart(), SupportedTimezone.EUROPE_MADRID).toLocalTime();
+                                final LocalTime workEnd = CommonDateTimeUtils.getDateTimeAtZone(worker.getDate(), worker.getWorkEnd(), SupportedTimezone.EUROPE_MADRID).toLocalTime();
+
+                                workTime = CommonUtils.stringFormat("Trabajo: {} - {}", CommonDateTimeUtils.formatTimeToChatbot(workStart), CommonDateTimeUtils.formatTimeToChatbot(workEnd));
+                            } else {
+                                workTime = "Trabajo: hoy no";
+                            }
+
+                            final String lunchTime;
+                            if (worker.lunchToday()) {
+                                final LocalTime lunchStart = CommonDateTimeUtils.getDateTimeAtZone(worker.getDate(), worker.getLunchStart(), SupportedTimezone.EUROPE_MADRID).toLocalTime();
+                                final LocalTime lunchEnd = CommonDateTimeUtils.getDateTimeAtZone(worker.getDate(), worker.getLunchEnd(), SupportedTimezone.EUROPE_MADRID).toLocalTime();
+
+                                lunchTime = CommonUtils.stringFormat("Comida: {} - {}", CommonDateTimeUtils.formatTimeToChatbot(lunchStart), CommonDateTimeUtils.formatTimeToChatbot(lunchEnd));
+                            } else {
+                                lunchTime = "Comida: hoy no";
+                            }
+
+                            final String workerHoliday = CommonUtils.stringFormat("Vacación hoy: {}", worker.isWorkerHoliday() ? "Sí" : "No");
+                            final String cityHoliday = CommonUtils.stringFormat("Festivo hoy: {}", worker.isCityHoliday() ? "Sí" : "No");
+
+                            notificationMessage = TelegramChatbotNotificationMessageBuilder
+                                    .copy(inputMessage)
+                                    .text(ChatbotMessages.COMMAND_TODAY_SETTINGS(day, workTime, lunchTime, workerHoliday, cityHoliday))
                                     .build();
                         } else if (chatbotCommand == ChatbotCommand.UPDATE_PASSWORD) {
                             final String requestId = updatePasswordRequestService.newUpdatePasswordRequest(worker.getWorkerInternalId(), chatId, worker.getCompany(), worker.getWorkerExternalId());

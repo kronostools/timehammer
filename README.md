@@ -1,6 +1,5 @@
 # TODO
 
-- Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
 - Chatbot
     - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
 - Web: Demo
