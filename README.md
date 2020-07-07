@@ -1,70 +1,64 @@
 # TODO
 
-- Refactorización utilizando una arquitectura orientada a eventos (EDA - Event-Driven Architecture)
-    - Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
-    - Chatbot
-        - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
-    - Web: Demo
-        - Quitar listado de usuarios y detalle de usuarios
-        - Añadir (de forma estática) la lista de días de vacaciones el modo mocked
-        - Añadir (de forma estática) la lista de días festivos de Madrid
-    - Compilación nativa de imágenes Docker
-    - Prueba día completo
-        - scheduler en ejecución
-        - comunytek real
-    - Revisar respuesta de stackoverflow
-        - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
-        - ya no recuerdo donde se daba el caso
-            - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
-    - Comprobación de estado
-        - Verificar que funciona con varios usuarios
-            - Después del cambio del ProduceMulti
-        - Verificar que funciona cuando la notificacion es multiple
-            - Registrar el mismo usuario en varios móviles
-    - Core
-        - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
-        - Crear un servicio con una cache para la recuperación de las preferencias (invalidar la cache al actualizar las preferencias)
-    - Web
-        - Registro
-            - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
-        - Demo
-            - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
-            - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
-            - Crear componente JQuery para establecer la hora
-    - Preferencias
-        - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
-        - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
-    - Monitorización de componentes con Graphana y Prometheus
-    - Schedule
-        - Añadir schedule para limpiar los trash_message
+- Añadir comando /currentPreferences para obtener las preferencias guardadas en el momento
+- Chatbot
+    - Añadir Lifecycle sobre el arranque para republicar los commandos del chatbot
+- Web: Demo
+    - Quitar listado de usuarios y detalle de usuarios
+    - Añadir (de forma estática) la lista de días de vacaciones el modo mocked
+    - Añadir (de forma estática) la lista de días festivos de Madrid
+- Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-CR3)
+- Compilación nativa de imágenes Docker
+- Prueba día completo
+    - scheduler en ejecución
+    - comunytek real
+- Comprobación de estado
+    - Verificar que funciona con varios usuarios
+        - Después del cambio del ProduceMulti
+    - Verificar que funciona cuando la notificacion es multiple
+        - Registrar el mismo usuario en varios móviles
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
 - Despliegue en producción
-- Probar en producción que funciona después de incorporar el servicio TimeMachineService
 - Hacer repo privado
 - *************** DEMO ***************
-- Meter test unitarios
-    - Probar las validaciones con tests unitarios
-- Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-CR2)
-- Icono TimeHammer
-- Icono KronosTools
-- Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
-- Añadir la posibilidad de meter excepciones al horario
+
+# Backlog
+
+- Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
+- Monitorización de componentes con Graphana y Prometheus
+- Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
+- Permitir la actualización de las preferencias con un comando /updateSettings
+- Añadir la posibilidad de meter excepciones al horario habitual
     - cambiar widget
     - la excepcion tendrá un periodo de aplicación
-    - en las preferencias añadir una lista de timetable exceptions
-    - al recuperar el trabajador con las preferencias se recuperarán únicamente las que apliquen a la fecha actual
-- Página para actualizar el perfil de un usuario
-    - Similar al login, se recibe un chatId y en base al chatId se recupera el registrationId y se devuelve una URL con el registrationId
-    - Se crea una página html donde se carga el perfil actual del usuario y se procesa el envío
-    - Actualizar el chatbot para que con el comando /settings lleve a la página del perfil del usuario
+    - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
+    - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
 - Crear pagina de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
     - Protegida con el perfil
     - Habrá comando /admin (no público) para acceder a la administración
     - El comando /admin genera un link incluyendo el registrationId
     - Al acceder al Admin con el registrationId se comprueba el perfil del usuario
     - Si el usuario no es admin -> UnauthorizedException
+- Schedule
+    - Añadir schedule para limpiar los trash_message
+- Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
+- Revisar respuesta de stackoverflow
+    - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
+    - ya no recuerdo donde se daba el caso
+        - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
+- Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
+- Web Registro
+    - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
+- Web Demo
+    - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
+    - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
+    - Crear componente JQuery para establecer la hora
+- Meter test unitarios
+    - Probar las validaciones con tests unitarios
+- Icono TimeHammer
+- Icono KronosTools
 - Mejorar flujo de despliegue en producción
     - Estudiar uso de registry
         - Docker Hub?
@@ -89,7 +83,6 @@
 - Añadir método para determinar la acción para un worker en base a sus SsidTrackingEvent (CONNECTED, DISCONNECTED, TICK)
 - I18N para los HTML?
     - Las validaciones ya están en multiidoma (se podrían configurar distintos mensajes creando un fichero de properties para el idioma en cuestion)
-
 ---
 
 # Referencias
@@ -152,6 +145,16 @@ https://thepolyglotdeveloper.com/2017/03/nginx-reverse-proxy-containerized-docke
 ## Docker Compose - extending services
 
 https://docs.docker.com/compose/extends
+
+## Reactive
+
+https://quarkus.io/guides/getting-started-reactive
+https://quarkus.io/guides/reactive-routes
+https://vertx.io/docs/vertx-web/java
+https://quarkus.io/guides/kafka
+https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2/index.html
+https://smallrye.io/smallrye-mutiny
+https://vertx.io/docs/vertx-pg-client/java
 
 ---
 
