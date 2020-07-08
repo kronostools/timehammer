@@ -79,46 +79,75 @@
 
             <div class="row mt-2 justify-content-center">
                 <div class="col-md-10">
-                    <h4 class="mb-3">Trabajador</h4>
-                    <form id="workersForm" class="form-inline" novalidate="novalidate" action="/demo/workers" method="GET">
-                        <select class="custom-select custom-select-sm d-block w-100 col-md-3 offset-md-4 mr-2" id="workerInternalId" name="workerInternalId">
-                        </select>
+                    <h4 class="mb-3">Vacaciones</h4>
+                    <table class="table">
+                        <tr>
+                            <td>01/01/2020</td>
+                            <td>05/01/2020</td>
+                            <td>10/01/2020</td>
+                            <td>01/02/2020</td>
+                            <td>05/02/2020</td>
+                        </tr>
+                        <tr>
+                            <td>01/03/2020</td>
+                            <td>05/03/2020</td>
+                            <td>01/04/2020</td>
+                            <td>05/04/2020</td>
+                            <td>01/05/2020</td>
+                        </tr>
+                        <tr>
+                            <td>05/05/2020</td>
+                            <td>01/06/2020</td>
+                            <td>05/06/2020</td>
+                            <td>01/07/2020</td>
+                            <td>05/07/2020</td>
+                        </tr>
+                        <tr>
+                            <td>01/08/2020</td>
+                            <td>05/08/2020</td>
+                            <td>01/09/2020</td>
+                            <td>05/09/2020</td>
+                            <td>01/10/2020</td>
+                        </tr>
+                        <tr>
+                            <td>05/10/2020</td>
+                            <td>01/11/2020</td>
+                            <td>05/11/2020</td>
+                            <td>01/12/2020</td>
+                            <td>05/12/2020</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-                        <button id="refreshWorkerInfo" type="submit" class="btn btn-sm col-md-1"><i class="fas fa-sync"></i></button>
-                    </form>
-
-                    <form id="workerStatusForm" class="mt-2" action="#">
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <label for="statusDayOfWeek" class="text-muted">Dia</label>
-                                <input type="text" class="form-control form-control-sm text-center" id="statusDayOfWeek" name="statusDayOfWeek" disabled="disabled">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="work" class="text-muted">Trabajo</label>
-                                <input type="text" class="form-control form-control-sm text-center" id="work" name="work" disabled="disabled">
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label for="lunch" class="text-muted">Comida</label>
-                                <input type="text" class="form-control form-control-sm text-center" id="lunch" name="lunch" disabled="disabled">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="statusTimestamp" class="text-muted">Útimo fichaje</label>
-                                <input type="text" class="form-control form-control-sm text-center" id="statusTimestamp" name="statusTimestamp" disabled="disabled">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="status" class="text-muted">Estado</label>
-                                <input type="text" class="form-control form-control-sm text-center" id="status" name="status" disabled="disabled">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="holidays">Vacaciones</label>
-                                <textarea class="form-control form-control.sm" id="holidays" name="holidays" rows="3" disabled="disabled"></textarea>
-                            </div>
-                        </div>
-                    </form>
+            <div class="row mt-2 justify-content-center">
+                <div class="col-md-10">
+                    <h4 class="mb-3">Festivos Madrid</h4>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>01/01/2020</td>
+                                <td>06/01/2020</td>
+                                <td>09/04/2020</td>
+                                <td>10/04/2020</td>
+                                <td>01/05/2020</td>
+                            </tr>
+                            <tr>
+                                <td>02/05/2020</td>
+                                <td>15/05/2020</td>
+                                <td>15/08/2020</td>
+                                <td>12/10/2020</td>
+                                <td>02/11/2020</td>
+                            </tr>
+                            <tr>
+                                <td>09/11/2020</td>
+                                <td>07/12/2020</td>
+                                <td>08/12/2020</td>
+                                <td>25/12/2020</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
