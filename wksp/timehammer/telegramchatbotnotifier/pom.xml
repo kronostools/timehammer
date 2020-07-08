@@ -16,18 +16,19 @@
 
   <properties>
     <camel.quarkus.group-id>org.apache.camel.quarkus</camel.quarkus.group-id>
-    <camel.quarkus.version>1.0.0-M7</camel.quarkus.version>
-    <camel.group-id>org.apache.camel</camel.group-id>
-    <camel.version>3.2.0</camel.version>
+    <camel.quarkus.version>1.0.0-CR3</camel.quarkus.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>${quarkus.platform.group-id}</groupId>
+      <artifactId>quarkus-cache</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
       <artifactId>smallrye-mutiny-vertx-web-client</artifactId>
     </dependency>
 
-    <!-- BEGIN CAMEL QUARKUS -->
     <dependency>
       <groupId>${camel.quarkus.group-id}</groupId>
       <artifactId>camel-quarkus-telegram</artifactId>
@@ -45,10 +46,6 @@
           <groupId>${camel.quarkus.group-id}</groupId>
           <artifactId>camel-quarkus-support-webhook</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-telegram</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
 
@@ -60,30 +57,6 @@
         <exclusion>
           <groupId>${camel.quarkus.group-id}</groupId>
           <artifactId>camel-quarkus-support-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-base</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-core-catalog</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-core-engine</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-microprofile-config</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-main</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-endpointdsl</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -109,10 +82,6 @@
           <groupId>${camel.quarkus.group-id}</groupId>
           <artifactId>camel-quarkus-core</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-webhook</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
 
@@ -131,209 +100,8 @@
           <groupId>${camel.quarkus.group-id}</groupId>
           <artifactId>camel-quarkus-core</artifactId>
         </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-direct</artifactId>
-        </exclusion>
       </exclusions>
     </dependency>
-    <!-- CAMEL QUARKUS -->
-
-    <!-- BEGIN CAMEL -->
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-base</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-api</artifactId>
-      <version>${camel.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-support</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-direct</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-core-catalog</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-microprofile-config</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-caffeine-lrucache</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-main</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-base</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-core-engine</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-headersmap</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-core-engine</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-base</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-telegram</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-webhook</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-webhook</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-support</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-componentdsl</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-core-engine</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>${camel.group-id}</groupId>
-      <artifactId>camel-endpointdsl</artifactId>
-      <version>${camel.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>${camel.group-id}</groupId>
-          <artifactId>camel-core-engine</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <!-- BEGIN CAMEL -->
 
     <dependency>
       <groupId>${quarkus.platform.group-id}</groupId>

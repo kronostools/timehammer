@@ -1,6 +1,7 @@
 # TODO
 
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-CR3)
+    - probar después de subir Quarkus a 1.6.0 y camel-quarkus-telegram a 1.0.0-CR3
 - Crear chatbot para demo
 - Compilación nativa de imágenes Docker
 - Prueba día completo
