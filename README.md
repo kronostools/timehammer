@@ -1,9 +1,5 @@
 # TODO
 
-- Web: Demo
-    - Quitar listado de usuarios y detalle de usuarios
-    - Añadir (de forma estática) la lista de días de vacaciones el modo mocked
-    - Añadir (de forma estática) la lista de días festivos de Madrid
 - Revisar versión de camel (ya está camel-quarkus-telegram 1.0.0-CR3)
 - Crear chatbot para demo
 - Compilación nativa de imágenes Docker
