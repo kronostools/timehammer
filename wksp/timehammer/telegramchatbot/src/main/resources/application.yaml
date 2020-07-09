@@ -25,3 +25,8 @@ camel:
 timehammer:
   chatbot:
     token: ${TIMEHAMMER_CHATBOT_TOKEN}
+
+"%localdemo":
+  timehammer:
+    chatbot:
+      token: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}

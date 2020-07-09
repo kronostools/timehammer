@@ -173,6 +173,7 @@ services:
     container_name: timehammer-telegramchatbot
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
@@ -188,6 +189,7 @@ services:
     container_name: timehammer-telegramchatbotnotifier
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
