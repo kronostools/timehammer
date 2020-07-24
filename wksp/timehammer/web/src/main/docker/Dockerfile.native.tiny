@@ -1,22 +1,6 @@
-####
-# This Dockerfile is used in order to build a container that runs the Quarkus application in native (no JVM) mode
-#
-# Before building the docker image run:
-#
-# mvn package -Pnative -Dquarkus.native.container-build=true
-#
-# Then, build the image with:
-#
-# docker build -f src/main/docker/Dockerfile.native -t quarkus/timehammer-integration .
-#
-# Then run the container using:
-#
-# docker run -i --rm -p 8080:8080 timehammer/timehammer-integration
-#
-###
-FROM cescoffier/native-base:latest
+FROM timehammer/base-debian10:1.0.0
 COPY target/*-runner /application
 
 EXPOSE 8080
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=pro"]

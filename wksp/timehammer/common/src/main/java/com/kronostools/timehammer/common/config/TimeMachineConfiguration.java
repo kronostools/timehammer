@@ -5,6 +5,7 @@ import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.services.impl.TimeMachineMockedService;
 import com.kronostools.timehammer.common.services.impl.TimeMachineRealService;
 import io.quarkus.arc.DefaultBean;
+import io.quarkus.arc.profile.IfBuildProfile;
 import io.quarkus.arc.profile.UnlessBuildProfile;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,7 +16,7 @@ import javax.enterprise.inject.Produces;
 public class TimeMachineConfiguration {
     @Produces
     @ApplicationScoped
-    @DefaultBean
+    @IfBuildProfile("prod")
     public TimeMachineService realTimeMachineService() {
         return new TimeMachineRealService();
     }

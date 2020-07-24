@@ -1,6 +1,22 @@
 # TODO
 
 - Compilación nativa de imágenes Docker
+    - cambiar la gestión de los servicios mocked (timemachineservice, comunytekclient, ¿alguno más?)
+        - actualmente se determina si usar mocked o real en tiempo de compilación
+        - cambiarlo para que se pueda determinar en runtime
+    - mover el config converter que hay en scheduler (que no se usa) al módulo common e incluirlo en el fichero de configuración
+    - compilar en nativo y construir las imagenes de todos los módulos
+        - catalog
+        - commandprocessor
+        - comunytek
+        - core
+        - integration
+        - scheduler
+        - statemachine
+        - telegramchatbot
+        - telegramchatbotnotifier
+        - web
+    - probar toda la aplicación con las imágenes nativas
 - Prueba día completo
     - scheduler en ejecución
     - comunytek real
@@ -212,6 +228,22 @@ $ \d <table>
 
 # Build Native
 
+Para compilar la imagen distroless que se usa para ejecutar las compilaciones nativas de quarkus
+
+(https://github.com/GoogleContainerTools/distroless/tree/master/cc)
+
+```
+bazel-3.2.0 build --host_force_python=PY2 //package_manager:dpkg_parser.par
+bazel-3.2.0 build --host_force_python=PY2 //cc:cc_debian10
+bazel-3.2.0 run --host_force_python=PY2 //cc:cc_debian10
+```
+
+Retaggear la imagen distroless generada:
+
+```
+docker tag bazel/cc:cc_debian10 timehammer/base-debian10:1.0.0
+```
+
 ```
 > docker-compose run timehammernativebuild
 ```
@@ -219,6 +251,7 @@ $ \d <table>
 Para compilar en nativo
 
 ```
+$ docker-compose --file docker-compose.native.yml up catalognb
 $ mvn clean package -Pnative -Dquarkus.native.container-build=docker
 
 # SI EL CONTENEDOR NO VE EL DE BDD

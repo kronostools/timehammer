@@ -1,0 +1,34 @@
+version: '3'
+services:
+  scheduler:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-schedulernb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/scheduler
+    command: ["mvn", "-Pnative", "clean", "package"]
+  catalog:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-catalognb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/catalog
+    command: ["mvn", "-Pnative", "clean", "package"]
+  commandprocessor:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-commandprocessornb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/commandprocessor
+    command: ["mvn", "-Pnative", "clean", "package"]
+  web:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-webnb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/web
+    command: ["mvn", "-Pnative", "clean", "package"]
