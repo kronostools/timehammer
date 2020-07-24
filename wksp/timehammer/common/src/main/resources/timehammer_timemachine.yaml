@@ -6,3 +6,17 @@ mp:
         topic: timemachine
         value:
           deserializer: com.kronostools.timehammer.common.messages.timemachine.deserializers.TimeMachineEventJacksonDeserializer
+
+timehammer:
+  mocks:
+    timemachineservice: false
+
+"%localdemo":
+  timehammer:
+    mocks:
+      timemachineservice: true
+
+"%remotedemo":
+  timehammer:
+    mocks:
+      timemachineservice: true

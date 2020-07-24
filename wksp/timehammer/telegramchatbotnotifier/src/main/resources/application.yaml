@@ -18,10 +18,21 @@ camel:
     name: timehammer-camel-cdi
 
 timehammer:
+  mocks:
+    notificationservice: false
   chatbot:
     token: ${TIMEHAMMER_CHATBOT_TOKEN}
 
 "%localdemo":
   timehammer:
+    mocks:
+      notificationservice: true
+    chatbot:
+      token: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
+
+"%remotedemo":
+  timehammer:
+    mocks:
+      notificationservice: true
     chatbot:
       token: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}

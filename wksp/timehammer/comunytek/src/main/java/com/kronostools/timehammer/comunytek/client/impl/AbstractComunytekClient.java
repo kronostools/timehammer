@@ -1,7 +1,8 @@
-package com.kronostools.timehammer.comunytek.client;
+package com.kronostools.timehammer.comunytek.client.impl;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.kronostools.timehammer.comunytek.client.ComunytekClient;
 import com.kronostools.timehammer.comunytek.model.CachedWorkerCredentials;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SerializationUtils;

@@ -21,3 +21,10 @@ kafka:
       category:
         com.kronostools.timehammer:
           level: DEBUG
+
+"%remotedemo":
+  quarkus:
+    log:
+      category:
+        com.kronostools.timehammer:
+          level: DEBUG

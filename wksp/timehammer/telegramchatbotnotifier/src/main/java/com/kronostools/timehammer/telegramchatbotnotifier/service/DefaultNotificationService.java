@@ -10,6 +10,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.telegram.TelegramParseMode;
 import org.apache.camel.component.telegram.model.*;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public abstract class AbstractNotificationService implements NotificationService {
+public class DefaultNotificationService implements NotificationService {
     protected final Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     protected final CamelContext camelContext;
@@ -34,7 +35,10 @@ public abstract class AbstractNotificationService implements NotificationService
 
     private final Cache<String, LinkedList<Long>> messageWithKeyboard;
 
-    AbstractNotificationService(final CamelContext camelContext) {
+    @ConfigProperty(name = "timehammer.mocks.notificationservice")
+    Boolean notificationServiceMocked;
+
+    public DefaultNotificationService(final CamelContext camelContext) {
         this.camelContext = camelContext;
         this.producerTemplate = camelContext.createProducerTemplate();
 
@@ -189,5 +193,7 @@ public abstract class AbstractNotificationService implements NotificationService
         }
     }
 
-    protected abstract boolean isDemoMode();
+    protected boolean isDemoMode() {
+        return notificationServiceMocked;
+    }
 }

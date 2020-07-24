@@ -21,8 +21,6 @@ public interface ComunytekClient {
 
     Uni<ComunytekUpdateStatusResponse> updateStatus(final String username, final ComunytekAction action, final LocalDateTime timestamp);
 
-    boolean isMocked();
-
     void dumpCredentials();
 
     void loadCredentials();

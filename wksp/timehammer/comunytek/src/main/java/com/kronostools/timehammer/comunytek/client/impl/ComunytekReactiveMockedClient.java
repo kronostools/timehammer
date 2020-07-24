@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.comunytek.client;
+package com.kronostools.timehammer.comunytek.client.impl;
 
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
@@ -213,10 +213,5 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
         }
 
         return Uni.createFrom().item(result);
-    }
-
-    @Override
-    public boolean isMocked() {
-        return true;
     }
 }

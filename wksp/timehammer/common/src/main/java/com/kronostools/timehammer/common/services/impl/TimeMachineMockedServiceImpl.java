@@ -5,10 +5,10 @@ import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 
 import java.time.LocalDateTime;
 
-public class TimeMachineMockedService extends TimeMachineAbstractService {
+public class TimeMachineMockedServiceImpl extends TimeMachineCommonServiceImpl {
     private LocalDateTime now;
 
-    public TimeMachineMockedService() {
+    public TimeMachineMockedServiceImpl() {
         this.now = now();
     }
 
@@ -23,10 +23,5 @@ public class TimeMachineMockedService extends TimeMachineAbstractService {
         LOG.trace("Travelling in time to {} at {}", CommonDateTimeUtils.formatDateTimeToLog(newTimestamp), CommonDateTimeUtils.formatTimezoneToLog(zone));
         now = CommonDateTimeUtils.getDateTimeWithZone(newTimestamp, zone);
         LOG.info("Traveled in time to {} at UTC", CommonDateTimeUtils.formatDateTimeToLog(now));
-    }
-
-    @Override
-    public boolean isMocked() {
-        return true;
     }
 }

@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.scheduler.config.converters;
+package com.kronostools.timehammer.common.config.converter;
 
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import org.eclipse.microprofile.config.spi.Converter;

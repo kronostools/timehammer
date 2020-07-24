@@ -1,21 +1,19 @@
 # TODO
 
 - Compilación nativa de imágenes Docker
-    - cambiar la gestión de los servicios mocked (timemachineservice, comunytekclient, ¿alguno más?)
-        - actualmente se determina si usar mocked o real en tiempo de compilación
-        - cambiarlo para que se pueda determinar en runtime
-    - mover el config converter que hay en scheduler (que no se usa) al módulo common e incluirlo en el fichero de configuración
     - compilar en nativo y construir las imagenes de todos los módulos
-        - catalog
-        - commandprocessor
-        - comunytek
-        - core
-        - integration
-        - scheduler
-        - statemachine
-        - telegramchatbot
-        - telegramchatbotnotifier
-        - web
+        - PENDING:
+            - catalog
+            - commandprocessor
+            - comunytek
+            - core
+            - integration
+            - scheduler
+            - statemachine
+            - telegramchatbot
+            - telegramchatbotnotifier
+            - web
+        - DONE:
     - probar toda la aplicación con las imágenes nativas
 - Prueba día completo
     - scheduler en ejecución

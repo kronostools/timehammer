@@ -1,4 +1,4 @@
-package com.kronostools.timehammer.comunytek.client;
+package com.kronostools.timehammer.comunytek.client.impl;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -422,11 +422,6 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
                 .onFailure(ComunytekExpiredSessionException.class)
                     .retry()
                     .atMost(EXPIRED_SESSION_MAX_RETRIES);
-    }
-
-    @Override
-    public boolean isMocked() {
-        return false;
     }
 
     private String getUrl(final String urlPart) {
