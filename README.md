@@ -3,17 +3,17 @@
 - Compilación nativa de imágenes Docker
     - compilar en nativo y construir las imagenes de todos los módulos
         - PENDING:
-            - catalog
-            - commandprocessor
             - comunytek
             - core
-            - integration
-            - scheduler
-            - statemachine
             - telegramchatbot
             - telegramchatbotnotifier
-            - web
         - DONE:
+            - web
+            - commandprocessor
+            - catalog
+            - scheduler
+            - integration
+            - statemachine
     - probar toda la aplicación con las imágenes nativas
 - Prueba día completo
     - scheduler en ejecución

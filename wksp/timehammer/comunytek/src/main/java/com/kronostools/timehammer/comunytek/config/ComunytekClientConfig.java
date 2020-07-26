@@ -7,6 +7,7 @@ import com.kronostools.timehammer.comunytek.client.impl.ComunytekReactiveRealCli
 import com.kronostools.timehammer.comunytek.client.impl.DefaultComunytekClient;
 import io.quarkus.arc.DefaultBean;
 import io.vertx.mutiny.core.Vertx;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
@@ -14,6 +15,9 @@ import javax.enterprise.inject.Produces;
 
 @Dependent
 public class ComunytekClientConfig {
+    @ConfigProperty(name = "timehammer.mocks.comunytekclient", defaultValue = "false")
+    Boolean comunytekClientMocked;
+
     @Produces
     @ApplicationScoped
     @DefaultBean
@@ -21,6 +25,6 @@ public class ComunytekClientConfig {
         final ComunytekReactiveRealClient comunytekReactiveRealClient = new ComunytekReactiveRealClient(vertx, loginCacheConfig, timeMachineService);
         final ComunytekReactiveMockedClient comunytekReactiveMockedClient = new ComunytekReactiveMockedClient();
 
-        return new DefaultComunytekClient(comunytekReactiveMockedClient, comunytekReactiveRealClient);
+        return new DefaultComunytekClient(comunytekReactiveMockedClient, comunytekReactiveRealClient, comunytekClientMocked);
     }
 }

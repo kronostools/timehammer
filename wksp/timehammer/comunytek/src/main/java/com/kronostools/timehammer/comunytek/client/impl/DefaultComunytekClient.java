@@ -7,7 +7,6 @@ import com.kronostools.timehammer.comunytek.model.ComunytekLoginResponse;
 import com.kronostools.timehammer.comunytek.model.ComunytekStatusResponse;
 import com.kronostools.timehammer.comunytek.model.ComunytekUpdateStatusResponse;
 import io.smallrye.mutiny.Uni;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,13 +14,12 @@ import java.time.LocalDateTime;
 public class DefaultComunytekClient extends AbstractComunytekClient {
     private final ComunytekReactiveMockedClient comunytekReactiveMockedClient;
     private final ComunytekReactiveRealClient comunytekReactiveRealClient;
+    private final boolean comunytekClientMocked;
 
-    @ConfigProperty(name = "timehammer.mocks.comunytekclient")
-    Boolean comunytekClientMocked;
-
-    public DefaultComunytekClient(final ComunytekReactiveMockedClient comunytekReactiveMockedClient, final ComunytekReactiveRealClient comunytekReactiveRealClient) {
+    public DefaultComunytekClient(final ComunytekReactiveMockedClient comunytekReactiveMockedClient, final ComunytekReactiveRealClient comunytekReactiveRealClient, final boolean comunytekClientMocked) {
         this.comunytekReactiveMockedClient = comunytekReactiveMockedClient;
         this.comunytekReactiveRealClient = comunytekReactiveRealClient;
+        this.comunytekClientMocked = comunytekClientMocked;
     }
 
     @Override

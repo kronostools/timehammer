@@ -16,6 +16,14 @@ services:
       - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
     working_dir: /project/timehammer/catalog
     command: ["mvn", "-Pnative", "clean", "package"]
+  integration:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-integrationnb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/integration
+    command: ["mvn", "-Pnative", "clean", "package"]
   commandprocessor:
     image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
     container_name: timehammer-commandprocessornb
@@ -31,4 +39,12 @@ services:
       - ./wksp/timehammer:/project/timehammer
       - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
     working_dir: /project/timehammer/web
+    command: ["mvn", "-Pnative", "clean", "package"]
+  statemachine:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-statemachinenb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/statemachine
     command: ["mvn", "-Pnative", "clean", "package"]

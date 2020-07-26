@@ -3,20 +3,18 @@ package com.kronostools.timehammer.common.services.impl;
 import com.kronostools.timehammer.common.constants.SupportedTimezone;
 import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.services.TimeMachineServiceImpl;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDateTime;
 
 public class DefaultTimeMachineService implements TimeMachineService {
     private final TimeMachineMockedServiceImpl timeMachineMockedService;
     private final TimeMachineRealService timeMachineRealService;
+    private final boolean timeMachineServiceMocked;
 
-    @ConfigProperty(name = "timehammer.mocks.timemachineservice")
-    Boolean timeMachineServiceMocked;
-
-    public DefaultTimeMachineService(final TimeMachineMockedServiceImpl timeMachineMockedService, final TimeMachineRealService timeMachineRealService) {
+    public DefaultTimeMachineService(final TimeMachineMockedServiceImpl timeMachineMockedService, final TimeMachineRealService timeMachineRealService, final boolean timeMachineServiceMocked) {
         this.timeMachineMockedService = timeMachineMockedService;
         this.timeMachineRealService = timeMachineRealService;
+        this.timeMachineServiceMocked = timeMachineServiceMocked;
     }
 
     @Override

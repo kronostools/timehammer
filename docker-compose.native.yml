@@ -87,6 +87,18 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+  integration:
+    build:
+      context: ./wksp/timehammer/integration
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/integration:1.0.0
+    container_name: timehammer-integration
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
   commandprocessor:
     build:
       context: ./wksp/timehammer/commandprocessor
@@ -105,6 +117,22 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/web:1.0.0
     container_name: timehammer-web
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    ports:
+      - 8090:8080
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+  statemachine:
+    build:
+      context: ./wksp/timehammer/statemachine
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/statemachine:1.0.0
+    container_name: timehammer-statemachine
+    volumes:
+      - statemachinedata:/data
     command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
     ports:
       - 8090:8080
