@@ -1,4 +1,6 @@
 quarkus:
+  ssl:
+    native: false
   datasource:
     db-kind: postgresql
     username: timehammer

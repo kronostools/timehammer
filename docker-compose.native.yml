@@ -87,6 +87,21 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+  core:
+    build:
+      context: ./wksp/timehammer/core
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/core:1.0.0
+    container_name: timehammer-core
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+    depends_on:
+      - db
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
   integration:
     build:
       context: ./wksp/timehammer/integration
@@ -99,12 +114,56 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+  comunytek:
+    build:
+      context: ./wksp/timehammer/comunytek
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/comunytek:1.0.0
+    container_name: timehammer-comunytek
+    volumes:
+      - comunytekdata:/data
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
   commandprocessor:
     build:
       context: ./wksp/timehammer/commandprocessor
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/commandprocessor:1.0.0
     container_name: timehammer-commandprocessor
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+  telegramchatbot:
+    build:
+      context: ./wksp/timehammer/telegramchatbot
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/telegramchatbot:1.0.0
+    container_name: timehammer-telegramchatbot
+    environment:
+      TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+  telegramchatbotnotifier:
+    build:
+      context: ./wksp/timehammer/telegramchatbotnotifier
+      dockerfile: ./src/main/docker/Dockerfile.native.tiny
+    image: timehammer/telegramchatbotnotifier:1.0.0
+    container_name: timehammer-telegramchatbotnotifier
+    environment:
+      TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
     command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
     depends_on:
       - kafka

@@ -16,6 +16,14 @@ services:
       - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
     working_dir: /project/timehammer/catalog
     command: ["mvn", "-Pnative", "clean", "package"]
+  core:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-corenb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/core
+    command: ["mvn", "-Pnative", "clean", "package"]
   integration:
     image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
     container_name: timehammer-integrationnb
@@ -24,6 +32,14 @@ services:
       - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
     working_dir: /project/timehammer/integration
     command: ["mvn", "-Pnative", "clean", "package"]
+  comunytek:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-comunyteknb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/comunytek
+    command: ["mvn", "-Pnative", "clean", "package"]
   commandprocessor:
     image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
     container_name: timehammer-commandprocessornb
@@ -31,6 +47,22 @@ services:
       - ./wksp/timehammer:/project/timehammer
       - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
     working_dir: /project/timehammer/commandprocessor
+    command: ["mvn", "-Pnative", "clean", "package"]
+  telegramchatbot:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-telegramchatbotnb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/telegramchatbot
+    command: ["mvn", "-Pnative", "clean", "package"]
+  telegramchatbotnotifier:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-telegramchatbotnotifiernb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/telegramchatbotnotifier
     command: ["mvn", "-Pnative", "clean", "package"]
   web:
     image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11

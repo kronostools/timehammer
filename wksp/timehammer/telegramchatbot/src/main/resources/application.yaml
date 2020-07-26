@@ -1,8 +1,7 @@
 quarkus:
   camel:
-    main:
-      routes-discovery:
-        enabled: false
+    routes-discovery:
+      enabled: false
 
 mp:
   messaging:
@@ -27,6 +26,11 @@ timehammer:
     token: ${TIMEHAMMER_CHATBOT_TOKEN}
 
 "%localdemo":
+  timehammer:
+    chatbot:
+      token: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
+
+"%remotedemo":
   timehammer:
     chatbot:
       token: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}

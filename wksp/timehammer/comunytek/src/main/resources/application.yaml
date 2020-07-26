@@ -53,14 +53,18 @@ mp:
         value:
           serializer: io.quarkus.kafka.client.serialization.ObjectMapperSerializer
 
+quarkus:
+  ssl:
+    native: true
+
 timehammer:
   mocks:
     comunytekclient: false
   comunytek:
     login-cache:
       expiration:
-      qty: 9
-      unit: MINUTES
+        qty: 9
+        unit: MINUTES
 
 "%localdemo":
   timehammer:
