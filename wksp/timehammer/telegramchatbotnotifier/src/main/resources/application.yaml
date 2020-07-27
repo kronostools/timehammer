@@ -1,8 +1,7 @@
 quarkus:
   camel:
-    main:
-      routes-discovery:
-        enabled: false
+    routes-discovery:
+      enabled: false
 
 mp:
   messaging:
