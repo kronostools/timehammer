@@ -79,3 +79,11 @@ timehammer:
         enabled: false
       update-workers-status:
         enabled: false
+
+"%remotedemo":
+  timehammer:
+    schedules:
+      update-workers-holidays:
+        enabled: false
+      update-workers-status:
+        enabled: false

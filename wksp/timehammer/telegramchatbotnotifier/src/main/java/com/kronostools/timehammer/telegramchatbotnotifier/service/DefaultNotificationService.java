@@ -1,5 +1,7 @@
 package com.kronostools.timehammer.telegramchatbotnotifier.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.common.messages.telegramchatbot.TelegramChatbotNotificationMessage;
@@ -61,6 +63,14 @@ public class DefaultNotificationService implements NotificationService {
         final OutgoingMessage outgoingMessage = getOutgoingMessage(notificationMessage);
 
         LOG.info("Notifying to chat '{}' ...", notificationMessage.getChatId());
+
+        if (LOG.isDebugEnabled()) {
+            try {
+                LOG.debug("Message to notify: '{}'", new ObjectMapper().writeValueAsString(outgoingMessage));
+            } catch (JsonProcessingException e) {
+                LOG.debug("Error converting message to notify to JSON");
+            }
+        }
 
         removePreviousKeyboard(notificationMessage);
 
@@ -165,8 +175,10 @@ public class DefaultNotificationService implements NotificationService {
     }
 
     private OutgoingMessage getOutgoingMessage(final String chatId, final String text, final ReplyMarkup replyMarkup) {
+        final String escapedText = escapeMarkdown(text);
+
         OutgoingMessage message = new OutgoingTextMessage.Builder()
-                .text(isDemoMode() ? CommonUtils.stringFormat("*(demo mode)*\n{}", text) : text)
+                .text(isDemoMode() ? CommonUtils.stringFormat("*(demo mode)*\n{}", escapedText) : escapedText)
                 .parseMode(TelegramParseMode.MARKDOWN.getCode())
                 .replyMarkup(replyMarkup)
                 .build();
@@ -174,6 +186,10 @@ public class DefaultNotificationService implements NotificationService {
         message.setChatId(chatId);
 
         return message;
+    }
+
+    private String escapeMarkdown(final String originalText) {
+        return originalText.replaceAll("_", "\\\\_");
     }
 
     private ReplyMarkup getReplyMarkup(final List<KeyboardOption> keyboard) {

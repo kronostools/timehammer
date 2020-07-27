@@ -193,8 +193,6 @@ services:
     volumes:
       - statemachinedata:/data
     command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
-    ports:
-      - 8090:8080
     depends_on:
       - kafka
     networks:
