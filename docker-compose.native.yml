@@ -66,7 +66,9 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/scheduler:1.0.0
     container_name: timehammer-scheduler
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -78,9 +80,10 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/catalog:1.0.0
     container_name: timehammer-catalog
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
     environment:
       TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - db
       - kafka
@@ -93,9 +96,10 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/core:1.0.0
     container_name: timehammer-core
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
     environment:
       TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - db
       - kafka
@@ -108,7 +112,9 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/integration:1.0.0
     container_name: timehammer-integration
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -122,7 +128,9 @@ services:
     container_name: timehammer-comunytek
     volumes:
       - comunytekdata:/data
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -134,7 +142,9 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/commandprocessor:1.0.0
     container_name: timehammer-commandprocessor
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -149,7 +159,8 @@ services:
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
       TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -164,7 +175,8 @@ services:
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
       TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:
@@ -176,7 +188,9 @@ services:
       dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/web:1.0.0
     container_name: timehammer-web
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     ports:
       - 8090:8080
     depends_on:
@@ -192,7 +206,9 @@ services:
     container_name: timehammer-statemachine
     volumes:
       - statemachinedata:/data
-    command: ["./application", "-Dquarkus.http.host=0.0.0.0", "-Dquarkus.profile=remotedemo"]
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
     depends_on:
       - kafka
     networks:

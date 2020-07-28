@@ -3,13 +3,6 @@ services:
   common:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository
-  monolith:
-    volumes:
-      - ${USERPROFILE}/.m2/repository:/root/.m2/repository
-    command: ["mvn", "-Dquarkus.profile=localdemo", "quarkus:dev"]
-    ports:
-      - 9010:8080
-      - 6000:5005
   scheduler:
     volumes:
       - ${USERPROFILE}/.m2/repository:/root/.m2/repository

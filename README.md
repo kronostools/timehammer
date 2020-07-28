@@ -35,7 +35,7 @@
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
 - Monitorización de componentes con Graphana y Prometheus
 - Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
-- Permitir la actualización de las preferencias con un comando /updateSettings
+- Permitir la actualización de las preferencias con un comando /update_settings
 - Añadir la posibilidad de meter excepciones al horario habitual
     - cambiar widget
     - la excepcion tendrá un periodo de aplicación
@@ -168,25 +168,11 @@ https://vertx.io/docs/vertx-pg-client/java
 
 ```
 $ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
-$ mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create \
+$ mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create \
     -DprojectGroupId=com.kronostools.timehammer \
     -DprojectArtifactId=ssidtracking \
     -DclassName="com.diegocastroviadero.timehammer.ssidtracking.SSIDTrackingResource" \
     -Dpath="/trackSSID"
-```
-
-# Creación de una extensión quarkus.io
-
-```
-$ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
-$ mkdir -p /root/wksp/timehammer/extensions
-$ cd /root/wksp/timehammer/extensions
-$ mvn io.quarkus:quarkus-maven-plugin:1.4.1.Final:create-extension -N \
-      -DgroupId=com.kronostools.timehammer \
-      -Dversion=1.0.0-SNAPSHOT \
-      -Dquarkus.artifactIdBase=banner-ext \
-      -Dquarkus.artifactIdPrefix=timehammer- \
-      -Dquarkus.nameBase="Banner extension"
 ```
 
 Para arrancar el proyecto quarkus.io:
@@ -198,8 +184,8 @@ $ mvn quarkus:dev
 # Arranque
 
 ```
-# run timehammerdev service
-$ docker-compose run --service-ports timehammerdev
+# run web service
+$ docker-compose up web
 
 # run db service
 $ docker-compose up -d db
@@ -242,24 +228,16 @@ Retaggear la imagen distroless generada:
 docker tag bazel/cc:cc_debian10 timehammer/base-debian10:1.0.0
 ```
 
-```
-> docker-compose run timehammernativebuild
-```
-
-Para compilar en nativo
+Para compilar el código en nativo
 
 ```
-$ docker-compose --file docker-compose.native.yml up catalognb
-$ mvn clean package -Pnative -Dquarkus.native.container-build=docker
-
-# SI EL CONTENEDOR NO VE EL DE BDD
-$ mvn clean package -Pnative -DskipTests -Dquarkus.native.container-build=docker
+$ docker-compose --file docker-compose.nativebuild.yml up catalog
 ```
 
 Para construir imagen con el ejecutable nativo
 
 ```
-> docker-compose up timehammernative
+> docker-compose --file docker-compose.native.yml build web
 ```
 
 # Despliegue en producción

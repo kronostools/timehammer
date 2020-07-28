@@ -68,19 +68,6 @@ services:
       - ${HOME}/.m2/repository:/root/.m2/repository
     working_dir: /root/wksp/timehammer/common
     command: ["mvn", "clean", "install"]
-  monolith:
-    image: maven:3.6.3-jdk-11-slim
-    container_name: timehammer-monolith
-    env_file:
-      - .env
-    volumes:
-      - ./wksp/timehammer:/root/wksp/timehammer
-      - ${HOME}/.m2/repository:/root/.m2/repository
-    working_dir: /root/wksp/timehammer/monolith
-    command: ["mvn", "-Dquarkus.profile=remotedemo", "quarkus:dev"]
-    networks:
-      - timehammer
-    restart: unless-stopped
   scheduler:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-scheduler

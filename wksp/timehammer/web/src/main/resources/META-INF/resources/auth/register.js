@@ -16,7 +16,7 @@ $(document).ready(function() {
         window.location = '../error_400.html'
     }
 
-    const registrationRequestId = queryParams.internalId[0]
+    const registrationRequestId = queryParams.registrationRequestId[0]
 
     const loadingElem = $('#loading').loading()
     const loading = loadingElem.loading('instance')
