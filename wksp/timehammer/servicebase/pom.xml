@@ -41,7 +41,6 @@
     <module>../core</module>
     <module>../comunytek</module>
     <module>../integration</module>
-    <module>../monolith</module>
     <module>../scheduler</module>
     <module>../statemachine</module>
     <module>../telegramchatbot</module>
