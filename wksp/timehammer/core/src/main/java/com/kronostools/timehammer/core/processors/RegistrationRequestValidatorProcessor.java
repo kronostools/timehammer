@@ -223,41 +223,43 @@ public class RegistrationRequestValidatorProcessor {
                     .build());
         }
 
-        final boolean validLunchStartMon = CommonDateTimeUtils.isTimeFromFormValid(lunchStart);
-        final boolean validLunchEndMon = CommonDateTimeUtils.isTimeFromFormValid(lunchEnd);
+        if (lunchStart != null && lunchEnd != null) {
+            final boolean validLunchStartMon = CommonDateTimeUtils.isTimeFromFormValid(lunchStart);
+            final boolean validLunchEndMon = CommonDateTimeUtils.isTimeFromFormValid(lunchEnd);
 
-        if (!validLunchStartMon) {
-            validationErrors.add(new ValidationErrorBuilder()
-                    .fieldName(timetableName + ".lunchStart" + dayShort)
-                    .errorMessage("El formato de la hora de inicio de la comida del " + day + " es inválido")
-                    .build());
-        }
+            if (!validLunchStartMon) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName(timetableName + ".lunchStart" + dayShort)
+                        .errorMessage("El formato de la hora de inicio de la comida del " + day + " es inválido")
+                        .build());
+            }
 
-        if (!validLunchEndMon) {
-            validationErrors.add(new ValidationErrorBuilder()
-                    .fieldName(timetableName + ".lunchEnd" + dayShort)
-                    .errorMessage("El formato de la hora de fin de la comida del " + day + " es inválido")
-                    .build());
-        }
+            if (!validLunchEndMon) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName(timetableName + ".lunchEnd" + dayShort)
+                        .errorMessage("El formato de la hora de fin de la comida del " + day + " es inválido")
+                        .build());
+            }
 
-        final boolean validLunchInterval = CommonDateTimeUtils.isTimeIntervalFromFormValid(lunchStart, lunchEnd);
+            final boolean validLunchInterval = CommonDateTimeUtils.isTimeIntervalFromFormValid(lunchStart, lunchEnd);
 
-        if (validLunchStartMon
-                && validLunchEndMon
-                && !validLunchInterval) {
-            validationErrors.add(new ValidationErrorBuilder()
-                    .fieldName(timetableName + ".lunch" + dayShort)
-                    .errorMessage("La hora de inicio de la comida tiene que ser anterior a la de fin")
-                    .build());
-        }
+            if (validLunchStartMon
+                    && validLunchEndMon
+                    && !validLunchInterval) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName(timetableName + ".lunch" + dayShort)
+                        .errorMessage("La hora de inicio de la comida tiene que ser anterior a la de fin")
+                        .build());
+            }
 
-        if (validWorkInterval
-                && validLunchInterval
-                && !CommonDateTimeUtils.isTimeIntervalFromFormWithin(lunchStart, lunchEnd, workStart, workEnd)) {
-            validationErrors.add(new ValidationErrorBuilder()
-                    .fieldName(timetableName + ".lunch" + dayShort)
-                    .errorMessage("La hora de la comida tiene que estar comprendida dentro del horario de trabajo")
-                    .build());
+            if (validWorkInterval
+                    && validLunchInterval
+                    && !CommonDateTimeUtils.isTimeIntervalFromFormWithin(lunchStart, lunchEnd, workStart, workEnd)) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName(timetableName + ".lunch" + dayShort)
+                        .errorMessage("La hora de la comida tiene que estar comprendida dentro del horario de trabajo")
+                        .build());
+            }
         }
 
         return validationErrors;

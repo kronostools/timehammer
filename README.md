@@ -1,8 +1,11 @@
 # TODO
 
 - Compilación nativa de imágenes Docker
+    - publicar pregunta en stackoverflow
+        2020-07-29 18:18:36,343 WARNING [io.ver.cor.imp.BlockedThreadChecker] (vertx-blocked-thread-checker) Thread Thread[vert.x-eventloop-thread-0,5,main]=Thread[vert.x-eventloop-thread-0,5,main] has been blocked for 22295 ms, time limit is 2000 ms: io.vertx.core.VertxException: Thread blocked
     - compilar en nativo y construir las imagenes de todos los módulos
         - PENDING:
+            - core
         - DONE:
             - scheduler
             - integration
@@ -12,7 +15,6 @@
             - telegramchatbot
             - telegramchatbotnotifier
             - web
-            - core
             - commandprocessor
     - probar toda la aplicación con las imágenes nativas
 - Prueba día completo
