@@ -16,7 +16,7 @@ public class TimehammerDomainConfig {
     }
 
     public String getRegisterUrl(final String internalId) {
-        return baseUrl + "/auth/register.html?internalId=" + internalId;
+        return baseUrl + "/auth/register.html?registrationRequestId=" + internalId;
     }
 
     public String getUnregisterUrl(final String internalId) {

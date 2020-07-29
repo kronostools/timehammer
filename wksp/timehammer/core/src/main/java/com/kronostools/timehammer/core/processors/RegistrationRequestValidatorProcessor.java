@@ -11,6 +11,7 @@ import com.kronostools.timehammer.common.messages.registration.WorkerRegistratio
 import com.kronostools.timehammer.common.messages.registration.forms.RegistrationRequestForm;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.core.dao.CityDao;
+import io.smallrye.mutiny.Uni;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -115,7 +116,7 @@ public class RegistrationRequestValidatorProcessor {
         } else {
             cityDao.findAll()
                     .onItem()
-                    .invoke(cityMultipleResult -> {
+                    .produceUni(cityMultipleResult -> {
                         if (cityMultipleResult.isNotSuccessful()) {
                             validationErrors.add(new ValidationErrorBuilder()
                                     .fieldName("workCity")
@@ -132,6 +133,8 @@ public class RegistrationRequestValidatorProcessor {
                                         .build());
                             }
                         }
+
+                        return Uni.createFrom().voidItem();
                     })
                     .await().indefinitely();
         }

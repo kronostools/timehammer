@@ -7,22 +7,22 @@ $.widget('timehammer.timetable', {
             idSuffix: 'Mon',
             workText: 'LUNES',
             lunchText: 'comida',
-            lunchOptional: false
+            lunchOptional: true
         }, {
             idSuffix: 'Tue',
             workText: 'MARTES',
             lunchText: 'comida',
-            lunchOptional: false
+            lunchOptional: true
         }, {
             idSuffix: 'Wed',
             workText: 'MIÉRCOLES',
             lunchText: 'comida',
-            lunchOptional: false
+            lunchOptional: true
         }, {
             idSuffix: 'Thu',
             workText: 'JUEVES',
             lunchText: 'comida',
-            lunchOptional: false
+            lunchOptional: true
         }, {
             idSuffix: 'Fri',
             workText: 'VIERNES',

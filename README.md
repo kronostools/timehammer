@@ -4,16 +4,16 @@
     - compilar en nativo y construir las imagenes de todos los módulos
         - PENDING:
         - DONE:
-            - web
-            - commandprocessor
             - scheduler
             - integration
             - statemachine
             - comunytek
             - catalog
-            - core
             - telegramchatbot
             - telegramchatbotnotifier
+            - web
+            - core
+            - commandprocessor
     - probar toda la aplicación con las imágenes nativas
 - Prueba día completo
     - scheduler en ejecución
@@ -54,6 +54,7 @@
     - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
     - ya no recuerdo donde se daba el caso
         - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
+- Revisar el uso de .invoke() junto con .await().indefinitely()
 - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
