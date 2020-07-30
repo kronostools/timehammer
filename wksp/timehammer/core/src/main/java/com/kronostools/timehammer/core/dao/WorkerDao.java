@@ -91,19 +91,23 @@ public class WorkerDao {
                             })
                             // on success, commit
                             .onItem()
-                                .produceUni(x -> tx.commit())
+                                .produceUni(x -> tx.commit().map(v -> Boolean.TRUE))
                             // on failure rollback
                             .onFailure()
                                 .recoverWithUni(e -> {
                                     final String errorMessage = stringFormat("Unexpected error while registering worker '{}'", registrationId);
                                     LOG.error(errorMessage, e);
 
-                                    return tx.rollback();
+                                    return tx.rollback().map(v -> Boolean.FALSE);
                                 })
             )
-            .flatMap(v -> {
-                LOG.debug("Registered new worker '{}' with chat '{}' and its preferences", registrationId, chatId);
-                return Uni.createFrom().item(new InsertResultBuilder().build());
+            .flatMap(r -> {
+                if (r) {
+                    LOG.debug("Registered new worker '{}' with chat '{}' and its preferences", registrationId, chatId);
+                    return Uni.createFrom().item(new InsertResultBuilder().build());
+                } else {
+                    return Uni.createFrom().item(new InsertResultBuilder().errorMessage("Worker could not be registered").build());
+                }
             })
             .onFailure()
                 .recoverWithItem(e -> new InsertResultBuilder().errorMessage("Worker could not be registered").build());

@@ -97,7 +97,7 @@ public class CommandProcessor {
 
                                 lunchTime = CommonUtils.stringFormat("Comida: {} - {}", CommonDateTimeUtils.formatTimeToChatbot(lunchStart), CommonDateTimeUtils.formatTimeToChatbot(lunchEnd));
                             } else {
-                                lunchTime = "Comida: hoy no";
+                                lunchTime = "Comida hoy: no";
                             }
 
                             final String workerHoliday = CommonUtils.stringFormat("Vacación hoy: {}", worker.isWorkerHoliday() ? "Sí" : "No");

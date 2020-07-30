@@ -10,7 +10,8 @@ import com.kronostools.timehammer.common.messages.registration.WorkerRegistratio
 import com.kronostools.timehammer.common.messages.registration.WorkerRegistrationRequestMessageBuilder;
 import com.kronostools.timehammer.common.messages.registration.forms.RegistrationRequestForm;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
-import com.kronostools.timehammer.core.dao.CityDao;
+import com.kronostools.timehammer.core.dao.CityService;
+import com.kronostools.timehammer.core.model.CityMultipleResult;
 import io.smallrye.mutiny.Uni;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -32,49 +33,54 @@ import static com.kronostools.timehammer.common.utils.CommonUtils.stringFormat;
 public class RegistrationRequestValidatorProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(RegistrationRequestValidatorProcessor.class);
 
+    private static final String DEFAULT_TIMETABLE_NAME = "defaultTimetable";
+
     private final Emitter<WorkerRegistrationRequestMessage> workerRegisterRouteChannel;
     private final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel;
-    private final CityDao cityDao;
+    private final CityService cityService;
 
     public RegistrationRequestValidatorProcessor(@Channel(Channels.WORKER_REGISTER_VALIDATE_NOTIFY) final Emitter<WorkerRegistrationRequestMessage> workerRegisterNotifyChannel,
                                                  @Channel(Channels.WORKER_REGISTER_ROUTE) final Emitter<WorkerRegistrationRequestMessage> workerRegisterRouteChannel,
-                                                 final CityDao cityDao) {
+                                                 final CityService cityService) {
         this.workerRegisterRouteChannel = workerRegisterRouteChannel;
         this.workerRegisterNotifyChannel = workerRegisterNotifyChannel;
-        this.cityDao = cityDao;
+        this.cityService = cityService;
     }
 
     @Incoming(Channels.WORKER_REGISTER_VALIDATE)
-    public CompletionStage<Void> process(final Message<WorkerRegistrationRequestMessage> message) {
+    public Uni<CompletionStage<Void>> process(final Message<WorkerRegistrationRequestMessage> message) {
         final WorkerRegistrationRequestMessage registrationRequest = WorkerRegistrationRequestMessageBuilder.copy(message.getPayload()).build();
 
         if (registrationRequest.getCheckRegistrationRequestPhase().isNotSuccessful()) {
             LOG.info("Nothing to validate because registration request '{}' is expired -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY);
 
-            return workerRegisterNotifyChannel.send(registrationRequest)
-                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
+            return Uni.createFrom().item(workerRegisterNotifyChannel.send(registrationRequest)
+                    .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId())));
         } else {
             LOG.info("Validating registration request '{}' ...", registrationRequest.getRegistrationRequestId());
 
-            final List<ValidationError> validationErrors = validateForm(registrationRequest.getRegistrationRequestForm());
+            return cityService.findAll()
+                    .map(cityMultipleResult -> {
+                        final List<ValidationError> validationErrors = validateForm(registrationRequest.getRegistrationRequestForm(), cityMultipleResult);
 
-            final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
-                    .validationErrors(validationErrors)
-                    .build();
+                        final ValidateRegistrationRequestPhase validationResult = new ValidateRegistrationRequestPhaseBuilder()
+                                .validationErrors(validationErrors)
+                                .build();
 
-            registrationRequest.setValidateRegistrationRequestPhase(validationResult);
+                        final WorkerRegistrationRequestMessage registrationRequestToSend = WorkerRegistrationRequestMessageBuilder.copy(registrationRequest)
+                                .validateRegistrationRequestPhase(validationResult)
+                                .build();
 
-            if (validationResult.isSuccessful()) {
-                LOG.info("Registration request '{}' is valid -> routing it to the next step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_ROUTE);
+                        if (validationResult.isSuccessful()) {
+                            return workerRegisterRouteChannel.send(registrationRequestToSend)
+                                    .handle(getMessageHandler(message, registrationRequestToSend.getRegistrationRequestId()));
+                        } else {
+                            LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY);
 
-                return workerRegisterRouteChannel.send(registrationRequest)
-                        .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
-            } else {
-                LOG.info("Registration request '{}' is invalid -> routing it to the end step in registration flow: '{}' ...", registrationRequest.getRegistrationRequestId(), Channels.WORKER_REGISTER_VALIDATE_NOTIFY);
-
-                return workerRegisterNotifyChannel.send(registrationRequest)
-                        .handle(getMessageHandler(message, registrationRequest.getRegistrationRequestId()));
-            }
+                            return workerRegisterNotifyChannel.send(registrationRequestToSend)
+                                    .handle(getMessageHandler(message, registrationRequestToSend.getRegistrationRequestId()));
+                        }
+                    });
         }
     }
 
@@ -91,7 +97,7 @@ public class RegistrationRequestValidatorProcessor {
         };
     }
 
-    private List<ValidationError> validateForm(final RegistrationRequestForm registrationRequestForm) {
+    private List<ValidationError> validateForm(final RegistrationRequestForm registrationRequestForm, final CityMultipleResult cityMultipleResult) {
         final List<ValidationError> validationErrors = new ArrayList<>();
 
         if (StringUtils.isBlank(registrationRequestForm.getWorkerExternalId())) {
@@ -114,29 +120,22 @@ public class RegistrationRequestValidatorProcessor {
                     .errorMessage("La ciudad de trabajo es obligatoria")
                     .build());
         } else {
-            cityDao.findAll()
-                    .onItem()
-                    .produceUni(cityMultipleResult -> {
-                        if (cityMultipleResult.isNotSuccessful()) {
-                            validationErrors.add(new ValidationErrorBuilder()
-                                    .fieldName("workCity")
-                                    .errorMessage("Ha ocurrido un error inesperado durante la validación de los datos. Por favor, reinténtelo de nuevo, y si el error persiste contacte con el administrador del sitio.")
-                                    .build());
-                        } else {
-                            boolean cityExists = cityMultipleResult.getResult().stream()
-                                    .anyMatch(c -> c.getCode().equals(registrationRequestForm.getWorkCity()));
+            if (cityMultipleResult.isNotSuccessful()) {
+                validationErrors.add(new ValidationErrorBuilder()
+                        .fieldName("workCity")
+                        .errorMessage("Ha ocurrido un error inesperado durante la validación de los datos. Por favor, reinténtelo de nuevo, y si el error persiste contacte con el administrador del sitio.")
+                        .build());
+            } else {
+                boolean cityExists = cityMultipleResult.getResult().stream()
+                        .anyMatch(c -> c.getCode().equals(registrationRequestForm.getWorkCity()));
 
-                            if (!cityExists) {
-                                validationErrors.add(new ValidationErrorBuilder()
-                                        .fieldName("workCity")
-                                        .errorMessage("La ciudad seleccionada no es válida.")
-                                        .build());
-                            }
-                        }
-
-                        return Uni.createFrom().voidItem();
-                    })
-                    .await().indefinitely();
+                if (!cityExists) {
+                    validationErrors.add(new ValidationErrorBuilder()
+                            .fieldName("workCity")
+                            .errorMessage("La ciudad seleccionada no es válida.")
+                            .build());
+                }
+            }
         }
 
         if (StringUtils.isBlank(registrationRequestForm.getCompanyCode())) {
@@ -158,35 +157,35 @@ public class RegistrationRequestValidatorProcessor {
                         registrationRequestForm.getDefaultTimetable().getWorkEndMon(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartMon(),
                         registrationRequestForm.getDefaultTimetable().getLunchEndMon(),
-                        "defaultTimetable", "lunes", "Mon"));
+                        DEFAULT_TIMETABLE_NAME, "lunes", "Mon"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartTue(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndTue(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartTue(),
                         registrationRequestForm.getDefaultTimetable().getLunchEndTue(),
-                        "defaultTimetable", "martes", "Tue"));
+                        DEFAULT_TIMETABLE_NAME, "martes", "Tue"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartWed(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndWed(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartWed(),
                         registrationRequestForm.getDefaultTimetable().getLunchEndWed(),
-                        "defaultTimetable", "miércoles", "Wed"));
+                        DEFAULT_TIMETABLE_NAME, "miércoles", "Wed"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartThu(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndThu(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartThu(),
                         registrationRequestForm.getDefaultTimetable().getLunchEndThu(),
-                        "defaultTimetable", "jueves", "Thu"));
+                        DEFAULT_TIMETABLE_NAME, "jueves", "Thu"));
 
         validationErrors
                 .addAll(validateTimetableDay(registrationRequestForm.getDefaultTimetable().getWorkStartFri(),
                         registrationRequestForm.getDefaultTimetable().getWorkEndFri(),
                         registrationRequestForm.getDefaultTimetable().getLunchStartFri(),
                         registrationRequestForm.getDefaultTimetable().getLunchEndFri(),
-                        "defaultTimetable", "viernes", "Fri"));
+                        DEFAULT_TIMETABLE_NAME, "viernes", "Fri"));
 
         return validationErrors;
     }

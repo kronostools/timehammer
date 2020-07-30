@@ -46,7 +46,9 @@ public final class CommonDateTimeUtils {
     }
 
     public static LocalTime parseTimeFromForm(final String time) {
-        return parseTime(time, FORMAT_HHMM_TSEP);
+        return Optional.ofNullable(time)
+                .map(t -> parseTime(t, FORMAT_HHMM_TSEP))
+                .orElse(null);
     }
 
     public static LocalTime parseTimeFromComunytek(final String time) {
