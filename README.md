@@ -245,19 +245,105 @@ Para construir imagen con el ejecutable nativo
 
 (a mejorar)
 
+exportar las imágenes
+
 ```
-cd /home/timehammer/wksp/kronostools \
-&& rm -Rf timehammer \
-&& git clone https://github.com/kronostools/timehammer.git \
-&& cd timehammer \
-&& rm -f docker-compose.override.yml \
-&& rm -Rf .git
+docker image save --output wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer/telegramchatbotnotifier:1.0.0
+docker image save --output wksp\images\telegramchatbot-1.0.0.tar timehammer/telegramchatbot:1.0.0
+docker image save --output wksp\images\statemachine-1.0.0.tar timehammer/statemachine:1.0.0
+docker image save --output wksp\images\commandprocessor-1.0.0.tar timehammer/commandprocessor:1.0.0
+docker image save --output wksp\images\comunytek-1.0.0.tar timehammer/comunytek:1.0.0
+docker image save --output wksp\images\integration-1.0.0.tar timehammer/integration:1.0.0
+docker image save --output wksp\images\catalog-1.0.0.tar timehammer/catalog:1.0.0
+docker image save --output wksp\images\core-1.0.0.tar timehammer/core:1.0.0
+docker image save --output wksp\images\web-1.0.0.tar timehammer/web:1.0.0
+docker image save --output wksp\images\scheduler-1.0.0.tar timehammer/scheduler:1.0.0
 ```
 
-Subir fichero `.env` (con filezilla)
+subir imágenes al servidor
 
+```
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\telegramchatbot-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\statemachine-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\commandprocessor-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\comunytek-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\integration-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\catalog-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\core-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\web-1.0.0.tar timehammer@54.37.152.149:/tmp
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\scheduler-1.0.0.tar timehammer@54.37.152.149:/tmp
+```
+
+cargar las imágenes el el registry local
+
+```
+docker load --input /tmp/telegramchatbotnotifier-1.0.0.tar
+docker load --input /tmp/telegramchatbot-1.0.0.tar
+docker load --input /tmp/statemachine-1.0.0.tar
+docker load --input /tmp/commandprocessor-1.0.0.tar
+docker load --input /tmp/comunytek-1.0.0.tar
+docker load --input /tmp/integration-1.0.0.tar
+docker load --input /tmp/catalog-1.0.0.tar
+docker load --input /tmp/core-1.0.0.tar
+docker load --input /tmp/web-1.0.0.tar
+docker load --input /tmp/scheduler-1.0.0.tar
+```
+
+Preparar estructura de contenido:
+
+```
+mkdir -p /home/timehammer/wksp/kronostools/timehammer/wksp/reverseproxy/config/nginx/proxy-confs
+```
+
+Subir configuración `reverseproxy`:
+
+```
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\reverseproxy\config\nginx\proxy-confs\timehammer.subdomain.conf timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer/wksp/reverseproxy/config/nginx/proxy-confs
+```
+
+Subir `docker-compose`:
+
+```
+scp -i %USERPROFILE%/.ssh/timehammer.ovh docker-compose.nativeremote.yml timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer/docker-compose.yml
+```
+
+Subir configuración `docker-compose`:
+
+```
+scp -i %USERPROFILE%/.ssh/timehammer.ovh .env timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer
+```
+
+Posicionarse en la siguiente ruta:
+
+```
+cd /home/timehammer/wksp/kronostools/timehammer
+```
+
+Arrancar servicios:
+
+```
 docker-compose up -d db
-docker-compose up -d timehammer
+docker-compose up -d kafka
+docker-compose up -d scheduler
+docker-compose up -d web
+docker-compose up -d core
+docker-compose up -d catalog
+docker-compose up -d integration
+docker-compose up -d comunytek
+docker-compose up -d telegramchatbot
+docker-compose up -d commandprocessor
+docker-compose up -d telegramchatbotnotifier
+docker-compose up -d statemachine
 docker-compose up -d reverseproxy
+```
 
-(la idea sería que fuese necesario únicamente `docker-compose up -d`)
+## FAQ
+
+### Para recargar la configuración de nginx (reverseproxy)
+
+Desde dentro del contenedor, ejecutar:
+
+```
+s6-svc -h /var/run/s6/services/nginx
+```

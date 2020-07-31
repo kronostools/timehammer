@@ -61,9 +61,6 @@ services:
       - timehammer
     restart: unless-stopped
   scheduler:
-    build:
-      context: ./wksp/timehammer/scheduler
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/scheduler:1.0.0
     container_name: timehammer-scheduler
     environment:
@@ -75,9 +72,6 @@ services:
       - timehammer
     restart: unless-stopped
   catalog:
-    build:
-      context: ./wksp/timehammer/catalog
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/catalog:1.0.0
     container_name: timehammer-catalog
     environment:
@@ -91,9 +85,6 @@ services:
       - timehammer
     restart: unless-stopped
   core:
-    build:
-      context: ./wksp/timehammer/core
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/core:1.0.0
     container_name: timehammer-core
     environment:
@@ -107,9 +98,6 @@ services:
       - timehammer
     restart: unless-stopped
   integration:
-    build:
-      context: ./wksp/timehammer/integration
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/integration:1.0.0
     container_name: timehammer-integration
     environment:
@@ -121,9 +109,6 @@ services:
       - timehammer
     restart: unless-stopped
   comunytek:
-    build:
-      context: ./wksp/timehammer/comunytek
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/comunytek:1.0.0
     container_name: timehammer-comunytek
     volumes:
@@ -137,9 +122,6 @@ services:
       - timehammer
     restart: unless-stopped
   commandprocessor:
-    build:
-      context: ./wksp/timehammer/commandprocessor
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/commandprocessor:1.0.0
     container_name: timehammer-commandprocessor
     environment:
@@ -151,9 +133,6 @@ services:
       - timehammer
     restart: unless-stopped
   telegramchatbot:
-    build:
-      context: ./wksp/timehammer/telegramchatbot
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/telegramchatbot:1.0.0
     container_name: timehammer-telegramchatbot
     environment:
@@ -167,9 +146,6 @@ services:
       - timehammer
     restart: unless-stopped
   telegramchatbotnotifier:
-    build:
-      context: ./wksp/timehammer/telegramchatbotnotifier
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/telegramchatbotnotifier:1.0.0
     container_name: timehammer-telegramchatbotnotifier
     environment:
@@ -183,9 +159,6 @@ services:
       - timehammer
     restart: unless-stopped
   web:
-    build:
-      context: ./wksp/timehammer/web
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/web:1.0.0
     container_name: timehammer-web
     environment:
@@ -199,9 +172,6 @@ services:
       - timehammer
     restart: unless-stopped
   statemachine:
-    build:
-      context: ./wksp/timehammer/statemachine
-      dockerfile: ./src/main/docker/Dockerfile.native.tiny
     image: timehammer/statemachine:1.0.0
     container_name: timehammer-statemachine
     volumes:
