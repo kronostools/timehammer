@@ -1,26 +1,9 @@
 # TODO
 
-- Compilación nativa de imágenes Docker
-    - compilar en nativo y construir las imagenes de todos los módulos
-        - PENDING:
-        - DONE:
-            - scheduler
-            - web
-            - core
-            - catalog
-            - integration
-            - comunytek
-            - commandprocessor
-            - statemachine
-            - telegramchatbot
-            - telegramchatbotnotifier
-    - probar toda la aplicación con las imágenes nativas demo
 - Prueba día completo
     - scheduler en ejecución
     - comunytek real
 - Comprobación de estado
-    - Verificar que funciona con varios usuarios
-        - Después del cambio del ProduceMulti
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
 - Revisar Chatbot
@@ -28,13 +11,18 @@
     - Contenido de mensajes
 - Despliegue en producción
 - Hacer repo privado
+- Preparar slides para presentación
+- Preparar post en página personal
+- Preparar dashboard para control de módulos?? (serviría para presentación)
+- Crear tag 1.0.0
 - *************** DEMO ***************
 
 # Backlog
 
+- Implementar la baja de un usuario (/unregister)
+- Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
 - Monitorización de componentes con Graphana y Prometheus
-- Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
 - Permitir la actualización de las preferencias con un comando /update_settings
 - Añadir la posibilidad de meter excepciones al horario habitual
     - cambiar widget
@@ -49,12 +37,13 @@
     - Si el usuario no es admin -> UnauthorizedException
 - Schedule
     - Añadir schedule para limpiar los trash_message
-- Añadir servicio de estadísticas de llamadas a Comunytek (usar VertX)
+- Añadir servicio de estadísticas de llamadas a Comunytek
 - Revisar respuesta de stackoverflow
     - https://stackoverflow.com/questions/62483105/manage-acknowledge-with-mutiny-when-transforming-message-to-multimessage
     - ya no recuerdo donde se daba el caso
         - al notificar el estado? que entra un mensaje por usuario pero para cada usuario se va a notificar a todos sus chatIds
 - Revisar el uso de .invoke() junto con .await().indefinitely()
+    - genera problemas cuando se mezcla código procedimental con código reactivo
 - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
@@ -62,20 +51,16 @@
     - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
     - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
     - Crear componente JQuery para establecer la hora
+    - Proteger el acceso (o llamadas al backend) en base al perfil
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
 - Icono TimeHammer
 - Icono KronosTools
+- Revisar si ha salido la versión final de camel (actualmente 1.0.0-CR3)
 - Mejorar flujo de despliegue en producción
     - Estudiar uso de registry
         - Docker Hub?
         - Contenedor registry de docker en producción para publicar la imagen de timehammer?
-    - Imagen nativa de timehammer
-        - La compilación nativa no funciona con quarkus-camel-telegram
-            - esperar a que haya versión final y volver a probar (en el iMac no tengo problemas para compilar)
-            - cuando funciona luego no ejecuta en la imagen distroless del Dockerfile tiny
-                - ya abrí un issue y me respondieron diciendo que se podía hacer
-                - retomar el issue y pedir que lo añadan y lo publiquen
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
 - Despliegue en producción
@@ -314,6 +299,8 @@ Subir configuración `docker-compose`:
 scp -i %USERPROFILE%/.ssh/timehammer.ovh .env timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer
 ```
 
+**Verificar el perfil configurado en el fichero de configuracion `.env`**
+
 Posicionarse en la siguiente ruta:
 
 ```
@@ -323,19 +310,16 @@ cd /home/timehammer/wksp/kronostools/timehammer
 Arrancar servicios:
 
 ```
-docker-compose up -d db
-docker-compose up -d kafka
-docker-compose up -d scheduler
-docker-compose up -d web
-docker-compose up -d core
-docker-compose up -d catalog
-docker-compose up -d integration
-docker-compose up -d comunytek
-docker-compose up -d telegramchatbot
-docker-compose up -d commandprocessor
-docker-compose up -d telegramchatbotnotifier
-docker-compose up -d statemachine
+docker-compose up -d db kafka
+docker-compose up -d scheduler web core catalog integration comunytek telegramchatbot commandprocessor telegramchatbotnotifier statemachine
 docker-compose up -d reverseproxy
+```
+
+Parar servicios:
+
+```
+docker-compose stop scheduler web core catalog integration comunytek telegramchatbot commandprocessor telegramchatbotnotifier statemachine
+docker-compose rm -f scheduler web core catalog integration comunytek telegramchatbot commandprocessor telegramchatbotnotifier statemachine
 ```
 
 ## FAQ
