@@ -4,6 +4,7 @@
     - limpieza de código comentado en UpdateWorkersHolidayScheduleProcessor y CheckWorkersStatusScheduleProcessor
 - Revisar/Configurar rotacion de logs en ovh
     - Revisar ocupacion de disco (03/08 - 6.1 GB | 19.0 GB)
+- Revisar el dump/load de los credenciales de comunytek en modo nativo
 - Revisar el mapeo de puertos para poder utilizar el /health (o /liveness /readyness)
 - Prueba día completo
     - scheduler en ejecución

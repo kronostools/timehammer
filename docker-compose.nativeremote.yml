@@ -5,8 +5,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-db
     environment:
       POSTGRES_USER: timehammer
@@ -23,8 +23,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-reverseproxy
     environment:
       PUID: 1001 # timehammer
@@ -52,8 +52,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-zookeeperkafka
     command: ["sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"]
     environment:
@@ -66,8 +66,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-kafka
     command: ["sh", "-c", "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"]
     depends_on:
@@ -85,8 +85,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 10
-        max-size: 25m
+        max-file: "10"
+        max-size: "25m"
     container_name: timehammer-scheduler
     environment:
       QUARKUS_PROFILE: ${QUARKUS_PROFILE}
@@ -101,8 +101,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-catalog
     environment:
       TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
@@ -119,8 +119,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 10
-        max-size: 25m
+        max-file: "10"
+        max-size: "25m"
     container_name: timehammer-core
     environment:
       TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
@@ -137,8 +137,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-integration
     environment:
       QUARKUS_PROFILE: ${QUARKUS_PROFILE}
@@ -153,8 +153,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 10
-        max-size: 10m
+        max-file: "10"
+        max-size: "10m"
     container_name: timehammer-comunytek
     volumes:
       - comunytekdata:/data
@@ -171,8 +171,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-commandprocessor
     environment:
       QUARKUS_PROFILE: ${QUARKUS_PROFILE}
@@ -187,8 +187,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-telegramchatbot
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
@@ -205,8 +205,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-telegramchatbotnotifier
     environment:
       TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
@@ -223,8 +223,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-web
     environment:
       QUARKUS_PROFILE: ${QUARKUS_PROFILE}
@@ -241,8 +241,8 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-file: 5
-        max-size: 10m
+        max-file: "5"
+        max-size: "10m"
     container_name: timehammer-statemachine
     volumes:
       - statemachinedata:/data
