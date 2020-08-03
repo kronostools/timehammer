@@ -1,5 +1,10 @@
 # TODO
 
+- Revisar el batch de actualización de vacaciones (se ha quedado atascado, ¿será por el await().indefinitely())
+    - limpieza de código comentado en UpdateWorkersHolidayScheduleProcessor y CheckWorkersStatusScheduleProcessor
+- Revisar/Configurar rotacion de logs en ovh
+    - Revisar ocupacion de disco (03/08 - 6.1 GB | 19.0 GB)
+- Revisar el mapeo de puertos para poder utilizar el /health (o /liveness /readyness)
 - Prueba día completo
     - scheduler en ejecución
     - comunytek real
@@ -9,7 +14,6 @@
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
-- Despliegue en producción
 - Hacer repo privado
 - Preparar slides para presentación
 - Preparar post en página personal
