@@ -35,34 +35,6 @@ public class CheckWorkersStatusScheduleProcessor {
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        /*
-        final List<CheckWorkersStatusWorker> workers = new ArrayList<>();
-
-        workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
-            .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
-                if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
-                    LOG.debug("Transforming result from db to list of workers ...");
-
-                    final List<WorkerCurrentPreferences> wcpl = workerCurrentPreferencesMultipleResult.getResult();
-
-                    wcpl.stream()
-                            .filter(WorkerCurrentPreferences::workToday)
-                            .forEach(wcp -> workers.add(new CheckWorkersStatusWorkerBuilder()
-                                    .generated(triggerMessage.getGenerated())
-                                    .executionId(triggerMessage.getExecutionId())
-                                    .name(triggerMessage.getName())
-                                    .batchSize(wcpl.size())
-                                    .workerCurrentPreferences(wcp)
-                                    .build()));
-                } else {
-                    LOG.error("Status of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());
-                }
-            })
-            .await()
-                .indefinitely();
-                //.atMost(Duration.ofMillis(1500L));
-        */
-
         return workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
                 .onItem().produceMulti(workerCurrentPreferencesMultipleResult -> {
                     if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
@@ -92,16 +64,5 @@ public class CheckWorkersStatusScheduleProcessor {
                     message.ack();
                     LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
                 });
-
-        /*
-        LOG.debug("Status of {} workers will be updated", workers.size());
-
-        return Multi.createFrom().iterable(workers.stream().map(Message::of).collect(Collectors.toList()))
-                .onCompletion().invoke(() -> {
-                    LOG.debug("Acknowleding trigger message of schedule '{}' ...", triggerMessage.getName());
-                    message.ack();
-                    LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
-                });
-        */
     }
 }

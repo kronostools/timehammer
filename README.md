@@ -1,7 +1,5 @@
 # TODO
 
-- Revisar el batch de actualización de vacaciones (se ha quedado atascado, ¿será por el await().indefinitely())
-    - limpieza de código comentado en UpdateWorkersHolidayScheduleProcessor y CheckWorkersStatusScheduleProcessor
 - Revisar/Configurar rotacion de logs en ovh
     - Revisar ocupacion de disco (03/08 - 6.1 GB | 19.0 GB)
 - Revisar el dump/load de los credenciales de comunytek en modo nativo
@@ -15,8 +13,7 @@
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
-- Hacer repo privado
-- Preparar slides para presentación
+zzq- Preparar slides para presentación
 - Preparar post en página personal
 - Preparar dashboard para control de módulos?? (serviría para presentación)
 - Crear tag 1.0.0
@@ -335,4 +332,12 @@ Desde dentro del contenedor, ejecutar:
 
 ```
 s6-svc -h /var/run/s6/services/nginx
+```
+
+### Obtener consumo de CPU y memoria de los contenedores
+
+[https://docs.docker.com/engine/reference/commandline/stats]
+
+```
+docker stats --format "table {{.ID}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 ```

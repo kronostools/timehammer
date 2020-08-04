@@ -35,34 +35,6 @@ public class UpdateWorkersHolidayScheduleProcessor {
 
         LOG.info("Received trigger message to run schedule '{}' with timestamp '{}'", triggerMessage.getName(), CommonDateTimeUtils.formatDateTimeToLog(triggerMessage.getGenerated()));
 
-        /*
-        final List<UpdateWorkersHolidayWorker> workers = new ArrayList<>();
-
-        workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
-            .onItem().invoke(workerCurrentPreferencesMultipleResult -> {
-                if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
-                    LOG.debug("Transforming result from db to list of workers ...");
-
-                    final List<WorkerCurrentPreferences> wcpl = workerCurrentPreferencesMultipleResult.getResult();
-
-                    wcpl.forEach(wcp -> workers
-                            .add(new UpdateWorkersHolidayWorkerBuilder()
-                                    .generated(triggerMessage.getGenerated())
-                                    .executionId(triggerMessage.getExecutionId())
-                                    .name(triggerMessage.getName())
-                                    .batchSize(wcpl.size())
-                                    .workerInternalId(wcp.getWorkerInternalId())
-                                    .company(wcp.getCompany())
-                                    .workerExternalId(wcp.getWorkerExternalId())
-                                    .holidayCandidate(triggerMessage.getGenerated().toLocalDate())
-                                    .build()));
-                } else {
-                    LOG.error("Holidays of workers will not be updated because there was an unexpected error while recovering list of workers. Error: {}", workerCurrentPreferencesMultipleResult.getErrorMessage());
-                }
-            })
-            .await().indefinitely();
-        */
-
         return workerCurrentPreferencesDao.findAll(triggerMessage.getGenerated().toLocalDate())
                 .onItem().produceMulti(workerCurrentPreferencesMultipleResult -> {
                     if (workerCurrentPreferencesMultipleResult.isSuccessful()) {
@@ -94,16 +66,5 @@ public class UpdateWorkersHolidayScheduleProcessor {
                     message.ack();
                     LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
                 });
-
-        /*
-        LOG.debug("Holidays of {} workers will be updated", workers.size());
-
-        return Multi.createFrom().iterable(workers.stream().map(Message::of).collect(Collectors.toList()))
-                .onCompletion().invoke(() -> {
-                    LOG.debug("Acknowleding trigger message of schedule '{}' ...", triggerMessage.getName());
-                    message.ack();
-                    LOG.debug("Acknowleded trigger message of schedule '{}'", triggerMessage.getName());
-                });
-        */
     }
 }
