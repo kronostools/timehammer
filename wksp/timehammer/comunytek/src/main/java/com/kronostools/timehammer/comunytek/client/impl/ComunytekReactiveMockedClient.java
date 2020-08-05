@@ -4,6 +4,7 @@ import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.common.utils.CommonUtils;
 import com.kronostools.timehammer.comunytek.constants.*;
 import com.kronostools.timehammer.comunytek.model.*;
+import com.kronostools.timehammer.comunytek.service.CredentialsCacheService;
 import io.smallrye.mutiny.Uni;
 
 import java.time.LocalDate;
@@ -14,7 +15,9 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     private final Map<String, Map<LocalDate, List<ComunytekStatusResponse>>> mockedRegistry;
     private final Set<LocalDate> mockedHolidays;
     
-    public ComunytekReactiveMockedClient() {
+    public ComunytekReactiveMockedClient(final CredentialsCacheService credentialsCacheService) {
+        super(credentialsCacheService);
+
         final int currentYear = LocalDate.now().getYear();
         
         this.mockedHolidays = new HashSet<>() {{
@@ -56,7 +59,9 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     @Override
     public Uni<ComunytekLoginResponse> login(final String username, final String password) {
         if ("demo".equals(password)) {
-            credentialsCache.put(username, new CachedWorkerCredentialsBuilder()
+            LOG.debug("Storing credential in cretentialsCache ...");
+
+            credentialsCacheService.updateCredentials(username, new CachedWorkerCredentialsBuilder()
                     .externalPassword(password)
                     .build());
 
@@ -79,7 +84,7 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
 
     @Override
     public Uni<ComunytekHolidayResponse> isHoliday(final String username, final LocalDate holidayCandidate) {
-        final CachedWorkerCredentials credentials = credentialsCache.getIfPresent(username);
+        final CachedWorkerCredentials credentials = credentialsCacheService.getCredentials(username);
 
         if (credentials != null) {
             return Uni.createFrom().item(new ComunytekHolidayResponseBuilder()
@@ -101,7 +106,7 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     public Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp) {
         final ComunytekStatusResponse result;
 
-        final CachedWorkerCredentials credentials = credentialsCache.getIfPresent(username);
+        final CachedWorkerCredentials credentials = credentialsCacheService.getCredentials(username);
 
         if (credentials != null) {
             if (mockedRegistry.containsKey(username) && mockedRegistry.get(username).containsKey(timestamp.toLocalDate())) {
@@ -139,7 +144,7 @@ public class ComunytekReactiveMockedClient extends AbstractComunytekClient {
     public Uni<ComunytekUpdateStatusResponse> updateStatus(final String username, final ComunytekAction action, final LocalDateTime timestamp) {
         final ComunytekUpdateStatusResponse result;
 
-        final CachedWorkerCredentials credentials = credentialsCache.getIfPresent(username);
+        final CachedWorkerCredentials credentials = credentialsCacheService.getCredentials(username);
 
         if (credentials != null) {
             final ComunytekStatusValue status;

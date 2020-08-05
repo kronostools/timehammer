@@ -1,12 +1,13 @@
 package com.kronostools.timehammer.comunytek.model;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class CachedWorkerCredentials implements Serializable {
+public class CachedWorkerCredentials {
     private String externalPassword;
     private boolean invalid;
     private LocalDateTime invalidSince;
+
+    public CachedWorkerCredentials() {}
 
     public String getExternalPassword() {
         return externalPassword;

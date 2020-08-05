@@ -11,7 +11,7 @@ import io.smallrye.mutiny.Uni;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class DefaultComunytekClient extends AbstractComunytekClient {
+public class DefaultComunytekClient implements ComunytekClient {
     private final ComunytekReactiveMockedClient comunytekReactiveMockedClient;
     private final ComunytekReactiveRealClient comunytekReactiveRealClient;
     private final boolean comunytekClientMocked;

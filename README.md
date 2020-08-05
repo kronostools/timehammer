@@ -1,19 +1,15 @@
 # TODO
 
-- Revisar/Configurar rotacion de logs en ovh
-    - Revisar ocupacion de disco (03/08 - 6.1 GB | 19.0 GB)
-- Revisar el dump/load de los credenciales de comunytek en modo nativo
-- Revisar el mapeo de puertos para poder utilizar el /health (o /liveness /readyness)
-- Prueba día completo
-    - scheduler en ejecución
-    - comunytek real
+- Investigar por qué cuando está sin usar un rato el chatbot, la primera vez tarda en responder bastante
+    - Creo que también pasa cuando lo arranco en local, podría ser por el long polling o por cómo camel recupera los mensajes
+    - Es raro, porque si se envían mensajes seguidos, las respuestas son casi instantáneas
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
 - Revisar Chatbot
     - Formato de mensajes
     - Contenido de mensajes
-zzq- Preparar slides para presentación
+- Preparar slides para presentación
 - Preparar post en página personal
 - Preparar dashboard para control de módulos?? (serviría para presentación)
 - Crear tag 1.0.0
@@ -68,6 +64,10 @@ zzq- Preparar slides para presentación
 - Despliegue en producción
     - Revisión de contenido de páginas
     - Política de privacidad y de cookies
+- Tras procesar una answer ¿haría falta llamar a `answerCallbackQuery`? ¿Al llamar a este método se borra el teclado? ¿Cómo se visualizan las alertas/notificaciones al llamar a este método?
+    - Actualmente se está modificando el mensaje para quitarle el teclado, lo cual implica una gestión extra, que consiste en guardar en una cache los identificadores de los mensajes enviados con teclado para luego poder modificarlos
+    - ¿Se podría simplificar este comportamiento usando `answerCallbackQuery`?
+    - Igual se puede probar con el postman
 - Endpoint para generar un token (a partir de un chatId)
 - Proteger endpoint de reporte de ssid a través de un token
 - Aplicación Android para hacer de forma periódica el envío del SSID?
@@ -340,4 +340,10 @@ s6-svc -h /var/run/s6/services/nginx
 
 ```
 docker stats --format "table {{.ID}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+```
+
+### Mostrar el contenido de un volumen
+
+```
+docker run --rm -it -v timehammer_comunytekdata:/vol alpine:latest ls -al /vol
 ```

@@ -166,6 +166,7 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+    stop_grace_period: 15s
   commandprocessor:
     image: timehammer/commandprocessor:1.0.0
     logging:
@@ -254,6 +255,7 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
+    stop_grace_period: 15s
 
 volumes:
   dbdata:

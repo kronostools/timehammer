@@ -20,8 +20,4 @@ public interface ComunytekClient {
     Uni<ComunytekStatusResponse> getStatus(final String username, final LocalDateTime timestamp);
 
     Uni<ComunytekUpdateStatusResponse> updateStatus(final String username, final ComunytekAction action, final LocalDateTime timestamp);
-
-    void dumpCredentials();
-
-    void loadCredentials();
 }

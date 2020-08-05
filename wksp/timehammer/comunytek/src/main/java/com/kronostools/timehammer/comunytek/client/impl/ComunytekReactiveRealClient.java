@@ -10,6 +10,7 @@ import com.kronostools.timehammer.comunytek.constants.*;
 import com.kronostools.timehammer.comunytek.exception.ComunytekExpiredSessionException;
 import com.kronostools.timehammer.comunytek.exception.ComunytekUnexpectedException;
 import com.kronostools.timehammer.comunytek.model.*;
+import com.kronostools.timehammer.comunytek.service.CredentialsCacheService;
 import io.smallrye.mutiny.Uni;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.mutiny.core.Vertx;
@@ -27,12 +28,8 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
     private static final long UNEXPECTED_ERROR_MAX_RETRIES = 2L;
     private static final long EXPIRED_SESSION_MAX_RETRIES = 2L;
 
-    private static final String OK = "OK";
     private static final String LINE_BREAK = "\n";
     private static final String TAB = "\t";
-
-    private static final String ACTION_HOURS_REPORTED = "LISTRH";
-    private static final String ACTION_REPORT_HOURS = "ADDRH";
 
     private static final String ERROR_EXPIRED_SESSION = "ERROR La sesion es invalida o ha expirado";
 
@@ -44,7 +41,10 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
 
     public ComunytekReactiveRealClient(final Vertx vertx,
                                        final LoginCacheConfig loginCacheConfig,
-                                       final TimeMachineService timeMachineService) {
+                                       final TimeMachineService timeMachineService,
+                                       final CredentialsCacheService credentialsCacheService) {
+        super(credentialsCacheService);
+
         this.client = WebClient.create(vertx, new WebClientOptions()
                 .setDefaultHost("empleados.comunytek.com")
                 .setDefaultPort(443)
@@ -133,7 +133,7 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
 
             return Uni.createFrom().item(loginResponse);
         } else {
-            final CachedWorkerCredentials cachedWorkerCredentials = credentialsCache.getIfPresent(username);
+            final CachedWorkerCredentials cachedWorkerCredentials = credentialsCacheService.getCredentials(username);
 
             if (cachedWorkerCredentials == null) {
                 final String errorMessage = CommonUtils.stringFormat("Credentials of user '{}' are missing", username);
@@ -442,17 +442,17 @@ public class ComunytekReactiveRealClient extends AbstractComunytekClient {
     }
 
     private void updateCredentials(final String username, final String externalPassword) {
-        credentialsCache.put(username, new CachedWorkerCredentialsBuilder()
+        credentialsCacheService.updateCredentials(username, new CachedWorkerCredentialsBuilder()
                 .invalid(false)
                 .externalPassword(externalPassword)
                 .build());
     }
 
     private void markCredentialsAsInvalid(final String username) {
-        final CachedWorkerCredentials foundCredentials = credentialsCache.getIfPresent(username);
+        final CachedWorkerCredentials foundCredentials = credentialsCacheService.getCredentials(username);
 
         if (foundCredentials != null) {
-            credentialsCache.put(username, CachedWorkerCredentialsBuilder.copy(foundCredentials)
+            credentialsCacheService.updateCredentials(username, CachedWorkerCredentialsBuilder.copy(foundCredentials)
                     .invalid(true)
                     .invalidSince(timeMachineService.getNow())
                     .build());

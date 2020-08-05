@@ -1,8 +1,11 @@
 package com.kronostools.timehammer.comunytek.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@JsonPOJOBuilder(withPrefix = "")
 public class CachedWorkerCredentialsBuilder {
     private String externalPassword;
     private boolean invalid;

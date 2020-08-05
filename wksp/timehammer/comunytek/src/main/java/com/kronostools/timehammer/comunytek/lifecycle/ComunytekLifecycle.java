@@ -1,6 +1,6 @@
 package com.kronostools.timehammer.comunytek.lifecycle;
 
-import com.kronostools.timehammer.comunytek.client.ComunytekClient;
+import com.kronostools.timehammer.comunytek.service.CredentialsCacheService;
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 import org.slf4j.Logger;
@@ -13,16 +13,16 @@ import javax.enterprise.event.Observes;
 public class ComunytekLifecycle {
     private static final Logger LOG = LoggerFactory.getLogger(ComunytekLifecycle.class);
 
-    final ComunytekClient comunytekClient;
+    final CredentialsCacheService credentialsCacheService;
 
-    public ComunytekLifecycle(final ComunytekClient comunytekClient) {
-        this.comunytekClient = comunytekClient;
+    public ComunytekLifecycle(final CredentialsCacheService credentialsCacheService) {
+        this.credentialsCacheService = credentialsCacheService;
     }
 
     void onStartup(@Observes StartupEvent event) {
         LOG.info("BEGIN onStartup");
 
-        comunytekClient.loadCredentials();
+        credentialsCacheService.loadCredentials();
 
         LOG.info("END onStartup");
     }
@@ -30,7 +30,7 @@ public class ComunytekLifecycle {
     void onShutdown(@Observes ShutdownEvent event) {
         LOG.info("BEGIN onShutdown");
 
-        comunytekClient.dumpCredentials();
+        credentialsCacheService.dumpCredentials();
 
         LOG.info("END onShutdown");
     }

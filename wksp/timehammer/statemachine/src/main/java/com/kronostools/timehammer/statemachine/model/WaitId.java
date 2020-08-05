@@ -5,15 +5,16 @@ import com.kronostools.timehammer.common.messages.constants.AnswerOption;
 import com.kronostools.timehammer.common.messages.constants.StatusContext;
 import com.kronostools.timehammer.common.messages.constants.StatusContextAction;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class WaitId implements Serializable {
-    private final String workerInternalId;
-    private final StatusContext context;
-    private final StatusContextAction contextAction;
+public class WaitId {
+    private String workerInternalId;
+    private StatusContext context;
+    private StatusContextAction contextAction;
 
-    WaitId(final String workerInternalId, final StatusContext context, final StatusContextAction contextAction) {
+    public WaitId() {}
+
+    public WaitId(final String workerInternalId, final StatusContext context, final StatusContextAction contextAction) {
         this.workerInternalId = workerInternalId;
         this.context = context;
         this.contextAction = contextAction;
@@ -31,12 +32,24 @@ public class WaitId implements Serializable {
         return workerInternalId;
     }
 
+    public void setWorkerInternalId(String workerInternalId) {
+        this.workerInternalId = workerInternalId;
+    }
+
     public StatusContext getContext() {
         return context;
     }
 
+    public void setContext(StatusContext context) {
+        this.context = context;
+    }
+
     public StatusContextAction getContextAction() {
         return contextAction;
+    }
+
+    public void setContextAction(StatusContextAction contextAction) {
+        this.contextAction = contextAction;
     }
 
     @Override
@@ -52,5 +65,10 @@ public class WaitId implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(workerInternalId, context, contextAction);
+    }
+
+    @Override
+    public String toString() {
+        return workerInternalId + "#" + context.name() + "#" + contextAction.name();
     }
 }

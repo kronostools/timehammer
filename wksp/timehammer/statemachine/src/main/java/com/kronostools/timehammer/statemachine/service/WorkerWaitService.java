@@ -1,5 +1,9 @@
 package com.kronostools.timehammer.statemachine.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.kronostools.timehammer.common.constants.WorkerStatusAction;
@@ -8,13 +12,15 @@ import com.kronostools.timehammer.common.services.TimeMachineService;
 import com.kronostools.timehammer.common.utils.CommonDateTimeUtils;
 import com.kronostools.timehammer.statemachine.model.Wait;
 import com.kronostools.timehammer.statemachine.model.WaitId;
+import com.kronostools.timehammer.statemachine.model.deserializers.WaitIdDeserializer;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +32,17 @@ public class WorkerWaitService {
 
     private static final String CACHE_TMP_FILE = "/data/cache.ser";
 
+    private final ObjectMapper om;
     private final Cache<WaitId, Wait> workerWaitsCache;
     private final TimeMachineService timeMachineService;
 
     public WorkerWaitService(final TimeMachineService timeMachineService) {
         this.timeMachineService = timeMachineService;
+
+        this.om = new ObjectMapper();
+        this.om.registerModule(new JavaTimeModule());
+        this.om.registerModule(new SimpleModule()
+                .addKeyDeserializer(WaitId.class, new WaitIdDeserializer()));
 
         this.workerWaitsCache = Caffeine.newBuilder().build();
     }
@@ -109,11 +121,11 @@ public class WorkerWaitService {
         final ConcurrentMap<WaitId, Wait> source = workerWaitsCache.asMap();
 
         if (source.isEmpty()) {
-            LOG.debug("No waits to dump");
+            LOG.info("No waits to dump");
         } else {
             final LocalDateTime timestamp = timeMachineService.getNow();
 
-            LOG.debug("Dumping unexpired waits at '{}' to temporary file ...", CommonDateTimeUtils.formatDateTimeToLog(timestamp));
+            LOG.info("Dumping unexpired waits at '{}' to temporary file ...", CommonDateTimeUtils.formatDateTimeToLog(timestamp));
 
             final HashMap<WaitId, Wait> m = new HashMap<>(source.size());
             source.forEach((key, value) -> {
@@ -122,10 +134,9 @@ public class WorkerWaitService {
                 }
             });
 
-            try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                SerializationUtils.serialize(m, baos);
-                FileUtils.writeByteArrayToFile(new File(CACHE_TMP_FILE), baos.toByteArray());
-                LOG.debug("Dumped {} waits to temporary file!", m.size());
+            try {
+                FileUtils.writeByteArrayToFile(new File(CACHE_TMP_FILE), om.writeValueAsBytes(m));
+                LOG.info("Dumped {} waits to temporary file!", m.size());
             } catch (IOException e) {
                 LOG.error("Impossible to dump waits cache to temporary file", e);
             }
@@ -136,23 +147,24 @@ public class WorkerWaitService {
         final File cacheFile = new File(CACHE_TMP_FILE);
 
         if (cacheFile.exists() && cacheFile.canRead()) {
-            LOG.debug("Loading credentials from temporary file ...");
+            LOG.info("Loading waits from temporary file ...");
 
-            try (ByteArrayInputStream bais = new ByteArrayInputStream(FileUtils.readFileToByteArray(cacheFile)); ObjectInputStream ois = new ObjectInputStream(bais)) {
-                final Map<WaitId, Wait> m = (Map<WaitId, Wait>) ois.readObject();
+            try (ByteArrayInputStream bais = new ByteArrayInputStream(FileUtils.readFileToByteArray(cacheFile))) {
+                TypeReference<Map<WaitId, Wait>> typeRef = new TypeReference<>() {};
+                final Map<WaitId, Wait> m = om.readValue(bais, typeRef);
                 workerWaitsCache.putAll(m);
 
-                LOG.debug("Loaded {} waits from temprary file!", m.size());
+                LOG.info("Loaded {} waits from temprary file!", m.size());
 
                 if (cacheFile.canWrite()) {
-                    LOG.debug("Deleting temporary file ...");
+                    LOG.info("Deleting temporary file ...");
                     if (cacheFile.delete()) {
-                        LOG.debug("Deleted temporary file!");
+                        LOG.info("Deleted temporary file!");
                     } else {
                         LOG.warn("Temporary file could not be deleted");
                     }
                 }
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 LOG.error("Impossible to load waits cache from temporary file", e);
             }
         } else {
