@@ -1,18 +1,17 @@
 # TODO
 
-- Investigar por qué cuando está sin usar un rato el chatbot, la primera vez tarda en responder bastante
-    - Creo que también pasa cuando lo arranco en local, podría ser por el long polling o por cómo camel recupera los mensajes
-    - Es raro, porque si se envían mensajes seguidos, las respuestas son casi instantáneas
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
-- Revisar Chatbot
-    - Formato de mensajes
-    - Contenido de mensajes
-- Preparar slides para presentación
 - Preparar post en página personal
+    - Actualizar versión de página personal
+    - Crear un nuevo proyecto (del estilo al TFM)
+    - Preparar slides en la página del proyecto (con el plugin JS que viene en la página personal)
 - Preparar dashboard para control de módulos?? (serviría para presentación)
-- Crear tag 1.0.0
+- Cerrar version 1.0.0-ALPHA
+    - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
+    - Mergear rama develop -> master
+    - Crear TAG 1.0.0-ALPHA en REPO
 - *************** DEMO ***************
 
 # Backlog
@@ -20,19 +19,24 @@
 - Implementar la baja de un usuario (/unregister)
 - Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
-- Monitorización de componentes con Graphana y Prometheus
+- Monitorización de componentes
+    - ¿Dashboard custom con D3.js?
+    - ¿con Graphana y Prometheus?
+- Web Registro
+    - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
-- Añadir la posibilidad de meter excepciones al horario habitual
-    - cambiar widget
-    - la excepcion tendrá un periodo de aplicación
-    - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
-    - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
+- Fix en la página de actualizar contraseña: a pantalla completa en pc se ve descentrado el formulario (está a la izquierda)
 - Crear pagina de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
     - Protegida con el perfil
     - Habrá comando /admin (no público) para acceder a la administración
     - El comando /admin genera un link incluyendo el registrationId
     - Al acceder al Admin con el registrationId se comprueba el perfil del usuario
     - Si el usuario no es admin -> UnauthorizedException
+- Añadir la posibilidad de meter excepciones al horario habitual
+    - cambiar widget
+    - la excepcion tendrá un periodo de aplicación
+    - Extraer las preferencias a una tabla de bdd separada (con fecha inicio y fecha fin) para poder tener periodos de tiempo custom.
+    - Adaptar la recuperación de las preferencias actuales para tener en cuenta que puede haber periodos custom
 - Schedule
     - Añadir schedule para limpiar los trash_message
 - Añadir servicio de estadísticas de llamadas a Comunytek
@@ -43,8 +47,6 @@
 - Revisar el uso de .invoke() junto con .await().indefinitely()
     - genera problemas cuando se mezcla código procedimental con código reactivo
 - Revisar accesos a base de datos... cambiar DAO y usar los propios Bean para seleccionar (o hacerlo con transacciones para leer en una transacción)
-- Web Registro
-    - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Web Demo
     - Al ejecutar a mano un batch, además de poner el spinner sobre el botón en cuestión, quitar el texto de la última ejecución
     - Quitar RxJs y dejar todo con JQuery (más fácil de mantener)
@@ -61,13 +63,21 @@
         - Contenedor registry de docker en producción para publicar la imagen de timehammer?
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
+    - ¿Por qué de vez en cuando tengo que volver a introducir mi contraseña?
 - Despliegue en producción
     - Revisión de contenido de páginas
     - Política de privacidad y de cookies
+    - Revisar Chatbot
+        - Formato de mensajes
+        - Contenido de mensajes
 - Tras procesar una answer ¿haría falta llamar a `answerCallbackQuery`? ¿Al llamar a este método se borra el teclado? ¿Cómo se visualizan las alertas/notificaciones al llamar a este método?
     - Actualmente se está modificando el mensaje para quitarle el teclado, lo cual implica una gestión extra, que consiste en guardar en una cache los identificadores de los mensajes enviados con teclado para luego poder modificarlos
     - ¿Se podría simplificar este comportamiento usando `answerCallbackQuery`?
     - Igual se puede probar con el postman
+- Investigar por qué cuando está sin usar un rato el chatbot, la primera vez tarda en responder bastante
+    - Creo que también pasa cuando lo arranco en local, podría ser por el long polling o por cómo camel recupera los mensajes
+        - La configuración del componente está disponible [aqui](https://camel.apache.org/components/latest/telegram-component.html#_query_parameters_32_parameters)
+    - Es raro, porque si se envían mensajes seguidos, las respuestas son casi instantáneas
 - Endpoint para generar un token (a partir de un chatId)
 - Proteger endpoint de reporte de ssid a través de un token
 - Aplicación Android para hacer de forma periódica el envío del SSID?
