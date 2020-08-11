@@ -4,7 +4,6 @@
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
 - Preparar post en página personal
-    - Actualizar versión de página personal
     - Crear un nuevo proyecto (del estilo al TFM)
     - Preparar slides en la página del proyecto (con el plugin JS que viene en la página personal)
 - Preparar dashboard para control de módulos?? (serviría para presentación)
@@ -332,6 +331,9 @@ Parar servicios:
 ```
 docker-compose stop scheduler web core catalog integration comunytek telegramchatbot commandprocessor telegramchatbotnotifier statemachine
 docker-compose rm -f scheduler web core catalog integration comunytek telegramchatbot commandprocessor telegramchatbotnotifier statemachine
+
+docker-compose stop db kafka zookeeper
+docker-compose rm -f db kafka zookeeper
 ```
 
 ## FAQ
