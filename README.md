@@ -11,7 +11,8 @@
     - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
     - Mergear rama develop -> master
     - Crear TAG 1.0.0-ALPHA en REPO
-- *************** DEMO ***************
+
+*************** DEMO ***************
 
 # Backlog
 
@@ -25,7 +26,7 @@
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
 - Fix en la página de actualizar contraseña: a pantalla completa en pc se ve descentrado el formulario (está a la izquierda)
-- Crear pagina de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
+- Crear página de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
     - Protegida con el perfil
     - Habrá comando /admin (no público) para acceder a la administración
     - El comando /admin genera un link incluyendo el registrationId
@@ -86,132 +87,14 @@
 - Añadir método para determinar la acción para un worker en base a sus SsidTrackingEvent (CONNECTED, DISCONNECTED, TICK)
 - I18N para los HTML?
     - Las validaciones ya están en multiidoma (se podrían configurar distintos mensajes creando un fichero de properties para el idioma en cuestion)
----
 
-# Referencias
+# Compilación en nativo
 
-## Hibernate - Relationships
+### Construir imagen base
 
-https://vladmihalcea.com/the-best-way-to-map-a-onetomany-association-with-jpa-and-hibernate/
-https://vladmihalcea.com/the-best-way-to-map-a-onetoone-relationship-with-jpa-and-hibernate/
+Se utiliza una imagen distroless para la ejecución del código Quarkus compilado en nativo. La imagen que se utiliza es la de [Google](https://github.com/GoogleContainerTools/distroless/tree/master/cc) con alguna pequeña modificación sobre las librerías que lleva instaladas.
 
-## Hibernate - Enums
-
-https://vladmihalcea.com/the-best-way-to-map-an-enum-type-with-jpa-and-hibernate/
-
-## Hibernate - HashCode and Equals
-
-https://vladmihalcea.com/hibernate-facts-equals-and-hashcode/
-https://vladmihalcea.com/the-best-way-to-implement-equals-hashcode-and-tostring-with-jpa-and-hibernate/
-https://vladmihalcea.com/the-best-way-to-map-a-naturalid-business-key-with-jpa-and-hibernate/
-https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
-
-## Hibernate - Date
-
-https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
-
-## Hibernate - Persist collections
-
-https://vladmihalcea.com/merge-entity-collections-jpa-hibernate/
-
-## Hibernate - Validations
-
-https://dwuysan.wordpress.com/2012/03/20/cross-field-validation-using-bean-validation-jsr-303/amp/
-
-## DTO Mappings
-
-https://mapstruct.org/news/2019-12-06-mapstruct-and-quarkus/
-
-## Front - Componente RangeSlider
-
-http://ionden.com/a/plugins/ion.rangeSlider/index.html
-
-## Quarkus - Cheatsheet
-
-https://lordofthejars.github.io/quarkus-cheat-sheet
-
-## Quarkus - Camel
-
-https://camel.apache.org/camel-quarkus/latest/first-steps.html
-https://camel.apache.org/camel-quarkus/latest/list-of-camel-quarkus-extensions.html
-https://camel.apache.org/components/latest/telegram-component.html
-
-## Telegram - API
-
-https://core.telegram.org/bots/api
-
-## NGINX + Let's encrypt
-
-https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
-https://thepolyglotdeveloper.com/2017/03/nginx-reverse-proxy-containerized-docker-applications
-
-## Docker Compose - extending services
-
-https://docs.docker.com/compose/extends
-
-## Reactive
-
-https://quarkus.io/guides/getting-started-reactive
-https://quarkus.io/guides/reactive-routes
-https://vertx.io/docs/vertx-web/java
-https://quarkus.io/guides/kafka
-https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2/index.html
-https://smallrye.io/smallrye-mutiny
-https://vertx.io/docs/vertx-pg-client/java
-
----
-
-# Creación de un proyecto quarkus.io
-
-```
-$ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
-$ mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create \
-    -DprojectGroupId=com.kronostools.timehammer \
-    -DprojectArtifactId=ssidtracking \
-    -DclassName="com.diegocastroviadero.timehammer.ssidtracking.SSIDTrackingResource" \
-    -Dpath="/trackSSID"
-```
-
-Para arrancar el proyecto quarkus.io:
-
-```
-$ mvn quarkus:dev
-```
-
-# Arranque
-
-```
-# run web service
-$ docker-compose up web
-
-# run db service
-$ docker-compose up -d db
-```
-
-# PSQL commands
-
-```
-# listar bases de datos
-$ \l
-
-# cambiar de base de datos
-$ \c <database>
-
-# listar tablas
-$ \dt
-
-# listar secuencias
-$ \ds
-
-# describir tabla
-$ \d <table>
-```
-
-# Build Native
-
-Para compilar la imagen distroless que se usa para ejecutar las compilaciones nativas de quarkus
-
-(https://github.com/GoogleContainerTools/distroless/tree/master/cc)
+Para construir la imagen de google hay que utilizar `bazel` versión `3.2.0` (a día 01/08/2020). Los comandos a ejecutar son los siguientes:
 
 ```
 bazel-3.2.0 build --host_force_python=PY2 //package_manager:dpkg_parser.par
@@ -219,11 +102,13 @@ bazel-3.2.0 build --host_force_python=PY2 //cc:cc_debian10
 bazel-3.2.0 run --host_force_python=PY2 //cc:cc_debian10
 ```
 
-Retaggear la imagen distroless generada:
+Finalmente se retaggea la imagen distroless generada:
 
 ```
 docker tag bazel/cc:cc_debian10 timehammer/base-debian10:1.0.0
 ```
+
+### Compilar el código Quarkus en nativo
 
 Para compilar el código en nativo
 
@@ -241,7 +126,7 @@ Para construir imagen con el ejecutable nativo
 
 (a mejorar)
 
-exportar las imágenes
+Exportar las imágenes
 
 ```
 docker image save --output wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer/telegramchatbotnotifier:1.0.0
@@ -256,7 +141,7 @@ docker image save --output wksp\images\web-1.0.0.tar timehammer/web:1.0.0
 docker image save --output wksp\images\scheduler-1.0.0.tar timehammer/scheduler:1.0.0
 ```
 
-subir imágenes al servidor
+Subir imágenes al servidor
 
 ```
 scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer@54.37.152.149:/tmp
@@ -271,7 +156,7 @@ scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\web-1.0.0.tar timehammer@54
 scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\scheduler-1.0.0.tar timehammer@54.37.152.149:/tmp
 ```
 
-cargar las imágenes el el registry local
+Cargar las imágenes en el registry local
 
 ```
 docker load --input /tmp/telegramchatbotnotifier-1.0.0.tar
@@ -336,9 +221,9 @@ docker-compose stop db kafka zookeeper
 docker-compose rm -f db kafka zookeeper
 ```
 
-## FAQ
+# HOWTOs
 
-### Para recargar la configuración de nginx (reverseproxy)
+### Cómo recargar la configuración de nginx en caliente (reverseproxy)
 
 Desde dentro del contenedor, ejecutar:
 
@@ -346,7 +231,7 @@ Desde dentro del contenedor, ejecutar:
 s6-svc -h /var/run/s6/services/nginx
 ```
 
-### Obtener consumo de CPU y memoria de los contenedores
+### Cómo obtener el consumo de CPU y memoria de los contenedores
 
 [https://docs.docker.com/engine/reference/commandline/stats]
 
@@ -354,8 +239,121 @@ s6-svc -h /var/run/s6/services/nginx
 docker stats --format "table {{.ID}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
 ```
 
-### Mostrar el contenido de un volumen
+Para mostrar el resultado ordenado por nombre de contenedor:
+
+```
+docker stats --no-stream --format "table {{.ID}}\t{{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" | (sed -u 1q; sort -k 2)
+```
+
+### Cómo mostrar el contenido de un volumen
 
 ```
 docker run --rm -it -v timehammer_comunytekdata:/vol alpine:latest ls -al /vol
 ```
+
+### Comandos básicos PSQL
+
+```
+# listar bases de datos
+$ \l
+
+# cambiar de base de datos
+$ \c <database>
+
+# listar tablas
+$ \dt
+
+# listar secuencias
+$ \ds
+
+# describir tabla
+$ \d <table>
+```
+
+### Cómo crear un proyecto quarkus.io
+
+```
+$ docker run -it --rm -v C:\work\repos\kronostools\timehammer\wksp\timehammer:/root/wksp/timehammer -v %USERPROFILE%\.m2\repository:/root/.m2/repository maven:3.6.3-jdk-11-slim bash
+$ mvn io.quarkus:quarkus-maven-plugin:1.6.0.Final:create \
+    -DprojectGroupId=com.kronostools.timehammer \
+    -DprojectArtifactId=ssidtracking \
+    -DclassName="com.diegocastroviadero.timehammer.ssidtracking.SSIDTrackingResource" \
+    -Dpath="/trackSSID"
+```
+
+Para arrancar el proyecto quarkus.io en modo de desarrollo
+
+```
+$ mvn quarkus:dev
+```
+
+# Referencias
+
+### DTO Mappings
+
+https://mapstruct.org/news/2019-12-06-mapstruct-and-quarkus/
+
+### Front - Componente RangeSlider
+
+http://ionden.com/a/plugins/ion.rangeSlider/index.html
+
+### Quarkus - Cheatsheet
+
+https://lordofthejars.github.io/quarkus-cheat-sheet
+
+### Quarkus - Camel
+
+https://camel.apache.org/camel-quarkus/latest/first-steps.html
+https://camel.apache.org/camel-quarkus/latest/list-of-camel-quarkus-extensions.html
+https://camel.apache.org/components/latest/telegram-component.html
+
+### Telegram - API
+
+https://core.telegram.org/bots/api
+
+### NGINX + Let's encrypt
+
+https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+https://thepolyglotdeveloper.com/2017/03/nginx-reverse-proxy-containerized-docker-applications
+
+### Docker Compose - extending services
+
+https://docs.docker.com/compose/extends
+
+### Reactive
+
+https://quarkus.io/guides/getting-started-reactive
+https://quarkus.io/guides/reactive-routes
+https://vertx.io/docs/vertx-web/java
+https://quarkus.io/guides/kafka
+https://smallrye.io/smallrye-reactive-messaging/smallrye-reactive-messaging/2/index.html
+https://smallrye.io/smallrye-mutiny
+https://vertx.io/docs/vertx-pg-client/java
+
+### Hibernate - Relationships
+
+https://vladmihalcea.com/the-best-way-to-map-a-onetomany-association-with-jpa-and-hibernate/
+https://vladmihalcea.com/the-best-way-to-map-a-onetoone-relationship-with-jpa-and-hibernate/
+
+### Hibernate - Enums
+
+https://vladmihalcea.com/the-best-way-to-map-an-enum-type-with-jpa-and-hibernate/
+
+### Hibernate - HashCode and Equals
+
+https://vladmihalcea.com/hibernate-facts-equals-and-hashcode/
+https://vladmihalcea.com/the-best-way-to-implement-equals-hashcode-and-tostring-with-jpa-and-hibernate/
+https://vladmihalcea.com/the-best-way-to-map-a-naturalid-business-key-with-jpa-and-hibernate/
+https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+
+### Hibernate - Date
+
+https://vladmihalcea.com/how-to-store-date-time-and-timestamps-in-utc-time-zone-with-jdbc-and-hibernate/
+
+### Hibernate - Persist collections
+
+https://vladmihalcea.com/merge-entity-collections-jpa-hibernate/
+
+### Hibernate - Validations
+
+https://dwuysan.wordpress.com/2012/03/20/cross-field-validation-using-bean-validation-jsr-303/amp/
