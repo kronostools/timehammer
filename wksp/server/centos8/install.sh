@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Review if Docker can be installed through get.docker.com (a lot easier)
+
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
 dnf list docker-ce

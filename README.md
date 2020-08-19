@@ -22,6 +22,8 @@
 - Monitorización de componentes
     - ¿Dashboard custom con D3.js?
     - ¿con Graphana y Prometheus?
+- Gestión de componentes
+    - [Gestión de Docker/Swarm/Kubernetes](https://www.portainer.io/installation/)
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
@@ -61,6 +63,10 @@
     - Estudiar uso de registry
         - Docker Hub?
         - Contenedor registry de docker en producción para publicar la imagen de timehammer?
+            - [UI Gestión de permisos de docker registry](http://port.us.org): muy interesante para utilizar junto con *Distribution* (la nueva version de Docker Registry)
+            - [Distribution o Docker Registry 2](https://github.com/docker/distribution): nueva versión de Docker Registry
+            - [Cómo securizar Docker Registry con certificado y password](https://training.play-with-docker.com/linux-registry-part2)
+            - [Cómo securizar Docker Registry con NGINX](https://docs.docker.com/registry/recipes/nginx)
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
     - ¿Por qué de vez en cuando tengo que volver a introducir mi contraseña?
@@ -70,6 +76,7 @@
     - Revisar Chatbot
         - Formato de mensajes
         - Contenido de mensajes
+- Actualizar Quarkus (a 14/08/2020 van por la 1.7.0)
 - Tras procesar una answer ¿haría falta llamar a `answerCallbackQuery`? ¿Al llamar a este método se borra el teclado? ¿Cómo se visualizan las alertas/notificaciones al llamar a este método?
     - Actualmente se está modificando el mensaje para quitarle el teclado, lo cual implica una gestión extra, que consiste en guardar en una cache los identificadores de los mensajes enviados con teclado para luego poder modificarlos
     - ¿Se podría simplificar este comportamiento usando `answerCallbackQuery`?
