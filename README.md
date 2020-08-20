@@ -1,12 +1,75 @@
 # TODO
 
+- Merece la pena la compilación a nativo y el uso de imágenes distroless?
+    - Cambiar por compilación java normal y empaquetado normal de imágenes
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
 - Preparar post en página personal
     - Crear un nuevo proyecto (del estilo al TFM)
     - Preparar slides en la página del proyecto (con el plugin JS que viene en la página personal)
+- Repo Git privado?
+    - Migrar a BitBucket?
 - Preparar dashboard para control de módulos?? (serviría para presentación)
+- Migrar a Kubernetes (más complicado que Swarm, pero más flexible y es hacia donde va el mercado, más ejemplos, soporte, comunidad)
+    - Crear los manifests de los dicerentes Deployments, Services, etc.
+    - Hacer uso de los Secrets (y ConfigMaps)
+    - Probar a instalar el Dashboard de Kubernetes
+        - Probar también Portainer para kubernetes?
+    - Base de datos
+        - O se externaliza (y en kubernetes se podría crear un Service de tipo ExternalName)
+        - O se despliega en kubernetes
+            - Se puede utilizar un persistent volume local (jugando con los label y los taints para "reservar" un nodo para la base de datos)
+            - Se puede tratar de crear un persistent volume distribuido de tal forma que no importe que se mueva de nodo (mirar también el controller StatefulSet o alternativa)
+    - Kafka
+        - Revisar la persistencia, si hace falta (que supongo que debería, para poder llevar el control de los mensajes procesados y pendientes), estamos ante la misma situación que la base de datos, aunque peor, porque externalizarlo no es tan fácil
+        - Modo cluster, debería haber 3 instancias
+    - Zookeeper
+        - Cambiarlo a modo cluster, debería haber 3 instancias (2GB de RAM cada una? me parece un poco excesivo para el uso que se le va a dar)
+            - Podría haber 3 Instancias de 2GB tanto para los zookeeper como para los kafka
+    - Para el enrutado utilizar un Controller Ingress
+        - Service Mesh?
+        - Istio?
+        - Istio y Kafka qué tal se llevan?
+        - Se puede prescindir del NGINX?
+        - Cómo se gestionan los certificados de Letsencrypt?
+- Migrar a cloud
+    - Clouds candidatos:
+        - RPi 4
+            - un único gasto
+            - más control
+            - Construir la imagen strimzi/kafka para arm64
+            - referencias
+                - https://opensource.com/article/20/6/kubernetes-raspberry-pi
+                - https://opensource.com/article/20/5/create-simple-cloud-init-service-your-homelab
+                - https://opensource.com/article/20/5/nfs-raspberry-pi
+                - https://opensource.com/article/20/6/kubernetes-nfs-client-provisioning
+                - https://opensource.com/article/19/3/how-run-postgresql-kubernetes
+                    - https://crunchydata.github.io/postgres-operator/stable/#documentation
+                - https://opensource.com/article/20/8/ingress-controllers-kubernetes
+                - https://opensource.com/article/20/7/homelab-metallb
+                - https://opensource.com/article/20/6/kubernetes-lens
+                - https://opensource.com/article/20/3/kubernetes-traefik
+                - https://opensource.com/article/19/3/getting-started-jaeger
+                - https://opensource.com/article/19/2/scaling-postgresql-kubernetes-operators
+                - más:
+                    https://opensource.com/tags/kubernetes
+        - DigitalOcean
+            - parece más pro que OVH
+            - tengo este descuento (https://www.digitalocean.com/?refcode=ee97875d52fa&utm_campaign=Referral_Invite&utm_medium=Referral_Program&utm_source=CopyPaste)
+        - AWS
+            - más complicado que OVH
+            - diría que más caro que OVH
+    - Hace falta disponer de un LoadBalancer en el Cloud para poder acceder desde fuera
+    - Para poder utilizar kubernetes en el cloud hay que publicar las imágenes en un Registry
+        - Se utiliza Docker Hub
+            - Para publicar imágenes de forma pública no hay problema
+            - Se puede crear un repo privado de forma gratuita
+            - Si se necesitan más repos privados son 5$/mo
+        - Se despliega un registry privado
+            - Más complejidad
+            - Tendría el coste de una máquina (que va a ser muy cercano al coste de Docker Hub de pago)
+            - En este caso se utilizaría ([Docker Distribution](https://github.com/docker/distribution) + [Portus](http://port.us.org))
 - Cerrar version 1.0.0-ALPHA
     - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
     - Mergear rama develop -> master
@@ -59,14 +122,6 @@
 - Icono TimeHammer
 - Icono KronosTools
 - Revisar si ha salido la versión final de camel (actualmente 1.0.0-CR3)
-- Mejorar flujo de despliegue en producción
-    - Estudiar uso de registry
-        - Docker Hub?
-        - Contenedor registry de docker en producción para publicar la imagen de timehammer?
-            - [UI Gestión de permisos de docker registry](http://port.us.org): muy interesante para utilizar junto con *Distribution* (la nueva version de Docker Registry)
-            - [Distribution o Docker Registry 2](https://github.com/docker/distribution): nueva versión de Docker Registry
-            - [Cómo securizar Docker Registry con certificado y password](https://training.play-with-docker.com/linux-registry-part2)
-            - [Cómo securizar Docker Registry con NGINX](https://docs.docker.com/registry/recipes/nginx)
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
     - ¿Por qué de vez en cuando tengo que volver a introducir mi contraseña?
