@@ -1,0 +1,82 @@
+version: '3'
+services:
+  scheduler:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-schedulerb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/scheduler
+    command: ["mvn", "clean", "package"]
+  catalog:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-catalogb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/catalog
+    command: ["mvn", "clean", "package"]
+  core:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-coreb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/core
+    command: ["mvn", "clean", "package"]
+  integration:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-integrationb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/integration
+    command: ["mvn", "clean", "package"]
+  comunytek:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-comunytekb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/comunytek
+    command: ["mvn", "clean", "package"]
+  commandprocessor:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-commandprocessorb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/commandprocessor
+    command: ["mvn", "clean", "package"]
+  telegramchatbot:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-telegramchatbotb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/telegramchatbot
+    command: ["mvn", "clean", "package"]
+  telegramchatbotnotifier:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-telegramchatbotnotifierb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/telegramchatbotnotifier
+    command: ["mvn", "clean", "package"]
+  web:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-webb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/web
+    command: ["mvn", "clean", "package"]
+  statemachine:
+    image: quay.io/quarkus/centos-quarkus-maven:20.1.0-java11
+    container_name: timehammer-statemachineb
+    volumes:
+      - ./wksp/timehammer:/project/timehammer
+      - ${USERPROFILE}/.m2/repository:/home/quarkus/.m2/repository
+    working_dir: /project/timehammer/statemachine
+    command: ["mvn", "clean", "package"]

@@ -1,0 +1,308 @@
+version: '2.4'
+services:
+  db:
+    image: postgres:12.2-alpine
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-db
+    environment:
+      POSTGRES_USER: timehammer
+      POSTGRES_DB: timehammer
+      POSTGRES_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      TZ: Etc/UTC
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 32m
+    memswap_limit: 32m
+    mem_reservation: 16m
+  reverseproxy:
+    image: linuxserver/letsencrypt:1.3.0-ls109
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-reverseproxy
+    environment:
+      PUID: 1001 # timehammer
+      PGID: 1001 # timehammer
+      TZ: Etc/UTC
+      URL: kronostools.com
+      SUBDOMAINS: timehammer,
+      VALIDATION: http
+      EMAIL: admin@kronostools.com
+      DHLEVEL: 2048
+      ONLY_SUBDOMAINS: "true"
+      STAGING: "false"
+    volumes:
+      - ./wksp/reverseproxy/config:/config
+    ports:
+      - 80:80
+      - 443:443
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 64m
+    memswap_limit: 32m
+    mem_reservation: 32m
+  zookeeper:
+    image: strimzi/kafka:0.17.0-kafka-2.4.0
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-zookeeperkafka
+    command: ["sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"]
+    environment:
+      LOG_DIR: /tmp/logs
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 512m
+    memswap_limit: 512m
+    mem_reservation: 256m
+  kafka:
+    image: strimzi/kafka:0.17.0-kafka-2.4.0
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-kafka
+    command: ["sh", "-c", "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"]
+    depends_on:
+      - zookeeper
+    environment:
+      LOG_DIR: "/tmp/logs"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 1536m
+    memswap_limit: 1536m
+    mem_reservation: 1024m
+  scheduler:
+    image: qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-scheduler
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  catalog:
+    image: qopuir/timehammer-catalog:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-catalog
+    environment:
+      TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - db
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  core:
+    image: qopuir/timehammer-core:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-core
+    environment:
+      TIMEHAMMER_DB_PASSWORD: ${TIMEHAMMER_DB_PASSWORD}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - db
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 256m
+    mem_reservation: 128m
+  integration:
+    image: qopuir/timehammer-integration:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-integration
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  comunytek:
+    image: qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-comunytek
+    volumes:
+      - comunytekdata:/data
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    stop_grace_period: 15s
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  commandprocessor:
+    image: qopuir/timehammer-commandprocessor:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-commandprocessor
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  telegramchatbot:
+    image: qopuir/timehammer-telegramchatbot:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-telegramchatbot
+    environment:
+      TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 256m
+    mem_reservation: 128m
+  telegramchatbotnotifier:
+    image: qopuir/timehammer-telegramchatbotnotifier:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-telegramchatbotnotifier
+    environment:
+      TIMEHAMMER_CHATBOT_TOKEN: ${TIMEHAMMER_CHATBOT_TOKEN}
+      TIMEHAMMER_CHATBOT_TOKEN_DEMO: ${TIMEHAMMER_CHATBOT_TOKEN_DEMO}
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  web:
+    image: qopuir/timehammer-web:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-web
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    ports:
+      - 8090:8080
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+  statemachine:
+    image: qopuir/timehammer-statemachine:1.0.0-SNAPSHOT
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "5m"
+    container_name: timehammer-statemachine
+    volumes:
+      - statemachinedata:/data
+    environment:
+      QUARKUS_PROFILE: ${QUARKUS_PROFILE}
+    command: ["./application", "-Dquarkus.http.host=0.0.0.0"]
+    depends_on:
+      - kafka
+    networks:
+      - timehammer
+    restart: unless-stopped
+    stop_grace_period: 15s
+    mem_limit: 192m
+    memswap_limit: 192m
+    mem_reservation: 128m
+
+volumes:
+  dbdata:
+  comunytekdata:
+  statemachinedata:
+
+networks:
+  timehammer:

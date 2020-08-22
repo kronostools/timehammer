@@ -1,16 +1,18 @@
 # TODO
 
-- Merece la pena la compilación a nativo y el uso de imágenes distroless?
-    - Cambiar por compilación java normal y empaquetado normal de imágenes
+- Cambiar a compilación java normal y construcción normal de imágenes
+- Publicar las imágenes en Docker Hub
+- Desplegar de nuevo en OVH y vigilar el consumo de recursos
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
 - Preparar post en página personal
     - Crear un nuevo proyecto (del estilo al TFM)
     - Preparar slides en la página del proyecto (con el plugin JS que viene en la página personal)
-- Repo Git privado?
-    - Migrar a BitBucket?
-- Preparar dashboard para control de módulos?? (serviría para presentación)
+- Privacidad de código?
+    - Repo Git privado? Migrar a BitBucket?
+    - Repo Docker Hub privado?
+- Preparar diagrama con arquitectura de colas y módulos
 - Migrar a Kubernetes (más complicado que Swarm, pero más flexible y es hacia donde va el mercado, más ejemplos, soporte, comunidad)
     - Crear los manifests de los dicerentes Deployments, Services, etc.
     - Hacer uso de los Secrets (y ConfigMaps)
@@ -21,6 +23,7 @@
         - O se despliega en kubernetes
             - Se puede utilizar un persistent volume local (jugando con los label y los taints para "reservar" un nodo para la base de datos)
             - Se puede tratar de crear un persistent volume distribuido de tal forma que no importe que se mueva de nodo (mirar también el controller StatefulSet o alternativa)
+                - https://github.com/longhorn/longhorn
     - Kafka
         - Revisar la persistencia, si hace falta (que supongo que debería, para poder llevar el control de los mensajes procesados y pendientes), estamos ante la misma situación que la base de datos, aunque peor, porque externalizarlo no es tan fácil
         - Modo cluster, debería haber 3 instancias
@@ -33,13 +36,20 @@
         - Istio y Kafka qué tal se llevan?
         - Se puede prescindir del NGINX?
         - Cómo se gestionan los certificados de Letsencrypt?
+        - Istio aplica? No son microservicios HTTP
 - Migrar a cloud
     - Clouds candidatos:
         - RPi 4
+            - hardware
+                - [Pagina interesante con serie en youtube](https://www.jeffgeerling.com/blog/2020/raspberry-pi-cluster-episode-6-turing-pi-review)
+                - [switch netgear 8 poe 120W](https://www.amazon.es/gp/product/B076BV421P/ref=ox_sc_act_title_1?smid=A1AT7YVPFBWXBL&psc=1)
+                - [rpi poe hat](https://www.tiendatec.es/raspberry-pi/hats/757-raspberry-pi-hat-poe-r20-0652508442105.html?src=raspberrypi)
+                - [rpi 4 model b 8GB RAM](https://www.tiendatec.es/raspberry-pi/placas-base/1231-raspberry-pi-4-modelo-b-8gb-765756931199.html?src=raspberrypi)
             - un único gasto
             - más control
             - Construir la imagen strimzi/kafka para arm64
             - referencias
+                - [resolver problemas de calor con rpi4](https://raspberryparatorpes.net/raspbian-2/nuevo-firmware-para-raspberry-pi-4/)
                 - https://opensource.com/article/20/6/kubernetes-raspberry-pi
                 - https://opensource.com/article/20/5/create-simple-cloud-init-service-your-homelab
                 - https://opensource.com/article/20/5/nfs-raspberry-pi
@@ -150,6 +160,53 @@
 - I18N para los HTML?
     - Las validaciones ya están en multiidoma (se podrían configurar distintos mensajes creando un fichero de properties para el idioma en cuestion)
 
+# Compilación java
+
+Compilar el código java
+
+```
+docker-compose -f docker-compose.compile.yml up telegramchatbotnotifier
+docker-compose -f docker-compose.compile.yml up telegramchatbot
+docker-compose -f docker-compose.compile.yml up statemachine
+docker-compose -f docker-compose.compile.yml up commandprocessor
+docker-compose -f docker-compose.compile.yml up comunytek
+docker-compose -f docker-compose.compile.yml up integration
+docker-compose -f docker-compose.compile.yml up catalog
+docker-compose -f docker-compose.compile.yml up core
+docker-compose -f docker-compose.compile.yml up web
+docker-compose -f docker-compose.compile.yml up scheduler
+```
+
+Construir las imágenes
+
+```
+docker-compose -f docker-compose.imgbuild.yml build telegramchatbotnotifier
+docker-compose -f docker-compose.imgbuild.yml build telegramchatbot
+docker-compose -f docker-compose.imgbuild.yml build statemachine
+docker-compose -f docker-compose.imgbuild.yml build commandprocessor
+docker-compose -f docker-compose.imgbuild.yml build comunytek
+docker-compose -f docker-compose.imgbuild.yml build integration
+docker-compose -f docker-compose.imgbuild.yml build catalog
+docker-compose -f docker-compose.imgbuild.yml build core
+docker-compose -f docker-compose.imgbuild.yml build web
+docker-compose -f docker-compose.imgbuild.yml build scheduler
+```
+
+Publicar imágenes en *Docker Hub*
+
+```
+docker push qopuir/timehammer-telegramchatbotnotifier:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-telegramchatbot:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-statemachine:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-commandprocessor:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-integration:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-catalog:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-core:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-web:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
+```
+
 # Compilación en nativo
 
 ### Construir imagen base
@@ -175,63 +232,49 @@ docker tag bazel/cc:cc_debian10 timehammer/base-debian10:1.0.0
 Para compilar el código en nativo
 
 ```
-$ docker-compose --file docker-compose.nativebuild.yml up catalog
+docker-compose -f docker-compose.compilenative.yml up telegramchatbotnotifier
+docker-compose -f docker-compose.compilenative.yml up telegramchatbot
+docker-compose -f docker-compose.compilenative.yml up statemachine
+docker-compose -f docker-compose.compilenative.yml up commandprocessor
+docker-compose -f docker-compose.compilenative.yml up comunytek
+docker-compose -f docker-compose.compilenative.yml up integration
+docker-compose -f docker-compose.compilenative.yml up catalog
+docker-compose -f docker-compose.compilenative.yml up core
+docker-compose -f docker-compose.compilenative.yml up web
+docker-compose -f docker-compose.compilenative.yml up scheduler
 ```
 
 Para construir imagen con el ejecutable nativo
 
 ```
-> docker-compose --file docker-compose.native.yml build web
+docker-compose -f docker-compose.imgbuildnative.yml build telegramchatbotnotifier
+docker-compose -f docker-compose.imgbuildnative.yml build telegramchatbot
+docker-compose -f docker-compose.imgbuildnative.yml build statemachine
+docker-compose -f docker-compose.imgbuildnative.yml build commandprocessor
+docker-compose -f docker-compose.imgbuildnative.yml build comunytek
+docker-compose -f docker-compose.imgbuildnative.yml build integration
+docker-compose -f docker-compose.imgbuildnative.yml build catalog
+docker-compose -f docker-compose.imgbuildnative.yml build core
+docker-compose -f docker-compose.imgbuildnative.yml build web
+docker-compose -f docker-compose.imgbuildnative.yml build scheduler
+```
+
+Publicar imágenes en *Docker Hub*
+
+```
+docker push qopuir/timehammer-telegramchatbotnotifier-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-telegramchatbot-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-statemachine-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-commandprocessor-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-comunytek-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-integration-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-catalog-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-core-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-web-native:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-scheduler-native:1.0.0-SNAPSHOT
 ```
 
 # Despliegue en producción
-
-(a mejorar)
-
-Exportar las imágenes
-
-```
-docker image save --output wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer/telegramchatbotnotifier:1.0.0
-docker image save --output wksp\images\telegramchatbot-1.0.0.tar timehammer/telegramchatbot:1.0.0
-docker image save --output wksp\images\statemachine-1.0.0.tar timehammer/statemachine:1.0.0
-docker image save --output wksp\images\commandprocessor-1.0.0.tar timehammer/commandprocessor:1.0.0
-docker image save --output wksp\images\comunytek-1.0.0.tar timehammer/comunytek:1.0.0
-docker image save --output wksp\images\integration-1.0.0.tar timehammer/integration:1.0.0
-docker image save --output wksp\images\catalog-1.0.0.tar timehammer/catalog:1.0.0
-docker image save --output wksp\images\core-1.0.0.tar timehammer/core:1.0.0
-docker image save --output wksp\images\web-1.0.0.tar timehammer/web:1.0.0
-docker image save --output wksp\images\scheduler-1.0.0.tar timehammer/scheduler:1.0.0
-```
-
-Subir imágenes al servidor
-
-```
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\telegramchatbotnotifier-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\telegramchatbot-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\statemachine-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\commandprocessor-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\comunytek-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\integration-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\catalog-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\core-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\web-1.0.0.tar timehammer@54.37.152.149:/tmp
-scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\images\scheduler-1.0.0.tar timehammer@54.37.152.149:/tmp
-```
-
-Cargar las imágenes en el registry local
-
-```
-docker load --input /tmp/telegramchatbotnotifier-1.0.0.tar
-docker load --input /tmp/telegramchatbot-1.0.0.tar
-docker load --input /tmp/statemachine-1.0.0.tar
-docker load --input /tmp/commandprocessor-1.0.0.tar
-docker load --input /tmp/comunytek-1.0.0.tar
-docker load --input /tmp/integration-1.0.0.tar
-docker load --input /tmp/catalog-1.0.0.tar
-docker load --input /tmp/core-1.0.0.tar
-docker load --input /tmp/web-1.0.0.tar
-docker load --input /tmp/scheduler-1.0.0.tar
-```
 
 Preparar estructura de contenido:
 
@@ -248,7 +291,11 @@ scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\reverseproxy\config\nginx\proxy-co
 Subir `docker-compose`:
 
 ```
-scp -i %USERPROFILE%/.ssh/timehammer.ovh docker-compose.nativeremote.yml timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer/docker-compose.yml
+# java
+scp -i %USERPROFILE%/.ssh/timehammer.ovh docker-compose.runremote.yml timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer/docker-compose.yml
+
+# nativo
+scp -i %USERPROFILE%/.ssh/timehammer.ovh docker-compose.runremotenative.yml timehammer@54.37.152.149:/home/timehammer/wksp/kronostools/timehammer/docker-compose.native.yml
 ```
 
 Subir configuración `docker-compose`:
