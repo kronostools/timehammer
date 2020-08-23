@@ -51,7 +51,7 @@ services:
       - timehammer
     restart: unless-stopped
     mem_limit: 64m
-    memswap_limit: 32m
+    memswap_limit: 64m
     mem_reservation: 32m
   zookeeper:
     image: strimzi/kafka:0.17.0-kafka-2.4.0

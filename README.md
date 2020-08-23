@@ -1,8 +1,5 @@
 # TODO
 
-- Cambiar a compilación java normal y construcción normal de imágenes
-- Publicar las imágenes en Docker Hub
-- Desplegar de nuevo en OVH y vigilar el consumo de recursos
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
