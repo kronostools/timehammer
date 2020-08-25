@@ -86,12 +86,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_HEAP_OPTS: -Xmx1G -Xms1G
     networks:
       - timehammer
     restart: unless-stopped
     mem_limit: 1536m
     memswap_limit: 1536m
-    mem_reservation: 1024m
+    mem_reservation: 1280m
   scheduler:
     image: qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
     logging:
