@@ -1,5 +1,7 @@
 # TODO
 
+- No funciona la escritura en fichero de contraseñas y waits cuando se paran los contenedores
+    - Al volver a arrancar los contenedores hay que volver a establecer la contraseña y volver a establecer la espera
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
         - Registrar el mismo usuario en varios móviles
