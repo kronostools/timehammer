@@ -64,12 +64,13 @@ services:
     command: ["sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"]
     environment:
       LOG_DIR: /tmp/logs
+      KAFKA_HEAP_OPTS: -Xmx256M -Xms256M
     networks:
       - timehammer
     restart: unless-stopped
-    mem_limit: 512m
-    memswap_limit: 512m
-    mem_reservation: 256m
+    mem_limit: 1024m
+    memswap_limit: 1024m
+    mem_reservation: 768m
   kafka:
     image: strimzi/kafka:0.17.0-kafka-2.4.0
     logging:
@@ -90,8 +91,8 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-    mem_limit: 2560m
-    memswap_limit: 2560m
+    mem_limit: 2308m
+    memswap_limit: 2308m
     mem_reservation: 1536m
   scheduler:
     image: qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
