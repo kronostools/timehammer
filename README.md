@@ -1,7 +1,6 @@
 # TODO
 
 - Desplegar la nueva versión del modulo web con los logos y favicon
-- Cambiar en base de datos la hora de la comida de 13:00-14:00 a 13:30-14:30
 - No funciona la escritura en fichero de contraseñas y waits cuando se paran los contenedores
     - Al volver a arrancar los contenedores hay que volver a establecer la contraseña y volver a establecer la espera
 - Comprobación de estado

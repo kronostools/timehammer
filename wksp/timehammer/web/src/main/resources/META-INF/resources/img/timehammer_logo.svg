@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+        xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+        sodipodi:docname="timehammer_logo.svg"
+        inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+        id="svg8"
+        version="1.1"
+        viewBox="0 0 16.634864 16.635622"
+        height="62.87476"
+        width="62.871929"
+        inkscape:export-filename="C:\work\repos\kronostools\timehammer\wksp\timehammer\web\src\main\resources\META-INF\resources\img\telegram_timhammer_logo.png"
+        inkscape:export-xdpi="390.88986"
+        inkscape:export-ydpi="390.88986">
+  <defs
+     id="defs2">
+    <rect
+       id="rect839"
+       height="9.260417"
+       width="6.0854168"
+       y="34.924999"
+       x="98.954163" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:snap-global="true"
+     inkscape:lockguides="true"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-9"
+     inkscape:window-x="-9"
+     inkscape:window-height="1001"
+     inkscape:window-width="1920"
+     fit-margin-bottom="0"
+     fit-margin-right="0"
+     fit-margin-left="0"
+     fit-margin-top="0"
+     units="px"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     inkscape:cy="32.82512"
+     inkscape:cx="133.29298"
+     inkscape:zoom="1"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-34.215164,-38.9199)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <text
+       style="font-size:5.64444px;line-height:1.25;font-family:'Copperplate Gothic Bold';-inkscape-font-specification:'Copperplate Gothic Bold, ';letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect839);"
+       id="text837"
+       xml:space="preserve" />
+    <g
+       id="g1460"
+       inkscape:export-xdpi="48.861233"
+       inkscape:export-ydpi="48.861233">
+      <path
+         id="path869"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:'Franklin Gothic Demi';-inkscape-font-specification:'Franklin Gothic Demi';letter-spacing:0px;word-spacing:0px;fill:#14abe2;fill-opacity:1;stroke-width:0.334263"
+         d="m 42.308045,48.677185 -5.168068,3.561362 13.710055,0.0032 v 3.313379 l -16.634868,3.91e-4 v -5.880526 l 4.042655,-2.680914 -4.042655,-2.905241 V 38.9199 l 16.634868,3e-6 v 3.273428 l -13.563815,0.0044 5.021828,3.810609 z"
+         sodipodi:nodetypes="cccccccccccccc" />
+      <path
+         d="m 50.849843,42.193283 -8.317416,0.0027 5.246372,0.002 -5.021788,3.810734 V 48.6776 l 5.168027,3.561342 -5.392611,0.0012 8.317416,0.0012 v -2.566385 l -4.042498,-2.681291 4.042498,-2.905218 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7556px;line-height:1.25;font-family:'Franklin Gothic Demi';-inkscape-font-specification:'Franklin Gothic Demi';letter-spacing:0px;word-spacing:0px;fill:#e6e6e6;stroke-width:0.334263"
+         id="path2330" />
+    </g>
+  </g>
+</svg>
