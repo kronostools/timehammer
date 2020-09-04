@@ -81,7 +81,6 @@
             - En este caso se utilizaría ([Docker Distribution](https://github.com/docker/distribution) + [Portus](http://port.us.org))
 - Cerrar version 1.0.0-ALPHA
     - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
-    - Mergear rama develop -> master
     - Crear TAG 1.0.0-ALPHA en REPO
 
 *************** DEMO ***************
@@ -127,7 +126,6 @@
     - Proteger el acceso (o llamadas al backend) en base al perfil
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
-- Icono KronosTools
 - Actualizar a la versión final de camel (actualmente 1.0.1)
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
