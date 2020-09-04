@@ -99,7 +99,6 @@
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
-- Fix en la página de actualizar contraseña: a pantalla completa en pc se ve descentrado el formulario (está a la izquierda)
 - Crear página de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
     - Protegida con el perfil
     - Habrá comando /admin (no público) para acceder a la administración
@@ -128,9 +127,8 @@
     - Proteger el acceso (o llamadas al backend) en base al perfil
 - Meter test unitarios
     - Probar las validaciones con tests unitarios
-- Icono TimeHammer
 - Icono KronosTools
-- Revisar si ha salido la versión final de camel (actualmente 1.0.0-CR3)
+- Actualizar a la versión final de camel (actualmente 1.0.1)
 - Completar la página de FAQ
     - ¿Cómo de segura está mi contraseña?
     - ¿Por qué de vez en cuando tengo que volver a introducir mi contraseña?
@@ -327,6 +325,18 @@ docker-compose rm -f scheduler web core catalog integration comunytek telegramch
 
 docker-compose stop db kafka zookeeper
 docker-compose rm -f db kafka zookeeper
+```
+
+# Evitar borrado de imágenes de Docker Hub
+
+Docker Hub ha introducido una nueva política de retención de imágenes para las cuentas gratuitas, bajo la cual las imágenes que no hayan recibido ningún pull/push en 6 meses serán marcadas para ser borradas.
+
+Como solución de contingencia he creado un script que hace un pull de todas las imágenes del proyecto y será ejecutado periódicamente el primer día de cada mes utilizando `crontab`.
+
+Para subir el script al servidor, ejecutar:
+
+```
+scp -i %USERPROFILE%/.ssh/timehammer.ovh wksp\server\centos8\pull_images.sh timehammer@54.37.152.149:/home/timehammer/pull_images.sh
 ```
 
 # HOWTOs
