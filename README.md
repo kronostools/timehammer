@@ -92,7 +92,7 @@
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
 - Monitorización de componentes
     - ¿Dashboard custom con D3.js?
-    - ¿con Graphana y Prometheus?
+    - ¿con Graphana y Prometheus? 
 - Gestión de componentes
     - [Gestión de Docker/Swarm/Kubernetes](https://www.portainer.io/installation/)
 - Web Registro
