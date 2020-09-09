@@ -1,12 +1,5 @@
 # TODO
 
-- Para la demo
-    - Repasar la ejecución del updateWorkers cuando el único que hay está de vacaciones
-- No funciona la escritura en fichero de contraseñas y waits cuando se paran los contenedores
-    - Al volver a arrancar los contenedores hay que volver a establecer la contraseña y volver a establecer la espera
-- Comprobación de estado
-    - Verificar que funciona cuando la notificacion es multiple
-        - Registrar el mismo usuario en varios móviles
 - Privacidad de código?
     - Repo Git privado? Migrar a BitBucket?
     - Repo Docker Hub privado?
@@ -97,6 +90,10 @@
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
+- Externalizar la página de demo a un módulo independiente
+- Comprobación de estado
+    - Verificar que funciona cuando la notificacion es multiple
+        - Registrar el mismo usuario en varios móviles
 - Crear página de administración (ej: reset de contraseñas de usuario, revisar mensajes basura)
     - Protegida con el perfil
     - Habrá comando /admin (no público) para acceder a la administración
@@ -159,46 +156,49 @@
 Compilar el código java
 
 ```
+docker-compose -f docker-compose.compile.yml up comunytek
+docker-compose -f docker-compose.compile.yml up core
+docker-compose -f docker-compose.compile.yml up statemachine
+docker-compose -f docker-compose.compile.yml up scheduler
+
 docker-compose -f docker-compose.compile.yml up telegramchatbotnotifier
 docker-compose -f docker-compose.compile.yml up telegramchatbot
-docker-compose -f docker-compose.compile.yml up statemachine
 docker-compose -f docker-compose.compile.yml up commandprocessor
-docker-compose -f docker-compose.compile.yml up comunytek
 docker-compose -f docker-compose.compile.yml up integration
 docker-compose -f docker-compose.compile.yml up catalog
-docker-compose -f docker-compose.compile.yml up core
 docker-compose -f docker-compose.compile.yml up web
-docker-compose -f docker-compose.compile.yml up scheduler
 ```
 
 Construir las imágenes
 
 ```
+docker-compose -f docker-compose.imgbuild.yml build comunytek
+docker-compose -f docker-compose.imgbuild.yml build core
+docker-compose -f docker-compose.imgbuild.yml build statemachine
+docker-compose -f docker-compose.imgbuild.yml build scheduler
+
 docker-compose -f docker-compose.imgbuild.yml build telegramchatbotnotifier
 docker-compose -f docker-compose.imgbuild.yml build telegramchatbot
-docker-compose -f docker-compose.imgbuild.yml build statemachine
 docker-compose -f docker-compose.imgbuild.yml build commandprocessor
-docker-compose -f docker-compose.imgbuild.yml build comunytek
 docker-compose -f docker-compose.imgbuild.yml build integration
 docker-compose -f docker-compose.imgbuild.yml build catalog
-docker-compose -f docker-compose.imgbuild.yml build core
 docker-compose -f docker-compose.imgbuild.yml build web
-docker-compose -f docker-compose.imgbuild.yml build scheduler
 ```
 
 Publicar imágenes en *Docker Hub*
 
 ```
+docker push qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-core:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-statemachine:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
+
 docker push qopuir/timehammer-telegramchatbotnotifier:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-telegramchatbot:1.0.0-SNAPSHOT
-docker push qopuir/timehammer-statemachine:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-commandprocessor:1.0.0-SNAPSHOT
-docker push qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-integration:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-catalog:1.0.0-SNAPSHOT
-docker push qopuir/timehammer-core:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-web:1.0.0-SNAPSHOT
-docker push qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
 ```
 
 # Compilación en nativo

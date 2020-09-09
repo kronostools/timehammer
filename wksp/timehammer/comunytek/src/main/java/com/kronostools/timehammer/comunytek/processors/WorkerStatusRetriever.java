@@ -34,44 +34,54 @@ public class WorkerStatusRetriever {
     public Uni<Message<CheckWorkersStatusWorker>> retrieveStatus(final Message<CheckWorkersStatusWorker> message) {
         final CheckWorkersStatusWorker checkWorkersStatusWorker = CheckWorkersStatusWorkerBuilder.copy(message.getPayload()).build();
 
-        LOG.info("Getting status of worker '{}' from Comunytek ...", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
 
-        return comunytekClient
-                .getStatus(checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerExternalId(), checkWorkersStatusWorker.getGenerated())
-                .onFailure(Exception.class)
+        if (checkWorkersStatusWorker.getWorkerCurrentPreferences().workToday()) {
+            LOG.info("Getting status of worker '{}' from Comunytek ...", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId());
+
+            return comunytekClient
+                    .getStatus(checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerExternalId(), checkWorkersStatusWorker.getGenerated())
+                    .onFailure(Exception.class)
                     .recoverWithItem((e) -> new ComunytekStatusResponseBuilder()
                             .result(ComunytekStatusResult.KO)
                             .errorMessage(e.getMessage())
                             .build())
-                .map(statusResponse -> {
-                    final GetWorkerStatusPhase getWorkerStatusPhase;
+                    .map(statusResponse -> {
+                        final GetWorkerStatusPhase getWorkerStatusPhase;
 
-                    if (statusResponse.isSuccessful()) {
-                        LOG.info("Status of worker '{}' at '{}' is '{}'", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), CommonDateTimeUtils.formatDateTimeToLog(checkWorkersStatusWorker.getGenerated()), statusResponse.getStatus().getText());
+                        if (statusResponse.isSuccessful()) {
+                            LOG.info("Status of worker '{}' at '{}' is '{}'", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), CommonDateTimeUtils.formatDateTimeToLog(checkWorkersStatusWorker.getGenerated()), statusResponse.getStatus().getText());
 
-                        getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
-                                .result(WorkerStatusResult.OK)
-                                .statusContext(statusResponse.toWorkerStatusContext())
-                                .build();
-                    } else {
-                        if (statusResponse.getResult() == ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS) {
                             getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
-                                    .result(WorkerStatusResult.MISSING_OR_INVALID_CREDENTIALS)
-                                    .errorMessage(statusResponse.getErrorMessage())
+                                    .result(WorkerStatusResult.OK)
+                                    .statusContext(statusResponse.toWorkerStatusContext())
                                     .build();
                         } else {
-                            getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
-                                    .result(WorkerStatusResult.KO)
-                                    .errorMessage(statusResponse.getErrorMessage())
-                                    .build();
+                            if (statusResponse.getResult() == ComunytekStatusResult.MISSING_OR_INVALID_CREDENTIALS) {
+                                getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
+                                        .result(WorkerStatusResult.MISSING_OR_INVALID_CREDENTIALS)
+                                        .errorMessage(statusResponse.getErrorMessage())
+                                        .build();
+                            } else {
+                                getWorkerStatusPhase = new GetWorkerStatusPhaseBuilder()
+                                        .result(WorkerStatusResult.KO)
+                                        .errorMessage(statusResponse.getErrorMessage())
+                                        .build();
+                            }
+
+                            LOG.warn("Status of worker '{}' couldn't be retrieved. Reason: {}", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), getWorkerStatusPhase.getResult().name());
                         }
 
-                        LOG.warn("Status of worker '{}' couldn't be retrieved. Reason: {}", checkWorkersStatusWorker.getWorkerCurrentPreferences().getWorkerInternalId(), getWorkerStatusPhase.getResult().name());
-                    }
+                        checkWorkersStatusWorker.setWorkerStatusPhase(getWorkerStatusPhase);
 
-                    checkWorkersStatusWorker.setWorkerStatusPhase(getWorkerStatusPhase);
+                        return Message.of(checkWorkersStatusWorker, message::ack);
+                    });
+        } else {
+            checkWorkersStatusWorker.setWorkerStatusPhase(new GetWorkerStatusPhaseBuilder()
+                    .result(WorkerStatusResult.IGNORED_NOT_WORKING_TODAY)
+                    .errorMessage(WorkerStatusResult.IGNORED_NOT_WORKING_TODAY.getDefaultErrorMessage())
+                    .build());
 
-                    return Message.of(checkWorkersStatusWorker, message::ack);
-                });
+            return Uni.createFrom().item(Message.of(checkWorkersStatusWorker, message::ack));
+        }
     }
 }

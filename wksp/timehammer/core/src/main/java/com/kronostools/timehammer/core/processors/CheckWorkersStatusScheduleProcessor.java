@@ -45,7 +45,6 @@ public class CheckWorkersStatusScheduleProcessor {
                         LOG.debug("Status of {} workers will be updated", wcpl.size());
 
                         return Multi.createFrom().items(wcpl.stream()
-                                .filter(WorkerCurrentPreferences::workToday)
                                 .map(wcp -> new CheckWorkersStatusWorkerBuilder()
                                         .generated(triggerMessage.getGenerated())
                                         .executionId(triggerMessage.getExecutionId())

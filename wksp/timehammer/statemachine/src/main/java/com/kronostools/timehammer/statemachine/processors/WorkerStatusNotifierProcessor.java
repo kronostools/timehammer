@@ -50,6 +50,8 @@ public class WorkerStatusNotifierProcessor {
 
         if (worker.getWorkerStatusPhase().getResult() == WorkerStatusResult.MISSING_OR_INVALID_CREDENTIALS) {
             notificationText = ChatbotMessages.MISSING_PASSWORD;
+        } else if (worker.getWorkerStatusPhase().getResult() == WorkerStatusResult.IGNORED_NOT_WORKING_TODAY) {
+            LOG.warn("Worker '{}' does not work today and its status was not checked, nothing to notify", worker.getWorkerCurrentPreferences().getWorkerInternalId());
         } else if (worker.getWorkerStatusActionPhase() == null
                 || worker.getWorkerStatusActionPhase().isNotSuccessful()) {
             LOG.warn("Unsuccessful status check for worker '{}', nothing to notify", worker.getWorkerCurrentPreferences().getWorkerInternalId());
