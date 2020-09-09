@@ -35,7 +35,7 @@ mp:
 
 timehammer:
   domain:
-    base-url: https://timehammer.kronostools.com
+    base-url: ${TIMEHAMMER_DOMAIN}
   chatbot:
     registration-request-cache:
       expiration:
@@ -45,8 +45,3 @@ timehammer:
       expiration:
         qty: 10
         unit: MINUTES
-
-"%localdemo":
-  timehammer:
-    domain:
-      base-url: http://192.168.86.168:8090
