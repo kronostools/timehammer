@@ -38,7 +38,7 @@ services:
       - timehammer
     restart: unless-stopped
   zookeeper:
-    image: strimzi/kafka:0.17.0-kafka-2.4.0
+    image: strimzi/kafka:0.19.0-kafka-2.5.0
     container_name: timehammer-zookeeperkafka
     command: ["sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"]
     environment:
@@ -47,7 +47,7 @@ services:
       - timehammer
     restart: unless-stopped
   kafka:
-    image: strimzi/kafka:0.17.0-kafka-2.4.0
+    image: strimzi/kafka:0.19.0-kafka-2.5.0
     container_name: timehammer-kafka
     command: ["sh", "-c", "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"]
     depends_on:
@@ -143,6 +143,8 @@ services:
   commandprocessor:
     image: maven:3.6.3-jdk-11-slim
     container_name: timehammer-commandprocessor
+    environment:
+      TIMEHAMMER_DOMAIN: ${TIMEHAMMER_DOMAIN}
     volumes:
       - ./wksp/timehammer:/root/wksp/timehammer
       - ${HOME}/.m2/repository:/root/.m2/repository
