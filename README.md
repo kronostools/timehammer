@@ -79,6 +79,14 @@
 
 # Backlog
 
+- Reducción de llamadas a Comunytek
+    - Crear tabla con columnas (worker_internal_id, status, status_last_check, pending_action, pending_action_last_update)
+      | worker_internal_id | status       | status_last_check | pending_action | pending_action_last_update |
+      |--------------------|--------------|-------------------|----------------|----------------------------|
+      | 1                  | initial      | 1-1-1900          | work_start     | 9-9-2020  8:00             |
+      | 1                  | started      | 9-9-2020 8:02     | work_start     | 9-9-2020  8:00             |
+      | 1                  | started      | 9-9-2020 8:02     | lunch_start    | 9-9-2020 13:00             |
+      | 1                  | paused_lunch | 9-9-2020 13:02    | lunch_start    | 9-9-2020 12:50             |
 - Implementar la baja de un usuario (/unregister)
 - Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
