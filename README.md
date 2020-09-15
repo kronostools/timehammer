@@ -1,5 +1,23 @@
 # TODO
 
+*************** DEMO ***************
+
+- Cerrar version 1.0.0-ALPHA
+    - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
+    - Crear TAG 1.0.0-ALPHA en REPO
+    - Generar las imágenes de docker con versión 1.0.0-ALPHA
+
+# Backlog
+
+- Reducción de llamadas a Comunytek
+    - Crear tabla con columnas (worker_internal_id, status, status_last_check, pending_action, pending_action_last_update)
+      | worker_internal_id | status       | status_last_check | pending_action | pending_action_last_update |
+      |--------------------|--------------|-------------------|----------------|----------------------------|
+      | 1                  | initial      | 1-1-1900          | work_start     | 9-9-2020  8:00             |
+      | 1                  | started      | 9-9-2020 8:02     | work_start     | 9-9-2020  8:00             |
+      | 1                  | started      | 9-9-2020 8:02     | lunch_start    | 9-9-2020 13:00             |
+      | 1                  | paused_lunch | 9-9-2020 13:02    | lunch_start    | 9-9-2020 12:50             |
+- Implementar la baja de un usuario (/unregister)
 - Privacidad de código?
     - Repo Git privado? Migrar a BitBucket?
     - Repo Docker Hub privado?
@@ -71,23 +89,6 @@
             - Más complejidad
             - Tendría el coste de una máquina (que va a ser muy cercano al coste de Docker Hub de pago)
             - En este caso se utilizaría ([Docker Distribution](https://github.com/docker/distribution) + [Portus](http://port.us.org))
-- Cerrar version 1.0.0-ALPHA
-    - Renombrar versiones de pom de 1.0.0-SNAPSHOT a 1.0.0-ALPHA
-    - Crear TAG 1.0.0-ALPHA en REPO
-
-*************** DEMO ***************
-
-# Backlog
-
-- Reducción de llamadas a Comunytek
-    - Crear tabla con columnas (worker_internal_id, status, status_last_check, pending_action, pending_action_last_update)
-      | worker_internal_id | status       | status_last_check | pending_action | pending_action_last_update |
-      |--------------------|--------------|-------------------|----------------|----------------------------|
-      | 1                  | initial      | 1-1-1900          | work_start     | 9-9-2020  8:00             |
-      | 1                  | started      | 9-9-2020 8:02     | work_start     | 9-9-2020  8:00             |
-      | 1                  | started      | 9-9-2020 8:02     | lunch_start    | 9-9-2020 13:00             |
-      | 1                  | paused_lunch | 9-9-2020 13:02    | lunch_start    | 9-9-2020 12:50             |
-- Implementar la baja de un usuario (/unregister)
 - Crear un servicio con una cache para la recuperación de las preferencias de los worker (invalidar la cache al actualizar las preferencias)
 - Añadir métricas (https://quarkus.io/guides/microprofile-metrics)
 - Monitorización de componentes
@@ -98,6 +99,9 @@
 - Web Registro
     - Mejorar la visualización de los errores: cuando afectan a varios campos, como por ejemplo, cuando el intervalo de trabajo no es correcto
 - Permitir la actualización de las preferencias con un comando /update_settings
+- Configurar el User-Agent en las llamadas http
+    - Deshabilitar el por defecto
+    - Tener una lista de headers y en cada llamada coger uno random
 - Externalizar la página de demo a un módulo independiente
 - Comprobación de estado
     - Verificar que funciona cuando la notificacion es multiple
@@ -164,8 +168,8 @@
 Compilar el código java
 
 ```
-docker-compose -f docker-compose.compile.yml up comunytek
 docker-compose -f docker-compose.compile.yml up core
+docker-compose -f docker-compose.compile.yml up comunytek
 docker-compose -f docker-compose.compile.yml up statemachine
 docker-compose -f docker-compose.compile.yml up scheduler
 
@@ -180,8 +184,8 @@ docker-compose -f docker-compose.compile.yml up web
 Construir las imágenes
 
 ```
-docker-compose -f docker-compose.imgbuild.yml build comunytek
 docker-compose -f docker-compose.imgbuild.yml build core
+docker-compose -f docker-compose.imgbuild.yml build comunytek
 docker-compose -f docker-compose.imgbuild.yml build statemachine
 docker-compose -f docker-compose.imgbuild.yml build scheduler
 
@@ -196,8 +200,8 @@ docker-compose -f docker-compose.imgbuild.yml build web
 Publicar imágenes en *Docker Hub*
 
 ```
-docker push qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-core:1.0.0-SNAPSHOT
+docker push qopuir/timehammer-comunytek:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-statemachine:1.0.0-SNAPSHOT
 docker push qopuir/timehammer-scheduler:1.0.0-SNAPSHOT
 
@@ -330,6 +334,59 @@ docker-compose rm -f scheduler web core catalog integration comunytek telegramch
 
 docker-compose stop db kafka zookeeper
 docker-compose rm -f db kafka zookeeper
+```
+
+# DEMO desde pc personal
+
+Exponer puerto 8090 a través de `ngrok`:
+
+```
+ngrok http 8090
+```
+
+Copiar la url de forwarding a .env (ej: https://8ecf39152302.ngrok.io)
+
+Arrancar kafka y db:
+
+```
+docker-compose -f docker-compose.runlocal.yml up -d db kafka
+```
+
+Limpiar la base de datos:
+
+```
+# docker-compose -f docker-compose.runlocal.yml exec db psql -U timehammer
+delete from worker_holiday;
+delete from worker_preferences;
+delete from worker_chat;
+delete from worker;
+```
+
+Limiar volúmenes:
+
+```
+docker volume rm timehammer_comunytekdata timehammer_statemachinedata
+```
+
+Arrancar el resto de servicios:
+
+```
+docker-compose -f docker-compose.runlocal.yml up scheduler
+docker-compose -f docker-compose.runlocal.yml up web
+docker-compose -f docker-compose.runlocal.yml up core
+docker-compose -f docker-compose.runlocal.yml up catalog
+docker-compose -f docker-compose.runlocal.yml up integration
+docker-compose -f docker-compose.runlocal.yml up comunytek
+docker-compose -f docker-compose.runlocal.yml up telegramchatbot
+docker-compose -f docker-compose.runlocal.yml up commandprocessor
+docker-compose -f docker-compose.runlocal.yml up telegramchatbotnotifier
+docker-compose -f docker-compose.runlocal.yml up statemachine
+```
+
+Parar todo:
+
+```
+docker-compose -f docker-compose.runlocal.yml down
 ```
 
 # Evitar borrado de imágenes de Docker Hub
