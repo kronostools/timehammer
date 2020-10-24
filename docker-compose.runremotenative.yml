@@ -50,8 +50,9 @@ services:
     networks:
       - timehammer
     restart: unless-stopped
-    mem_limit: 64m
-    memswap_limit: 64m
+    # Required 128M in order to be able to renew the cert
+    mem_limit: 128m
+    memswap_limit: 128m
     mem_reservation: 32m
   zookeeper:
     image: strimzi/kafka:0.19.0-kafka-2.5.0
